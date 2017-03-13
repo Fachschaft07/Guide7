@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/drawer_action_blackboard"
+            android:title="@string/navigation_drawer_item_blackboard"/>
+        <item
+            android:id="@+id/drawer_action_schedule"
+            android:title="@string/navigation_drawer_item_schedule"/>
+        <item
+            android:id="@+id/drawer_action_roomsearch"
+            android:title="@string/navigation_drawer_item_roomsearch"/>
+        <!--<item
+            android:id="@+id/drawer_action_settings"
+            android:title="@string/navigation_drawer_item_settings"/>-->
+    </group>
+
+    <item android:title="@string/navigation_drawer_info">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/drawer_action_datapolicy"
+                    android:title="@string/navigation_drawer_item_datapolicy"/>
+                <item
+                    android:id="@+id/drawer_action_info"
+                    android:title="@string/navigation_drawer_item_info"/>
+            </group>
+        </menu>
+    </item>
+
+    <item android:title="@string/navigation_drawer_other">
+        <menu>
+            <item
+                android:id="@+id/drawer_action_logout"
+                android:title="@string/navigation_drawer_item_logout"/>
+        </menu>
+    </item>
+
+</menu>

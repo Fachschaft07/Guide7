@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <domain-config>
+        <domain includeSubdomains="true">w3-o.cs.hm.edu</domain>
+        <trust-anchors>
+            <certificates src="@raw/zpa_certificate"/>
+        </trust-anchors>
+    </domain-config>
+</network-security-config>

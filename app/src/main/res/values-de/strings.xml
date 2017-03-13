@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- General -->
+    <string name="app_name">Guide7</string>
+    <string name="developer_email">barny.eder@gmail.com</string>
+
+    <!-- Login -->
+    <string name="passwordHint">Password</string>
+    <string name="usernameHint">Nutzerkennung</string>
+    <string name="loginButtonLabel">Anmelden</string>
+    <string name="loginRequestLabel">Gib deine ZPA Anmeldedaten ein.</string>
+    <string name="loginNotice">Das Anmelden ist einmalig, danach wirst du immer automatisch angemeldet.</string>
+    <string name="loginMessage">Anmeldung am ZPA</string>
+
+    <!-- Week Plan -->
+    <string name="loadingMessage">Stundenplan wird heruntergeladen...</string>
+    <string name="refresh">Aktualisieren</string>
+
+    <!-- Room Search -->
+    <string name="from">von</string>
+    <string name="to">bis</string>
+    <string name="searchingForRoomMessage">Räume werden gesucht...</string>
+    <string name="roomSearchError">Es ist ein Fehler aufgetreten. :(</string>
+    <string name="seats">Plätze</string>
+
+    <!-- Settings -->
+    <string name="scheduleSettings">Stundenplan</string>
+    <string name="scheduleView">Ansicht</string>
+    <string name="days">Tage</string>
+
+    <!-- Black Board -->
+    <string name="currentlyNotAvailableBlackboard">Das Schwarze Brett ist wegen des geschlossenen FI Systems nicht verfügbar.</string>
+    <string name="searchingForBoardEntriesMessage">Neuigkeiten werden gesucht...</string>
+    <string name="boardEntrySearchError">Bei der Suche nach Neuigkeiten ist ein Fehler aufgetreten. :(</string>
+
+    <!-- Error Messages -->
+    <string name="loginErrorMessage">Anmeldung am ZPA fehlgeschlagen. Prüfe nach ob das ZPA online ist oder ob eine Internetverbindung besteht.</string>
+    <string name="badLoginMessage">Der angegebene Nutzername und/oder das Passwort sind falsch.</string>
+    <string name="parseMonthPlanErrorMessage">Stundenplan konnte nicht vom ZPA gelesen werden.</string>
+
+    <!-- Menu -->
+    <string name="toLogin">Zur Anmeldung</string>
+    <string name="action_settings">Einstellungen</string>
+
+    <!-- Settings -->
+    <string name="weekplan_group">Stundenplan</string>
+    <string name="displayedDays">Anzuzeigende Tage</string>
+
+    <!-- Error View -->
+    <string name="errorViewHeader">Oh nein! Ein Fehler ist aufgetreten und ich habe ihn nicht kommen sehen. Deswegen gibt es keinen schönen Fehlerdialog. Entschuldigung! :(</string>
+
+    <!-- Main Activity -->
+    <string name="title_activity_main">Thaw</string>
+
+    <!-- Navigation Drawer -->
+    <string name="navigation_drawer_open">Navigation öffnen</string>
+    <string name="navigation_drawer_close">Navigation schliessen</string>
+    <string name="navigation_drawer_other">Sonstiges</string>
+    <string name="navigation_drawer_info">Informationen</string>
+    <string name="navigation_drawer_item_blackboard">Schwarzes Brett</string>
+    <string name="navigation_drawer_item_schedule">Stundenplan</string>
+    <string name="navigation_drawer_item_roomsearch">Raumsuche</string>
+    <string name="navigation_drawer_item_settings">Einstellungen</string>
+    <string name="navigation_drawer_item_contact">Kontakt</string>
+    <string name="navigation_drawer_item_datapolicy">Datenschutzerklärung</string>
+    <string name="navigation_drawer_item_info">Info</string>
+    <string name="navigation_drawer_item_logout">Abmelden</string>
+
+</resources>
