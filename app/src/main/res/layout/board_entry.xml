@@ -70,7 +70,9 @@
                 android:layout_span="3"
                 android:layout_weight="1"
                 android:text="TextView"
-                android:textColor="@android:color/black"/>
+                android:textColor="@android:color/black"
+                android:linksClickable="true"
+                android:autoLink="web"/>
         </TableRow>
 
         <TableRow
