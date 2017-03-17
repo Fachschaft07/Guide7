@@ -34,6 +34,7 @@ import de.be.thaw.fragments.MainFragment;
 import de.be.thaw.fragments.RoomSearchFragment;
 import de.be.thaw.fragments.SettingsFragment;
 import de.be.thaw.fragments.WeekPlanFragment;
+import de.be.thaw.util.job.jobs.UpdateNoticeBoardJob;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -46,6 +47,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 	 * The initially shown fragment/menu item.
 	 */
 	private static final int INITIAL_FRAGMENT = R.id.drawer_action_blackboard;
+
+	/**
+	 * Extra key to use when you want to call the MainActivity and
+	 * initially show a specific fragment -> pass its drawer action id as integer.
+	 * An example of an id is the INITIAL_FRAGMENT variable.
+	 */
+	public static final String CALL_FRAGMENT_EXTRA = "de.be.thaw.MainActivity.callFragmentExtra";
 
 	/**
 	 * URL to the Data Policy.
@@ -70,11 +78,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 		initializeDrawer();
 		initializeNavigation();
+		initializeJobs();
+
+		// Check if there is an initial fragment to call set in the extra.
+		if (getIntent().hasExtra(CALL_FRAGMENT_EXTRA)) {
+			selectFragmentById(getIntent().getIntExtra(CALL_FRAGMENT_EXTRA, INITIAL_FRAGMENT));
+		}
 
 		if (savedInstanceState == null) {
 			// Set Start Fragment
 			selectInitialFragment();
 		}
+	}
+
+	/**
+	 * Method where you can define jobs to be run in the background.
+	 */
+	private void initializeJobs() {
+		// Recurring Task which updates the notice board!
+		UpdateNoticeBoardJob.scheduleJob();
 	}
 
 	/**
@@ -342,7 +364,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 	 * Select the Initial Fragment.
 	 */
 	private void selectInitialFragment() {
-		onNavigationItemSelected(navigationView.getMenu().findItem(INITIAL_FRAGMENT));
+		selectFragmentById(INITIAL_FRAGMENT);
+	}
+
+	/**
+	 * Select an fragment by its id.
+	 * @param fragmentDrawerActionId
+	 */
+	private void selectFragmentById(int fragmentDrawerActionId) {
+		onNavigationItemSelected(navigationView.getMenu().findItem(fragmentDrawerActionId));
 	}
 
 }

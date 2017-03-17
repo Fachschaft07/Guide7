@@ -35,4 +35,45 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"/>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/info_versionName">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:padding="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:weightSum="1">
+
+                <TextView
+                    android:id="@+id/textView10"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/info_versionName"
+                    android:layout_marginTop="24dp"
+                    android:layout_weight="1.02"
+                    android:text="@string/libraries"/>
+
+                <TextView
+                    android:id="@+id/textView12"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textView10"
+                    android:text="android-job Copyright © 2007-2016 by Evernote Corporation\njsoup Copyright © 2009 - 2016 Jonathan Hedley"
+                    android:textSize="12sp"/>
+            </LinearLayout>
+        </ScrollView>
+    </RelativeLayout>
+
 </RelativeLayout>

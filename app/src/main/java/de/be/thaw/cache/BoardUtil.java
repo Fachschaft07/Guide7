@@ -1,6 +1,7 @@
 package de.be.thaw.cache;
 
 import android.app.Activity;
+import android.content.Context;
 import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,13 +27,13 @@ public class BoardUtil {
 	/**
 	 * Store Board Entties in cache.
 	 * @param entries
-	 * @param activity
+	 * @param context
 	 */
-	public static void store(BoardEntry[] entries, Activity activity) throws IOException {
+	public static void store(BoardEntry[] entries, Context context) throws IOException {
 		ObjectMapper mapper = new ObjectMapper();
 		String entriesJSON = mapper.writeValueAsString(entries);
 
-		File boardStorage = new File(activity.getFilesDir(), BOARD_FILE + ".json");
+		File boardStorage = new File(context.getFilesDir(), BOARD_FILE + ".json");
 		FileWriter writer = new FileWriter(boardStorage, false);
 
 		writer.write(entriesJSON); // Write Entries to file.
@@ -44,11 +45,11 @@ public class BoardUtil {
 
 	/**
 	 * Retrieve stored board entries from file.
-	 * @param activity
+	 * @param context
 	 * @return
 	 */
-	public static BoardEntry[] retrieve(Activity activity) throws IOException {
-		File boardStorage = new File(activity.getFilesDir(), BOARD_FILE + ".json");
+	public static BoardEntry[] retrieve(Context context) throws IOException {
+		File boardStorage = new File(context.getFilesDir(), BOARD_FILE + ".json");
 
 		if (boardStorage.exists()) {
 			ObjectMapper mapper = new ObjectMapper();
@@ -64,10 +65,10 @@ public class BoardUtil {
 
 	/**
 	 * Clear Cache Files.
-	 * @param activity
+	 * @param context
 	 */
-	public static void clear(Activity activity) {
-		File internalDir = activity.getFilesDir();
+	public static void clear(Context context) {
+		File internalDir = context.getFilesDir();
 
 		// Get all cache files
 		File[] cacheFiles = internalDir.listFiles(new FileFilter() {

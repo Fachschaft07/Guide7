@@ -28,10 +28,12 @@
     <string name="scheduleView">Ansicht</string>
     <string name="days">Tage</string>
 
-    <!-- Black Board -->
+    <!-- Notice Board -->
     <string name="currentlyNotAvailableBlackboard">Das Schwarze Brett ist wegen des geschlossenen FI Systems nicht verfügbar.</string>
     <string name="searchingForBoardEntriesMessage">Neuigkeiten werden gesucht...</string>
     <string name="boardEntrySearchError">Bei der Suche nach Neuigkeiten ist ein Fehler aufgetreten. :(</string>
+    <string name="noticeBoardChangedNotificationTitle">Schwarzes Brett</string>
+    <string name="noticeBoardChangedNotificationMessage">Das Schwarze Brett wurde geändert, vielleicht ist etwas interessantes dabei!</string>
 
     <!-- Error Messages -->
     <string name="loginErrorMessage">Anmeldung am ZPA fehlgeschlagen. Prüfe nach ob das ZPA online ist oder ob eine Internetverbindung besteht.</string>
@@ -46,11 +48,14 @@
     <string name="weekplan_group">Stundenplan</string>
     <string name="displayedDays">Anzuzeigende Tage</string>
 
+    <!-- Info -->
+    <string name="libraries">Bibliotheken</string>
+
     <!-- Error View -->
     <string name="errorViewHeader">Oh nein! Ein Fehler ist aufgetreten und ich habe ihn nicht kommen sehen. Deswegen gibt es keinen schönen Fehlerdialog. Entschuldigung! :(</string>
 
     <!-- Main Activity -->
-    <string name="title_activity_main">Thaw</string>
+    <string name="title_activity_main">Guide7</string>
 
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">Navigation öffnen</string>

@@ -27,10 +27,12 @@
     <string name="scheduleView">Schedule display</string>
     <string name="days">Days</string>
 
-    <!-- Black Board -->
+    <!-- Notice Board -->
     <string name="currentlyNotAvailableBlackboard">The Notice board is currently not available due to the FI System shutdown.</string>
     <string name="searchingForBoardEntriesMessage">Searching for news...</string>
     <string name="boardEntrySearchError">An error occurred while searching for news. :(</string>
+    <string name="noticeBoardChangedNotificationTitle">Notice board</string>
+    <string name="noticeBoardChangedNotificationMessage">The notice board has been changed, might be worth to take a glimpse!</string>
 
     <!-- Error Messages -->
     <string name="loginErrorMessage">Could not login to ZPA. Check that the ZPA System is up and running or maybe there is a problem with your connection.</string>
@@ -45,11 +47,14 @@
     <string name="weekplan_group">Schedule</string>
     <string name="displayedDays">Displayed days</string>
 
+    <!-- Info -->
+    <string name="libraries">Libraries</string>
+
     <!-- Error View -->
     <string name="errorViewHeader">On no! An Error happened and I didn\'t foresee it to create a beautiful dialog for it. I\'m sorry! :(</string>
 
     <!-- Main Activity -->
-    <string name="title_activity_main">Thaw</string>
+    <string name="title_activity_main">Guide7</string>
 
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
