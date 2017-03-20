@@ -1,32 +1,31 @@
-package de.be.thaw.zpa.parser;
+package de.be.thaw.connect.parser;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import de.be.thaw.connect.parser.exception.ParseException;
 import de.be.thaw.model.noticeboard.BoardEntry;
-import de.be.thaw.zpa.exception.ZPAParseException;
 
 /**
  * Created by Benjamin Eder on 12.03.2017.
  */
-public class NoticeBoardParser implements ZPAParser<BoardEntry[]> {
+public class NoticeBoardParser implements Parser<BoardEntry[]> {
 
 	public static final SimpleDateFormat DATE_PARSER = new SimpleDateFormat("dd.MM.yyyy");
 
 	@Override
-	public BoardEntry[] parse(Document doc) throws ZPAParseException {
+	public BoardEntry[] parse(Document doc) throws ParseException {
 		Elements elms = doc.getElementsByTag("tbody");
 
 		// There should be only one tbody element so get the first otherwise throw Exception
 		if (elms.size() != 1) {
-			throw new ZPAParseException("None or more than one tbody element found!");
+			throw new ParseException("None or more than one tbody element found!");
 		}
 
 		Element tbody = elms.get(0);
@@ -53,7 +52,7 @@ public class NoticeBoardParser implements ZPAParser<BoardEntry[]> {
 					try {
 						from = DATE_PARSER.parse(fromDate);
 					} catch (Exception e) {
-						throw new ZPAParseException(e);
+						throw new ParseException(e);
 					}
 
 					String toDate = entryItems.get(4).text();
@@ -61,7 +60,7 @@ public class NoticeBoardParser implements ZPAParser<BoardEntry[]> {
 					try {
 						to = DATE_PARSER.parse(toDate);
 					} catch (Exception e) {
-						throw new ZPAParseException(e);
+						throw new ParseException(e);
 					}
 
 					entries.add(new BoardEntry(author, title, content, from, to));

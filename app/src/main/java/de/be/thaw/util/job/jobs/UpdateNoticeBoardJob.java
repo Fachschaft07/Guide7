@@ -5,13 +5,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.media.RingtoneManager;
-import android.net.Uri;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
 import com.evernote.android.job.Job;
 import com.evernote.android.job.JobRequest;
@@ -25,8 +20,7 @@ import de.be.thaw.MainActivity;
 import de.be.thaw.R;
 import de.be.thaw.cache.BoardUtil;
 import de.be.thaw.model.noticeboard.BoardEntry;
-import de.be.thaw.util.TimeUtil;
-import de.be.thaw.zpa.ZPAConnection;
+import de.be.thaw.connect.zpa.ZPAConnection;
 
 /**
  * Recurring Task which is checking for Notice board changes by updating and

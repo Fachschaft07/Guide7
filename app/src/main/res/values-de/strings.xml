@@ -40,6 +40,10 @@
     <string name="badLoginMessage">Der angegebene Nutzername und/oder das Passwort sind falsch.</string>
     <string name="parseMonthPlanErrorMessage">Stundenplan konnte nicht vom ZPA gelesen werden.</string>
 
+    <!-- Canteen Menu -->
+    <string name="searchingForCanteenMenus">Speiseplan wird erneuert...</string>
+    <string name="canteenMenuLoadingError">Ein Fehler ist aufgetreten. :(</string>
+
     <!-- Menu -->
     <string name="toLogin">Zur Anmeldung</string>
     <string name="action_settings">Einstellungen</string>
@@ -64,6 +68,7 @@
     <string name="navigation_drawer_info">Informationen</string>
     <string name="navigation_drawer_item_blackboard">Schwarzes Brett</string>
     <string name="navigation_drawer_item_schedule">Stundenplan</string>
+    <string name="navigation_drawer_item_menu">Speiseplan</string>
     <string name="navigation_drawer_item_roomsearch">Raumsuche</string>
     <string name="navigation_drawer_item_settings">Einstellungen</string>
     <string name="navigation_drawer_item_contact">Kontakt</string>

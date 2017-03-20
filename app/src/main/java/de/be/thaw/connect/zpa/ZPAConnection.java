@@ -1,6 +1,5 @@
-package de.be.thaw.zpa;
+package de.be.thaw.connect.zpa;
 
-import android.util.JsonReader;
 import android.util.Log;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -12,7 +11,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -24,19 +22,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+import de.be.thaw.connect.parser.exception.ParseException;
+import de.be.thaw.connect.studentenwerk.StudentenwerkConnection;
+import de.be.thaw.model.canteen.Menu;
 import de.be.thaw.model.freerooms.Room;
 import de.be.thaw.model.noticeboard.BoardEntry;
 import de.be.thaw.model.schedule.Schedule;
 import de.be.thaw.model.schedule.ScheduleDay;
-import de.be.thaw.zpa.exception.CouldNotReceiveLoginErrorException;
-import de.be.thaw.zpa.exception.CouldNotReceiveMiddlewaretokenException;
-import de.be.thaw.zpa.exception.InvalidDateException;
-import de.be.thaw.zpa.exception.ZPABadCredentialsException;
-import de.be.thaw.zpa.exception.ZPALoginFailedException;
-import de.be.thaw.zpa.exception.ZPAParseException;
-import de.be.thaw.zpa.parser.NoticeBoardParser;
-import de.be.thaw.zpa.parser.WeekPlanParser;
-import de.be.thaw.zpa.parser.ZPAParser;
+import de.be.thaw.connect.zpa.exception.CouldNotReceiveLoginErrorException;
+import de.be.thaw.connect.zpa.exception.CouldNotReceiveMiddlewaretokenException;
+import de.be.thaw.connect.zpa.exception.InvalidDateException;
+import de.be.thaw.connect.zpa.exception.ZPABadCredentialsException;
+import de.be.thaw.connect.zpa.exception.ZPALoginFailedException;
+import de.be.thaw.connect.parser.NoticeBoardParser;
+import de.be.thaw.connect.parser.WeekPlanParser;
+import de.be.thaw.connect.parser.Parser;
 
 public class ZPAConnection {
 
@@ -188,10 +188,12 @@ public class ZPAConnection {
 	 * Get all valid notice board entries.
 	 * @return
 	 */
-	public BoardEntry[] getBoardNews() throws IOException, ZPAParseException {
+	public BoardEntry[] getBoardNews() throws IOException, ParseException {
 		Document doc = connection.url(ZPA_URL + ZPA_PUBLIC_NOTICE_BOARD).get();
 
-		ZPAParser<BoardEntry[]> boardParser = new NoticeBoardParser();
+		Parser<BoardEntry[]> boardParser = new NoticeBoardParser();
+
+		Menu[] menu = new StudentenwerkConnection().getMenus();
 
 		return boardParser.parse(doc);
 	}
@@ -202,9 +204,9 @@ public class ZPAConnection {
 	 *
 	 * @param start
 	 * @param end
-	 * @throws InvalidDateException, IOException, ZPAParseException
+	 * @throws InvalidDateException, IOException, ParseException
 	 */
-	public Room[] getFreeRooms(Calendar start, Calendar end) throws InvalidDateException, IOException, ZPAParseException {
+	public Room[] getFreeRooms(Calendar start, Calendar end) throws InvalidDateException, IOException, ParseException {
 		// Check if is same day, otherwise throw Exception.
 		if (!(start.get(Calendar.YEAR) == end.get(Calendar.YEAR) && start.get(Calendar.DAY_OF_YEAR) == end.get(Calendar.DAY_OF_YEAR))) {
 			throw new InvalidDateException("Start- and Enddate have to be essentially the same day for the free room search to work propertly.");
@@ -234,7 +236,7 @@ public class ZPAConnection {
 		JsonNode jsonRoot = mapper.readTree(result);
 
 		if (jsonRoot == null || jsonRoot.get("error_code").asInt() != 0) {
-			throw new ZPAParseException("Could not parse free rooms.");
+			throw new ParseException("Could not parse free rooms.");
 		}
 
 
@@ -258,7 +260,7 @@ public class ZPAConnection {
 	 * @return
 	 * @throws IOException
 	 */
-	public Schedule getWeekplan(String date) throws ZPAParseException, IOException {
+	public Schedule getWeekplan(String date) throws ParseException, IOException {
 		Map<String, String> parameter = new HashMap<>();
 		parameter.put("date", date);
 
@@ -276,7 +278,7 @@ public class ZPAConnection {
 	 * @throws ExecutionException
 	 * @throws InterruptedException
 	 */
-	public Schedule getMonthPlan(int month, int year) throws ZPAParseException, IOException {
+	public Schedule getMonthPlan(int month, int year) throws ParseException, IOException {
 		int currentDay = 1;
 
 		Calendar calendar = Calendar.getInstance();

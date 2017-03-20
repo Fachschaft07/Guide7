@@ -9,6 +9,9 @@
             android:id="@+id/drawer_action_schedule"
             android:title="@string/navigation_drawer_item_schedule"/>
         <item
+            android:id="@+id/drawer_action_menu"
+            android:title="@string/navigation_drawer_item_menu"/>
+        <item
             android:id="@+id/drawer_action_roomsearch"
             android:title="@string/navigation_drawer_item_roomsearch"/>
         <!--<item

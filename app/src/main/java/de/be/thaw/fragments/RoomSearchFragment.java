@@ -4,18 +4,12 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.RectF;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,37 +20,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import com.alamkanak.weekview.DateTimeInterpreter;
-import com.alamkanak.weekview.MonthLoader;
-import com.alamkanak.weekview.WeekView;
-import com.alamkanak.weekview.WeekViewEvent;
-
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
 
-import de.be.thaw.EventDetailActivity;
 import de.be.thaw.R;
-import de.be.thaw.auth.Authentication;
-import de.be.thaw.auth.Credential;
-import de.be.thaw.cache.ScheduleUtil;
-import de.be.thaw.model.ScheduleEvent;
 import de.be.thaw.model.freerooms.Room;
-import de.be.thaw.model.schedule.Schedule;
-import de.be.thaw.model.schedule.ScheduleDay;
-import de.be.thaw.model.schedule.ScheduleItem;
-import de.be.thaw.ui.AlertDialogManager;
-import de.be.thaw.ui.ProgressDialogManager;
-import de.be.thaw.util.Refreshable;
-import de.be.thaw.util.ThawUtil;
-import de.be.thaw.util.TimeUtil;
-import de.be.thaw.zpa.ZPAConnection;
-import de.be.thaw.zpa.exception.ZPABadCredentialsException;
-import de.be.thaw.zpa.exception.ZPALoginFailedException;
+import de.be.thaw.connect.zpa.ZPAConnection;
 
 public class RoomSearchFragment extends Fragment implements MainFragment {
 

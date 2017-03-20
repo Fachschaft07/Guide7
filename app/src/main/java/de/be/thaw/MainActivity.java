@@ -29,6 +29,7 @@ import de.be.thaw.auth.Authentication;
 import de.be.thaw.auth.CertificateUtil;
 import de.be.thaw.exception.ExceptionHandler;
 import de.be.thaw.fragments.InfoFragment;
+import de.be.thaw.fragments.MenuFragment;
 import de.be.thaw.fragments.NoticeBoardFragment;
 import de.be.thaw.fragments.MainFragment;
 import de.be.thaw.fragments.RoomSearchFragment;
@@ -130,6 +131,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 		if (menu != null) {
 			setIcon(menu, R.id.drawer_action_blackboard, FontAwesomeIcons.fa_newspaper_o, R.color.drawer_icon_color);
 			setIcon(menu, R.id.drawer_action_schedule, FontAwesomeIcons.fa_table, R.color.drawer_icon_color);
+			setIcon(menu, R.id.drawer_action_menu, FontAwesomeIcons.fa_cutlery, R.color.drawer_icon_color);
 			setIcon(menu, R.id.drawer_action_roomsearch, FontAwesomeIcons.fa_search, R.color.drawer_icon_color);
 			//setIcon(menu, R.id.drawer_action_settings, FontAwesomeIcons.fa_cogs, R.color.drawer_icon_color);
 
@@ -245,6 +247,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 				case R.id.drawer_action_roomsearch:
 					RoomSearchFragment roomSearchFragment = RoomSearchFragment.newInstance();
 					selectItem(roomSearchFragment, item.getTitle());
+					break;
+
+				case R.id.drawer_action_menu:
+					MenuFragment menuFragment = MenuFragment.newInstance();
+					selectItem(menuFragment, item.getTitle());
 					break;
 
 				/*case R.id.drawer_action_settings:

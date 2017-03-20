@@ -2,18 +2,15 @@ package de.be.thaw.fragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.RectF;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,12 +37,11 @@ import de.be.thaw.model.schedule.ScheduleDay;
 import de.be.thaw.model.schedule.ScheduleItem;
 import de.be.thaw.ui.AlertDialogManager;
 import de.be.thaw.ui.ProgressDialogManager;
-import de.be.thaw.util.Refreshable;
 import de.be.thaw.util.ThawUtil;
 import de.be.thaw.util.TimeUtil;
-import de.be.thaw.zpa.ZPAConnection;
-import de.be.thaw.zpa.exception.ZPABadCredentialsException;
-import de.be.thaw.zpa.exception.ZPALoginFailedException;
+import de.be.thaw.connect.zpa.ZPAConnection;
+import de.be.thaw.connect.zpa.exception.ZPABadCredentialsException;
+import de.be.thaw.connect.zpa.exception.ZPALoginFailedException;
 
 public class WeekPlanFragment extends Fragment implements MainFragment {
 

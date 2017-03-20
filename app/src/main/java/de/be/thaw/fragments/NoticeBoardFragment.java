@@ -8,9 +8,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
-import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,11 +21,10 @@ import java.io.IOException;
 
 import de.be.thaw.R;
 import de.be.thaw.cache.BoardUtil;
-import de.be.thaw.model.freerooms.Room;
 import de.be.thaw.model.noticeboard.BoardEntry;
 import de.be.thaw.util.ThawUtil;
-import de.be.thaw.zpa.ZPAConnection;
-import de.be.thaw.zpa.parser.NoticeBoardParser;
+import de.be.thaw.connect.zpa.ZPAConnection;
+import de.be.thaw.connect.parser.NoticeBoardParser;
 
 public class NoticeBoardFragment extends Fragment implements MainFragment {
 
@@ -36,6 +34,11 @@ public class NoticeBoardFragment extends Fragment implements MainFragment {
 	 * Object containing the items for the list view.
 	 */
 	private ArrayAdapter<BoardEntry> boardAdapter;
+
+	/**
+	 * Layout responsible for pull to refresh.
+	 */
+	private SwipeRefreshLayout swipeContainer;
 
 	public NoticeBoardFragment() {
 		// Required empty public constructor
@@ -84,6 +87,20 @@ public class NoticeBoardFragment extends Fragment implements MainFragment {
 		boardAdapter = new BoardArrayAdapter(getActivity());
 
 		// Initialize Views
+		swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.boardlist_swipe_layout);
+		swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+
+			@Override
+			public void onRefresh() {
+				refresh();
+			}
+
+		});
+		swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+				android.R.color.holo_green_light,
+				android.R.color.holo_orange_light,
+				android.R.color.holo_red_light);
+
 		ListView boardList = (ListView) view.findViewById(R.id.boardlist);
 		boardList.setAdapter(boardAdapter);
 
@@ -143,7 +160,10 @@ public class NoticeBoardFragment extends Fragment implements MainFragment {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			progress.show();
+
+			if (!swipeContainer.isRefreshing()) {
+				progress.show();
+			}
 		}
 
 		@Override
@@ -168,6 +188,8 @@ public class NoticeBoardFragment extends Fragment implements MainFragment {
 			if (progress.isShowing()) {
 				progress.dismiss();
 			}
+
+			swipeContainer.setRefreshing(false);
 		}
 
 		@Override
@@ -177,6 +199,8 @@ public class NoticeBoardFragment extends Fragment implements MainFragment {
 			if (progress.isShowing()) {
 				progress.dismiss();
 			}
+
+			swipeContainer.setRefreshing(false);
 
 			if (e != null) {
 				new AlertDialog.Builder(activity).setMessage(activity.getResources().getString(R.string.boardEntrySearchError)).show();

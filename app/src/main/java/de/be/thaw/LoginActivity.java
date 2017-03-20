@@ -23,8 +23,8 @@ import de.be.thaw.auth.Authentication;
 import de.be.thaw.auth.CertificateUtil;
 import de.be.thaw.auth.Credential;
 import de.be.thaw.exception.ExceptionHandler;
-import de.be.thaw.zpa.ZPAConnection;
-import de.be.thaw.zpa.exception.ZPABadCredentialsException;
+import de.be.thaw.connect.zpa.ZPAConnection;
+import de.be.thaw.connect.zpa.exception.ZPABadCredentialsException;
 
 public class LoginActivity extends AppCompatActivity {
 

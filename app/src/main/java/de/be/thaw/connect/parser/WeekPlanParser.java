@@ -1,6 +1,5 @@
-package de.be.thaw.zpa.parser;
+package de.be.thaw.connect.parser;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,17 +11,17 @@ import org.jsoup.nodes.Element;
 import org.jsoup.safety.Whitelist;
 import org.jsoup.select.Elements;
 
+import de.be.thaw.connect.parser.exception.ParseException;
 import de.be.thaw.model.schedule.Schedule;
 import de.be.thaw.model.schedule.ScheduleDay;
 import de.be.thaw.model.schedule.ScheduleItem;
-import de.be.thaw.zpa.exception.ZPAParseException;
 
 /**
  * Parser parsing the week plan from ZPA.
  * 
  * @author Benjamin Eder
  */
-public class WeekPlanParser implements ZPAParser<Schedule> {
+public class WeekPlanParser implements Parser<Schedule> {
 
 	/**
 	 * Class for the Week Plan Table
@@ -48,7 +47,7 @@ public class WeekPlanParser implements ZPAParser<Schedule> {
 	public static final SimpleDateFormat TIME_PARSER = new SimpleDateFormat("HH:mm");
 	
 	@Override
-	public Schedule parse(Document doc) throws ZPAParseException {
+	public Schedule parse(Document doc) throws ParseException {
 		Element tableBody = getTableBodyElement(doc);
 		Elements planDays = getPlanDays(tableBody);
 		
@@ -65,9 +64,9 @@ public class WeekPlanParser implements ZPAParser<Schedule> {
 	 * Parse a HTML Day Element.
 	 * @param dayElement
 	 * @return
-	 * @throws ZPAParseException
+	 * @throws ParseException
 	 */
-	private ScheduleDay parseDay(Element dayElement) throws ZPAParseException {
+	private ScheduleDay parseDay(Element dayElement) throws ParseException {
 		Date date = getDateFromDayElement(dayElement);
 
 		List<ScheduleItem> items = new ArrayList<>();
@@ -107,8 +106,8 @@ public class WeekPlanParser implements ZPAParser<Schedule> {
 							end.setYear(date.getYear());
 							end.setMonth(date.getMonth());
 							end.setDate(date.getDate());
-						} catch (ParseException e) {
-							throw new ZPAParseException(e);
+						} catch (java.text.ParseException e) {
+							throw new ParseException(e);
 						}
 
 
@@ -122,7 +121,7 @@ public class WeekPlanParser implements ZPAParser<Schedule> {
 
 						items.add(new ScheduleItem(title, description, start, end));
 					} else {
-						throw new ZPAParseException("Ambiguous Item Content.");
+						throw new ParseException("Ambiguous Item Content.");
 					}
 				}
 			}
@@ -165,11 +164,11 @@ public class WeekPlanParser implements ZPAParser<Schedule> {
 	 * @param dayElement
 	 * @return
 	 */
-	private Date getDateFromDayElement(Element dayElement) throws ZPAParseException {
+	private Date getDateFromDayElement(Element dayElement) throws ParseException {
 		try {
 			return DATE_PARSER.parse(dayElement.attr("id"));
-		} catch (ParseException e) {
-			throw new ZPAParseException(e);
+		} catch (java.text.ParseException e) {
+			throw new ParseException(e);
 		}
 	}
 	
@@ -177,13 +176,13 @@ public class WeekPlanParser implements ZPAParser<Schedule> {
 	 * Get Days from table body
 	 * @param tableBody
 	 * @return
-	 * @throws ZPAParseException
+	 * @throws ParseException
 	 */
-	private Elements getPlanDays(Element tableBody) throws ZPAParseException {
+	private Elements getPlanDays(Element tableBody) throws ParseException {
 		Elements possibleDayElements = tableBody.getElementsByClass(TABLE_DAY_CLASS);
 		
 		if (possibleDayElements == null || possibleDayElements.isEmpty()) {
-			throw new ZPAParseException("Could not parse days from table body.");
+			throw new ParseException("Could not parse days from table body.");
 		}
 		
 		return possibleDayElements;
@@ -193,9 +192,9 @@ public class WeekPlanParser implements ZPAParser<Schedule> {
 	 * Get the table body element.
 	 * @param doc
 	 * @return
-	 * @throws ZPAParseException
+	 * @throws ParseException
 	 */
-	private Element getTableBodyElement(Document doc) throws ZPAParseException {
+	private Element getTableBodyElement(Document doc) throws ParseException {
 		Elements possibleElements = doc.getElementsByClass(TABLE_PLAN_CLASS);
 		
 		for (int i = 0; i < possibleElements.size(); i++) {
@@ -205,7 +204,7 @@ public class WeekPlanParser implements ZPAParser<Schedule> {
 			}
 		}
 		
-		throw new ZPAParseException("Could not parse the table body element.");
+		throw new ParseException("Could not parse the table body element.");
 	}
 	
 }

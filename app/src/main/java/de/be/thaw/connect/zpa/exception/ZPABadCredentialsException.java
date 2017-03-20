@@ -1,4 +1,4 @@
-package de.be.thaw.zpa.exception;
+package de.be.thaw.connect.zpa.exception;
 
 public class ZPABadCredentialsException extends Exception {
 
