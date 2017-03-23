@@ -6,11 +6,29 @@
         android:title="@string/weekplan_group">
 
         <android.support.v7.preference.ListPreference
-            android:defaultValue="1"
             android:title="@string/displayedDays"
-            android:key="displayedDaysPref"
-            android:entries="@array/displayableDaysArray"
-            android:entryValues="@array/displayableDaysArrayValues"/>
+            android:summary="@string/displayedDaysSummary"
+            android:key="displayedDaysPrefKey"
+            android:defaultValue="2"
+            android:entries="@array/displayableDaysValues"
+            android:entryValues="@array/displayableDaysArray"/>
+
+        <android.support.v7.preference.SwitchPreferenceCompat
+            android:title="@string/staticScheduleNotification"
+            android:summary="@string/staticScheduleNotificationSummary"
+            android:key="staticScheduleNotificationKey"
+            android:defaultValue="false"/>
+
+    </android.support.v7.preference.PreferenceCategory>
+
+    <android.support.v7.preference.PreferenceCategory
+        android:title="@string/noticeboard_group">
+
+        <android.support.v7.preference.SwitchPreferenceCompat
+            android:title="@string/noticeboard_notification_prop"
+            android:summary="@string/noticeboard_notification_prop_summary"
+            android:key="noticeboardNotificationKey"
+            android:defaultValue="true"/>
 
     </android.support.v7.preference.PreferenceCategory>
 

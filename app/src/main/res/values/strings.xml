@@ -14,6 +14,7 @@
     <!-- Week Plan -->
     <string name="loadingMessage">Downloading schedule...</string>
     <string name="refresh">Refresh</string>
+    <string name="staticEventNotificationTitle">Next event</string>
 
     <!-- Room Search -->
     <string name="from">from</string>
@@ -50,6 +51,12 @@
     <!-- Settings -->
     <string name="weekplan_group">Schedule</string>
     <string name="displayedDays">Displayed days</string>
+    <string name="displayedDaysSummary">How many days should be shown in the schedule</string>
+    <string name="staticScheduleNotification">Static event notification</string>
+    <string name="staticScheduleNotificationSummary">Shows a static notification showing the next event</string>
+    <string name="noticeboard_group">Notice board</string>
+    <string name="noticeboard_notification_prop">Change notification</string>
+    <string name="noticeboard_notification_prop_summary">Shows a notification once the notice board changes.</string>
 
     <!-- Info -->
     <string name="libraries">Libraries</string>

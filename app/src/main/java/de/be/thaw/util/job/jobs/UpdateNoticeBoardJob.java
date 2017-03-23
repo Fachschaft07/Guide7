@@ -5,10 +5,13 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
+import android.support.v7.preference.PreferenceManager;
 
 import com.evernote.android.job.Job;
+import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobRequest;
 
 import java.io.IOException;
@@ -31,6 +34,7 @@ import de.be.thaw.connect.zpa.ZPAConnection;
 public class UpdateNoticeBoardJob extends Job {
 
 	public static final String TAG = "UpdateNoticeBoardJob";
+	public static final int NOTIFICATION_ID = 1;
 
 	@NonNull
 	@Override
@@ -110,19 +114,34 @@ public class UpdateNoticeBoardJob extends Job {
 						.setAutoCancel(true);
 
 		NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-		notificationManager.notify(1, notificationBuilder.build());
+		notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
 	}
 
 	/**
 	 * Schedule the job to be executed.
 	 */
 	public static void scheduleJob() {
-		new JobRequest.Builder(UpdateNoticeBoardJob.TAG)
+		new JobRequest.Builder(TAG)
 				.setPeriodic(TimeUnit.MINUTES.toMillis(60), TimeUnit.MINUTES.toMillis(10))
 				.setRequiredNetworkType(JobRequest.NetworkType.CONNECTED)
 				.setUpdateCurrent(true)
 				.build()
 				.schedule();
+	}
+
+	/**
+	 * Cancel this job.
+	 */
+	public static void cancelJob() {
+		JobManager.instance().cancelAllForTag(TAG);
+	}
+
+	/**
+	 * Return whether this job is activated (Activatable via settings by user).
+	 * @return
+	 */
+	public static boolean isActivated(Context context) {
+		return PreferenceManager.getDefaultSharedPreferences(context).getBoolean("noticeboardNotificationKey", true);
 	}
 
 }

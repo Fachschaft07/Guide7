@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +39,7 @@ import de.be.thaw.model.schedule.ScheduleDay;
 import de.be.thaw.model.schedule.ScheduleItem;
 import de.be.thaw.ui.AlertDialogManager;
 import de.be.thaw.ui.ProgressDialogManager;
+import de.be.thaw.ui.weekview.WeeklyLoader;
 import de.be.thaw.util.ThawUtil;
 import de.be.thaw.util.TimeUtil;
 import de.be.thaw.connect.zpa.ZPAConnection;
@@ -48,6 +51,11 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 	private static final String TAG = "WeekPlanFragment";
 	private static final double START_HOUR = 7.0;
 	private static final String DATE_CACHE = "de.be.thaw.dateCache";
+
+	/**
+	 * Amount of displayable days.
+	 */
+	private int displayableDays = -1;
 
 	private WeekView weekView;
 
@@ -132,6 +140,19 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 	}
 
 	/**
+	 * Get Amount of displayable days from settings.
+	 *
+	 * @return
+	 */
+	private int getDisplayableDays() {
+		if (displayableDays == -1) {
+			displayableDays = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(getContext()).getString("displayedDaysPrefKey", "2"));
+		}
+
+		return displayableDays;
+	}
+
+	/**
 	 * Initialize Week Plan.
 	 */
 	private void initialize(View view) {
@@ -140,6 +161,9 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 
 		// Initially go to start hour to hide earlier hours.
 		weekView.goToHour(START_HOUR);
+		weekView.setNumberOfVisibleDays(getDisplayableDays());
+
+		weekView.setWeekViewLoader(new WeeklyLoader(new ZPAWeekChangeListener()));
 
 		// Set an action when any event is clicked.
 		weekView.setOnEventClickListener(new WeekView.EventClickListener() {
@@ -160,7 +184,11 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 
 			@Override
 			public String interpretDate(Calendar date) {
-				return TimeUtil.getDateString(date);
+				if (getDisplayableDays() > 2) {
+					return TimeUtil.getShortDateString(date);
+				} else {
+					return TimeUtil.getDateString(date);
+				}
 			}
 
 			@Override
@@ -169,10 +197,6 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 			}
 
 		});
-
-		// The week view has infinite scrolling horizontally. We have to provide the events of a
-		// month every time the month changes on the week view.
-		weekView.setMonthChangeListener(new ZPAMonthChangeListener());
 
 		// Set long press listener for events.
 		weekView.setEventLongPressListener(new WeekView.EventLongPressListener() {
@@ -190,11 +214,12 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 	 *
 	 * @param year
 	 * @param month
+	 * @param week
 	 * @throws ExecutionException
 	 * @throws InterruptedException
 	 */
-	private void refreshSchedule(int year, int month) throws ExecutionException, InterruptedException {
-		new LoadScheduleTask(getActivity(), alertDialogManager, progressDialogManager, weekView).execute(year, month);
+	private void refreshSchedule(int year, int month, int week) throws ExecutionException, InterruptedException {
+		new LoadScheduleTask(getActivity(), alertDialogManager, progressDialogManager, weekView).execute(year, month, week);
 	}
 
 	/**
@@ -213,6 +238,7 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 
 		private int year;
 		private int month;
+		private int week;
 
 		public LoadScheduleTask(Activity activity, AlertDialogManager alertDialogManager, ProgressDialogManager progress, WeekView weekView) {
 			this.activity = activity;
@@ -234,6 +260,7 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 		protected Schedule doInBackground(Integer... params) {
 			year = params[0];
 			month = params[1];
+			week = params[2];
 
 			Credential credential = Authentication.getCredential(getActivity());
 
@@ -247,12 +274,14 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 			}
 
 			Schedule schedule = null;
-			try {
-				schedule = connection.getMonthPlan(month, year);
-			} catch (Exception e) {
-				e.printStackTrace();
+			if (connection != null) {
+				try {
+					schedule = connection.getWeekplan(year, month, week);
+				} catch (Exception e) {
+					e.printStackTrace();
 
-				error = e;
+					error = e;
+				}
 			}
 
 			return schedule;
@@ -269,7 +298,7 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 			super.onCancelled(schedule);
 
 			if (progress.isShowing()) {
-				progress.dismiss();
+				progress.cancel();
 			}
 		}
 
@@ -297,7 +326,7 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 			if (schedule != null) {
 				// Write Schedule to Cache
 				try {
-					ScheduleUtil.store(schedule, getActivity(), year, month);
+					ScheduleUtil.store(schedule, getActivity(), year, month, week);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -314,22 +343,22 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 	/**
 	 * Month Changelistener to load months from ZPA.
 	 */
-	private class ZPAMonthChangeListener implements MonthLoader.MonthChangeListener {
+	private class ZPAWeekChangeListener implements WeeklyLoader.WeekChangeListener {
 
 		@Override
-		public List<? extends WeekViewEvent> onMonthChange(int newYear, int newMonth) {
+		public List<? extends WeekViewEvent> onWeekChange(int newYear, int newMonth, int newWeek) {
 			ArrayList<ScheduleEvent> events = new ArrayList<>();
 
 			Schedule schedule = null;
 			try {
-				schedule = ScheduleUtil.retrieve(getActivity(), newYear, newMonth);
+				schedule = ScheduleUtil.retrieve(getActivity(), newYear, newMonth, newWeek);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 
 			if (schedule == null) {
 				try {
-					refreshSchedule(newYear, newMonth);
+					refreshSchedule(newYear, newMonth, newWeek);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

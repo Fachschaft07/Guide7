@@ -28,6 +28,7 @@ public class ProgressDialogManager {
 				if (addOnCancelListeners != null) {
 					for (DialogInterface.OnCancelListener l : addOnCancelListeners) {
 						l.onCancel(dialog);
+						dialogsShown = 0;
 					}
 				}
 			}
@@ -47,6 +48,12 @@ public class ProgressDialogManager {
 		dialogsShown--;
 
 		if (dialogsShown == 0 && dialog.isShowing()) {
+			dialog.dismiss();
+		}
+	}
+
+	public void cancel() {
+		if (dialog.isShowing()) {
 			dialog.dismiss();
 		}
 	}

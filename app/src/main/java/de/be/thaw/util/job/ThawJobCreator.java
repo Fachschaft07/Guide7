@@ -3,6 +3,7 @@ package de.be.thaw.util.job;
 import com.evernote.android.job.Job;
 import com.evernote.android.job.JobCreator;
 
+import de.be.thaw.util.job.jobs.StaticWeekPlanNotificationJob;
 import de.be.thaw.util.job.jobs.UpdateNoticeBoardJob;
 
 /**
@@ -17,6 +18,9 @@ public class ThawJobCreator implements JobCreator {
 		switch (tag) {
 			case UpdateNoticeBoardJob.TAG:
 				return new UpdateNoticeBoardJob();
+
+			case StaticWeekPlanNotificationJob.TAG:
+				return new StaticWeekPlanNotificationJob();
 
 			// Add more here if you need another background job! :)
 

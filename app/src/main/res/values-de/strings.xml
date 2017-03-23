@@ -5,7 +5,7 @@
     <string name="developer_email">barny.eder@gmail.com</string>
 
     <!-- Login -->
-    <string name="passwordHint">Password</string>
+    <string name="passwordHint">Passwort</string>
     <string name="usernameHint">Nutzerkennung</string>
     <string name="loginButtonLabel">Anmelden</string>
     <string name="loginRequestLabel">Gib deine ZPA Anmeldedaten ein.</string>
@@ -15,6 +15,7 @@
     <!-- Week Plan -->
     <string name="loadingMessage">Stundenplan wird heruntergeladen...</string>
     <string name="refresh">Aktualisieren</string>
+    <string name="staticEventNotificationTitle">Nächste Vorlesung</string>
 
     <!-- Room Search -->
     <string name="from">von</string>
@@ -51,6 +52,12 @@
     <!-- Settings -->
     <string name="weekplan_group">Stundenplan</string>
     <string name="displayedDays">Anzuzeigende Tage</string>
+    <string name="displayedDaysSummary">Wie viele Tage im Stundenplan auf einmal zu sehen sind</string>
+    <string name="staticScheduleNotification">Statische Vorlesungs Benachrichtigung</string>
+    <string name="staticScheduleNotificationSummary">Zeigt eine statische Benachrichtigung mit der nächste Vorlesung</string>
+    <string name="noticeboard_group">Schwarzes Brett</string>
+    <string name="noticeboard_notification_prop">Änderungsbenachrichtigung</string>
+    <string name="noticeboard_notification_prop_summary">Zeigt eine Benachrichtigung falls das Schwarze Brett sich geändert hat</string>
 
     <!-- Info -->
     <string name="libraries">Bibliotheken</string>

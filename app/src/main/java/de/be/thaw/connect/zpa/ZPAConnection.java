@@ -271,6 +271,25 @@ public class ZPAConnection {
 	}
 
 	/**
+	 * Get Schedule for a week.
+	 *
+	 * @param year
+	 * @param month
+	 * @param week
+	 * @return
+	 * @throws IOException
+	 */
+	public Schedule getWeekplan(int year, int month, int week) throws ParseException, IOException {
+		Calendar cal = Calendar.getInstance();
+		cal.clear();
+		cal.set(Calendar.YEAR, year);
+		cal.set(Calendar.MONTH, month);
+		cal.set(Calendar.WEEK_OF_YEAR, week);
+
+		return getWeekplan(buildDateString(cal.get(Calendar.DAY_OF_MONTH) + 1, month - 1, year, WeekPlanParser.DATE_PARSER));
+	}
+
+	/**
 	 * Get the schedule of a whole month!
 	 * @param month
 	 * @param year

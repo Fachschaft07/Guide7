@@ -14,9 +14,9 @@
         <item
             android:id="@+id/drawer_action_roomsearch"
             android:title="@string/navigation_drawer_item_roomsearch"/>
-        <!--<item
+        <item
             android:id="@+id/drawer_action_settings"
-            android:title="@string/navigation_drawer_item_settings"/>-->
+            android:title="@string/navigation_drawer_item_settings"/>
     </group>
 
     <item android:title="@string/navigation_drawer_info">

@@ -1,5 +1,6 @@
 package de.be.thaw;
 
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.v4.app.FragmentManager;
 import android.content.Intent;
@@ -10,6 +11,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,9 +37,10 @@ import de.be.thaw.fragments.MainFragment;
 import de.be.thaw.fragments.RoomSearchFragment;
 import de.be.thaw.fragments.SettingsFragment;
 import de.be.thaw.fragments.WeekPlanFragment;
+import de.be.thaw.util.job.jobs.StaticWeekPlanNotificationJob;
 import de.be.thaw.util.job.jobs.UpdateNoticeBoardJob;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
 	/**
 	 * Key used to store the currently selected item in the instance.
@@ -96,8 +99,38 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 	 * Method where you can define jobs to be run in the background.
 	 */
 	private void initializeJobs() {
-		// Recurring Task which updates the notice board!
-		UpdateNoticeBoardJob.scheduleJob();
+		if (UpdateNoticeBoardJob.isActivated(this)) {
+			// Recurring Task which updates the notice board!
+			UpdateNoticeBoardJob.scheduleJob();
+		}
+
+		if (StaticWeekPlanNotificationJob.isActivated(this)) {
+			StaticWeekPlanNotificationJob.scheduleJob();
+		}
+
+		// Issue change listener to react to preference changes.
+		PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
+	}
+
+	@Override
+	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+		if (key.equals("noticeboardNotificationKey")) {
+			boolean activated = sharedPreferences.getBoolean(key, true);
+
+			if (activated) {
+				UpdateNoticeBoardJob.scheduleJob();
+			} else {
+				UpdateNoticeBoardJob.cancelJob();
+			}
+		} else if (key.equals("staticScheduleNotificationKey")) {
+			boolean activated = sharedPreferences.getBoolean(key, false);
+
+			if (activated) {
+				StaticWeekPlanNotificationJob.scheduleJob();
+			} else {
+				StaticWeekPlanNotificationJob.cancelJob(this);
+			}
+		}
 	}
 
 	/**
@@ -133,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 			setIcon(menu, R.id.drawer_action_schedule, FontAwesomeIcons.fa_table, R.color.drawer_icon_color);
 			setIcon(menu, R.id.drawer_action_menu, FontAwesomeIcons.fa_cutlery, R.color.drawer_icon_color);
 			setIcon(menu, R.id.drawer_action_roomsearch, FontAwesomeIcons.fa_search, R.color.drawer_icon_color);
-			//setIcon(menu, R.id.drawer_action_settings, FontAwesomeIcons.fa_cogs, R.color.drawer_icon_color);
+			setIcon(menu, R.id.drawer_action_settings, FontAwesomeIcons.fa_cogs, R.color.drawer_icon_color);
 
 			setIcon(menu, R.id.drawer_action_datapolicy, FontAwesomeIcons.fa_paragraph, R.color.drawer_icon_color);
 			setIcon(menu, R.id.drawer_action_info, FontAwesomeIcons.fa_info_circle, R.color.drawer_icon_color);
@@ -254,10 +287,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 					selectItem(menuFragment, item.getTitle());
 					break;
 
-				/*case R.id.drawer_action_settings:
+				case R.id.drawer_action_settings:
 					SettingsFragment settingsFragment = SettingsFragment.newInstance();
 					selectItem(settingsFragment, item.getTitle());
-					break;*/
+					break;
 
 				case R.id.drawer_action_datapolicy:
 					Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(DATA_POLICY_URL));
