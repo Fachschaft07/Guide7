@@ -283,7 +283,6 @@ public class ZPAConnection {
 		Calendar cal = Calendar.getInstance();
 		cal.clear();
 		cal.set(Calendar.YEAR, year);
-		cal.set(Calendar.MONTH, month);
 		cal.set(Calendar.WEEK_OF_YEAR, week);
 
 		return getWeekplan(buildDateString(cal.get(Calendar.DAY_OF_MONTH) + 1, month - 1, year, WeekPlanParser.DATE_PARSER));
