@@ -29,12 +29,12 @@ public class MenuParser implements Parser<Menu[]> {
 
 	@Override
 	public Menu[] parse(Document doc) throws ParseException {
-		Elements elements = doc.getElementsByClass("menu"); // Get all menu elements
+		Elements elements = doc.getElementsByClass("c-schedule__item"); // Get all menu elements
 
 		List<Menu> menus = new ArrayList<>();
 		for (Element element : elements) {
 			// Get Headline containing the menus date.
-			Elements headlineElements = element.getElementsByClass("headline");
+			Elements headlineElements = element.getElementsByClass("c-schedule__header");
 			Element headlineElm = null;
 			for (Element headlineElement : headlineElements) {
 				if (headlineElement.childNodeSize() > 0) {
@@ -44,7 +44,7 @@ public class MenuParser implements Parser<Menu[]> {
 			}
 
 			// Parse date of menu
-			String headline = headlineElm.children().get(0).children().get(0).text();
+			String headline = headlineElm.children().get(0).text();
 			Date date = null;
 			try {
 				date = DATE_FORMAT.parse(headline);
@@ -54,7 +54,7 @@ public class MenuParser implements Parser<Menu[]> {
 
 
 			// Parse Meals
-			Elements mealElements = element.getElementsByClass("beschreibung");
+			Elements mealElements = element.getElementsByClass("c-schedule__description");
 
 			List<Meal> meals = new ArrayList<>();
 			for (Element mealElement : mealElements) {
@@ -64,16 +64,17 @@ public class MenuParser implements Parser<Menu[]> {
 					throw new ParseException("Meal name cannot be empty.");
 				}
 
+				Elements meatlessElements = mealElement.getElementsByClass("fleischlos");
+				Elements veganElements = mealElement.getElementsByClass("vegan");
+
 				// Parse MealInfo
 				MealInfo mealInfo = null;
-				if (name.contains("mit Fleisch")) {
-					mealInfo = MealInfo.MEAT;
-				} else if (name.contains("vegan")) {
+				if (veganElements != null && !veganElements.isEmpty()) {
 					mealInfo = MealInfo.VEGAN;
-				} else if (name.contains("fleischlos")) {
+				} else if (meatlessElements != null && !meatlessElements.isEmpty()) {
 					mealInfo = MealInfo.MEATLESS;
 				} else {
-					mealInfo = MealInfo.MEAT; // I just suppose there is meat. There has to be! ;D
+					mealInfo = MealInfo.MEAT;
 				}
 
 				// Parse Allergens

@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.preference.PreferenceManager;
+import android.util.Log;
 
 import com.evernote.android.job.Job;
 import com.evernote.android.job.JobManager;
@@ -15,6 +16,7 @@ import com.evernote.android.job.JobRequest;
 
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -42,6 +44,14 @@ public class StaticWeekPlanNotificationJob extends Job {
 	public static final String TAG = "StaticWeekPlanNotificationJob";
 	public static final int NOTIFICATION_ID = 2;
 
+	/**
+	 * How much time to wait after a event happend before searching for the next event.
+	 * (in minutes). (At least one!)
+	 */
+	private static final int BUFFER = 1;
+
+	private static int runningJobId = -1;
+
 	@NonNull
 	@Override
 	protected Result onRunJob(Params params) {
@@ -53,8 +63,8 @@ public class StaticWeekPlanNotificationJob extends Job {
 			schedule = ScheduleUtil.retrieve(getContext(), cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.WEEK_OF_YEAR));
 		} catch (IOException e) {
 			e.printStackTrace();
-			return Result.FAILURE;
 		}
+
 
 		Calendar eventCal = Calendar.getInstance();
 		ScheduleItem event = null;
@@ -82,11 +92,13 @@ public class StaticWeekPlanNotificationJob extends Job {
 		issueNotification(event);
 
 		// Reschedule job
+		runningJobId = -1;
 		if (event != null) {
-			eventCal.setTime(event.getEnd());
-			scheduleJob(eventCal.getTimeInMillis() - cal.getTimeInMillis());
+			eventCal.setTime(event.getStart());
+
+			scheduleJob(eventCal.getTimeInMillis() - cal.getTimeInMillis() + TimeUnit.MINUTES.toMillis(BUFFER));
 		} else {
-			scheduleJob(TimeUnit.HOURS.toMillis(5));
+			scheduleJob(TimeUnit.HOURS.toMillis(1));
 		}
 
 		return Result.SUCCESS;
@@ -131,10 +143,12 @@ public class StaticWeekPlanNotificationJob extends Job {
 	 * @param millisToWait
 	 */
 	private static void scheduleJob(long millisToWait) {
-		new JobRequest.Builder(TAG)
-				.setExact(millisToWait)
-				.build()
-				.schedule();
+		if (runningJobId == -1) {
+			runningJobId = new JobRequest.Builder(TAG)
+					.setExact(millisToWait)
+					.build()
+					.schedule();
+		}
 	}
 
 	/**
@@ -142,6 +156,8 @@ public class StaticWeekPlanNotificationJob extends Job {
 	 */
 	public static void cancelJob(Context context) {
 		JobManager.instance().cancelAllForTag(TAG);
+
+		runningJobId = -1;
 
 		// Cancel notification
 		NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
