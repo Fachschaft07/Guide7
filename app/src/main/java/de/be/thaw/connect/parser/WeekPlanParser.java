@@ -45,6 +45,8 @@ public class WeekPlanParser implements Parser<Schedule> {
 
 	public static final SimpleDateFormat DATE_PARSER = new SimpleDateFormat("dd.MM.yyyy");
 	public static final SimpleDateFormat TIME_PARSER = new SimpleDateFormat("HH:mm");
+
+	private static final String CANCEL_NOTICE = "Fällt aus";
 	
 	@Override
 	public Schedule parse(Document doc) throws ParseException {
@@ -88,6 +90,14 @@ public class WeekPlanParser implements Parser<Schedule> {
 						String headerText = getHeaderFromItemElement(header);
 						String contentText = getContentFromItemElement(content);
 
+						boolean isCancelled = false;
+
+						if (headerText.contains(CANCEL_NOTICE)) {
+							isCancelled = true;
+
+							headerText = headerText.substring(0, headerText.indexOf(CANCEL_NOTICE)).trim();
+						}
+
 						String[] splittedHeader = headerText.split(" ");
 						String endDate = splittedHeader[splittedHeader.length - 1];
 						String startDate = splittedHeader[splittedHeader.length - 3];
@@ -119,7 +129,7 @@ public class WeekPlanParser implements Parser<Schedule> {
 							description += splittedContent[a];
 						}
 
-						items.add(new ScheduleItem(title, description, start, end));
+						items.add(new ScheduleItem(title, description, start, end, isCancelled));
 					} else {
 						throw new ParseException("Ambiguous Item Content.");
 					}

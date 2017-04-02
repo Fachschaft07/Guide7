@@ -5,4 +5,5 @@
     <color name="colorAccent">#FF4081</color>
     <color name="actionBar_icon_color">#FFFFFF</color>
     <color name="drawer_icon_color">#000</color>
+    <color name="eventColorCancelled">#525252</color>
 </resources>

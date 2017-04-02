@@ -16,6 +16,7 @@
     <string name="loadingMessage">Stundenplan wird heruntergeladen...</string>
     <string name="refresh">Aktualisieren</string>
     <string name="staticEventNotificationTitle">Nächste Vorlesung</string>
+    <string name="eventCancelled">FÄLLT AUS</string>
 
     <!-- Room Search -->
     <string name="from">von</string>

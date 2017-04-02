@@ -370,7 +370,14 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 					if (day != null) {
 						for (ScheduleItem item : day.getItems()) {
 							if (item != null) {
-								events.add(new ScheduleEvent(item));
+								ScheduleEvent event = new ScheduleEvent(item);
+
+								if (item.isEventCancelled()) {
+									event.setColor(getResources().getColor(R.color.eventColorCancelled));
+									item.setTitle(getResources().getString(R.string.eventCancelled) + " " + item.getTitle());
+								}
+
+								events.add(event);
 							}
 						}
 					}

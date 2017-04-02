@@ -8,6 +8,7 @@ import com.alamkanak.weekview.WeekViewEvent;
 import java.util.Calendar;
 import java.util.Date;
 
+import de.be.thaw.R;
 import de.be.thaw.model.schedule.ScheduleItem;
 import de.be.thaw.util.ThawUtil;
 
@@ -17,15 +18,15 @@ import de.be.thaw.util.ThawUtil;
 public class ScheduleEvent extends WeekViewEvent implements Parcelable {
 
 	private static int ID_COUNTER = 0;
+	private ScheduleItem item;
 
 	public ScheduleEvent(ScheduleItem item) {
 		setId(ID_COUNTER);
 		ID_COUNTER++;
 
-		setName(item.getTitle());
+		this.item = item;
 
-		setLocation(item.getDescription());
-
+		// Initialize Calendars
 		Calendar startTime = Calendar.getInstance();
 		startTime.setTime(item.getStart());
 		setStartTime(startTime);
@@ -35,17 +36,25 @@ public class ScheduleEvent extends WeekViewEvent implements Parcelable {
 		setEndTime(endTime);
 	}
 
+	@Override
+	public String getName() {
+		return item.getTitle();
+	}
+
+	@Override
+	public String getLocation() {
+		return item.getDescription();
+	}
+
 	protected ScheduleEvent(Parcel in) {
-		setName(in.readString());
-		setLocation(in.readString());
+		item = (ScheduleItem) in.readValue(getClass().getClassLoader());
 		setStartTime((Calendar) in.readValue(getClass().getClassLoader()));
 		setEndTime((Calendar) in.readValue(getClass().getClassLoader()));
 	}
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeString(getName());
-		dest.writeString(getLocation());
+		dest.writeValue(item);
 		dest.writeValue(getStartTime());
 		dest.writeValue(getEndTime());
 	}

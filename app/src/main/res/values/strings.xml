@@ -15,6 +15,7 @@
     <string name="loadingMessage">Downloading schedule...</string>
     <string name="refresh">Refresh</string>
     <string name="staticEventNotificationTitle">Next event</string>
+    <string name="eventCancelled">CANCELLED</string>
 
     <!-- Room Search -->
     <string name="from">from</string>
