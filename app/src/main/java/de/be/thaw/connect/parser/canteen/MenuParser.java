@@ -44,7 +44,7 @@ public class MenuParser implements Parser<Menu[]> {
 			}
 
 			// Parse date of menu
-			String headline = headlineElm.children().get(0).text();
+			String headline = headlineElm.getElementsByTag("span").get(0).text();
 			Date date = null;
 			try {
 				date = DATE_FORMAT.parse(headline);

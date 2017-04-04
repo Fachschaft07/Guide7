@@ -75,12 +75,14 @@ public class StaticWeekPlanNotificationJob extends Job {
 				if (cal.get(Calendar.DAY_OF_MONTH) == eventCal.get(Calendar.DAY_OF_MONTH)) {
 					long difference = Long.MAX_VALUE;
 					for (ScheduleItem item : day.getItems()) {
-						eventCal.setTime(item.getStart());
+						if (!item.isEventCancelled()) {
+							eventCal.setTime(item.getStart());
 
-						long newDiff = eventCal.getTimeInMillis() - cal.getTimeInMillis();
-						if (newDiff > 0 && newDiff < difference) {
-							event = item;
-							difference = newDiff;
+							long newDiff = eventCal.getTimeInMillis() - cal.getTimeInMillis();
+							if (newDiff > 0 && newDiff < difference) {
+								event = item;
+								difference = newDiff;
+							}
 						}
 					}
 					break;

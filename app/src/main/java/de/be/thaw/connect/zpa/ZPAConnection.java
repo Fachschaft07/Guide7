@@ -73,6 +73,11 @@ public class ZPAConnection {
 	public static final String ZPA_STUDENT_PUBLIC_PLAN_SUFFIX = "student/public_plan/";
 
 	/**
+	 * Suffix for the personal notice board.
+	 */
+	public static final String ZPA_STUDENT_NOTICE_BOARD = "student/notice_board/";
+
+	/**
 	 * Suffix for the public notice board.
 	 */
 	public static final String ZPA_PUBLIC_NOTICE_BOARD = "public/notice_board/";
