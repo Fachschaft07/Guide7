@@ -168,6 +168,7 @@ public class ZPAConnection {
 		}
 
 		Log.i(ZPA_CONNECTION_TAG, "ZPA Login OK!");
+
 		return true;
 	}
 
@@ -190,17 +191,26 @@ public class ZPAConnection {
 	}
 
 	/**
-	 * Get all valid notice board entries.
+	 * Get all private board news.
+	 *
 	 * @return
 	 */
 	public BoardEntry[] getBoardNews() throws IOException, ParseException {
-		Document doc = connection.url(ZPA_URL + ZPA_PUBLIC_NOTICE_BOARD).get();
+		return getBoardNews(true);
+	}
 
-		Parser<BoardEntry[]> boardParser = new NoticeBoardParser();
+	/**
+	 * Get all notice board entries (Either personal entries or public ones).
+	 * You need to be logged in for personal entries.
+	 *
+	 * @param personal Personal board entries or public ones?
+	 * @return
+	 */
+	public BoardEntry[] getBoardNews(boolean personal) throws IOException, ParseException {
+		Document doc = getZPAUrl(personal ? ZPA_STUDENT_NOTICE_BOARD : ZPA_PUBLIC_NOTICE_BOARD);
 
-		Menu[] menu = new StudentenwerkConnection().getMenus();
-
-		return boardParser.parse(doc);
+		Parser<BoardEntry[]> parser = new NoticeBoardParser();
+		return parser.parse(doc);
 	}
 
 	/**
@@ -374,16 +384,11 @@ public class ZPAConnection {
 	 * Get a Document from the ZPA with the passed URL.
 	 *
 	 * @param suffix
-	 * @param parameter
 	 * @return
 	 * @throws IOException
 	 */
-	public Document getZPAUrl(String suffix, Map<String, String> parameter) throws IOException {
-		Document doc = connection.url(ZPA_URL + suffix).data(parameter).get();
-
-		updateMiddleWareToken(doc);
-
-		return doc;
+	private Document getZPAUrl(String suffix) throws IOException {
+		return connection.url(ZPA_URL + suffix).get();
 	}
 
 	/**

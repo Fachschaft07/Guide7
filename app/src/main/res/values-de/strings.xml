@@ -17,6 +17,8 @@
     <string name="refresh">Aktualisieren</string>
     <string name="staticEventNotificationTitle">Nächste Vorlesung</string>
     <string name="eventCancelled">FÄLLT AUS</string>
+    <string name="showCancelledEventsTitle">Ausfallende Vorlesungen anzeigen</string>
+    <string name="showCancelledEventsSummary">Zeigt ausgefallene Vorlesungen in einer anderen Farbe an.</string>
 
     <!-- Room Search -->
     <string name="from">von</string>

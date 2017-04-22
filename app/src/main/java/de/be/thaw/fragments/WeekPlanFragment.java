@@ -38,6 +38,7 @@ import de.be.thaw.model.schedule.Schedule;
 import de.be.thaw.model.schedule.ScheduleDay;
 import de.be.thaw.model.schedule.ScheduleItem;
 import de.be.thaw.ui.AlertDialogManager;
+import de.be.thaw.ui.LoadSnackbar;
 import de.be.thaw.ui.ProgressDialogManager;
 import de.be.thaw.ui.weekview.WeeklyLoader;
 import de.be.thaw.util.ThawUtil;
@@ -59,7 +60,7 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 
 	private WeekView weekView;
 
-	private ProgressDialogManager progressDialogManager;
+	private LoadSnackbar loadSnackbar;
 	private AlertDialogManager alertDialogManager;
 
 	public WeekPlanFragment() {
@@ -85,7 +86,6 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 		progressDialog.setIndeterminate(true);
 		progressDialog.setMessage(getResources().getString(R.string.loadingMessage));
 
-		progressDialogManager = new ProgressDialogManager(progressDialog);
 		alertDialogManager = new AlertDialogManager(new AlertDialog.Builder(getActivity()).create());
 	}
 
@@ -153,6 +153,30 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 	}
 
 	/**
+	 * Whether to show cancelled events.
+	 *
+	 * @return
+	 */
+	private boolean showCancelledEvents() {
+		return PreferenceManager.getDefaultSharedPreferences(getContext()).getBoolean("showCancelledEvents", true);
+	}
+
+	/**
+	 * Get the appropriate color for a weekplan item.
+	 *
+	 * @param item
+	 * @return
+	 */
+	private int getColorForItem(ScheduleItem item) {
+		if (item.isEventCancelled()) {
+			return getResources().getColor(R.color.eventColorCancelled);
+		} else {
+			// Default color
+			return getResources().getColor(R.color.colorPrimary);
+		}
+	}
+
+	/**
 	 * Initialize Week Plan.
 	 */
 	private void initialize(View view) {
@@ -203,10 +227,13 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 
 			@Override
 			public void onEventLongPress(WeekViewEvent event, RectF eventRect) {
-				Snackbar.make(getActivity().findViewById(R.id.app_bar_main), event.getName(), Snackbar.LENGTH_SHORT).show();
+				// Do nothing just now. Maybe someones gettin' a great idea about this.
+				// Snackbar.make(getActivity().findViewById(R.id.content_frame), event.getName(), Snackbar.LENGTH_SHORT).show();
 			}
 
 		});
+
+		loadSnackbar = new LoadSnackbar(Snackbar.make(getActivity().findViewById(R.id.content_frame), "Stundenplan wird heruntergeladen...", Snackbar.LENGTH_INDEFINITE));
 	}
 
 	/**
@@ -219,7 +246,7 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 	 * @throws InterruptedException
 	 */
 	private void refreshSchedule(int year, int month, int week) throws ExecutionException, InterruptedException {
-		new LoadScheduleTask(getActivity(), alertDialogManager, progressDialogManager, weekView).execute(year, month, week);
+		new LoadScheduleTask(getActivity(), alertDialogManager, weekView, loadSnackbar).execute(year, month, week);
 	}
 
 	/**
@@ -227,10 +254,10 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 	 */
 	private class LoadScheduleTask extends AsyncTask<Integer, Integer, Schedule> {
 
-		private final ProgressDialogManager progress;
 		private final AlertDialogManager alertDialogManager;
 
 		private final WeekView weekView;
+		private final LoadSnackbar snackbar;
 
 		private final Activity activity;
 
@@ -240,20 +267,11 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 		private int month;
 		private int week;
 
-		public LoadScheduleTask(Activity activity, AlertDialogManager alertDialogManager, ProgressDialogManager progress, WeekView weekView) {
+		public LoadScheduleTask(Activity activity, AlertDialogManager alertDialogManager, WeekView weekView, LoadSnackbar snackbar) {
 			this.activity = activity;
 			this.weekView = weekView;
-			this.progress = progress;
 			this.alertDialogManager = alertDialogManager;
-
-			progress.addOnCancelListener(new DialogInterface.OnCancelListener() {
-
-				@Override
-				public void onCancel(DialogInterface dialog) {
-					cancel(true);
-				}
-
-			});
+			this.snackbar = snackbar;
 		}
 
 		@Override
@@ -290,25 +308,22 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			progress.show();
+
+			snackbar.show();
 		}
 
 		@Override
 		protected void onCancelled(Schedule schedule) {
 			super.onCancelled(schedule);
 
-			if (progress.isShowing()) {
-				progress.cancel();
-			}
+			snackbar.dismiss();
 		}
 
 		@Override
 		protected void onPostExecute(Schedule schedule) {
 			super.onPostExecute(schedule);
 
-			if (progress.isShowing()) {
-				progress.dismiss();
-			}
+			snackbar.dismiss();
 
 			if (error != null) {
 				// Show error
@@ -368,16 +383,21 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 				// Create Events
 				for (ScheduleDay day : schedule.getWeekdays()) {
 					if (day != null) {
+
+
 						for (ScheduleItem item : day.getItems()) {
 							if (item != null) {
 								ScheduleEvent event = new ScheduleEvent(item);
+								event.setColor(getColorForItem(item));
 
 								if (item.isEventCancelled()) {
-									event.setColor(getResources().getColor(R.color.eventColorCancelled));
-									item.setTitle(getResources().getString(R.string.eventCancelled) + " " + item.getTitle());
+									if (showCancelledEvents()) {
+										item.setTitle(getResources().getString(R.string.eventCancelled) + " " + item.getTitle());
+										events.add(event);
+									}
+								} else {
+									events.add(event);
 								}
-
-								events.add(event);
 							}
 						}
 					}
@@ -386,7 +406,6 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 
 			return events;
 		}
-
 	}
 
 }

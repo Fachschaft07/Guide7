@@ -32,11 +32,11 @@ public class Authentication {
 	/**
 	 * Save Credential to shared preferences.
 	 *
-	 * @param activity
+	 * @param context
 	 * @param credential
 	 */
-	public static void saveCredential(Activity activity, Credential credential) {
-		SharedPreferences sharedPref = activity.getSharedPreferences(ThawUtil.SHARED_PREFS, Context.MODE_PRIVATE);
+	public static void saveCredential(Context context, Credential credential) {
+		SharedPreferences sharedPref = context.getSharedPreferences(ThawUtil.SHARED_PREFS, Context.MODE_PRIVATE);
 
 		String encryptedUsername = null;
 		String encryptedPassword = null;
@@ -60,11 +60,11 @@ public class Authentication {
 	/**
 	 * Fetch credential from shared preferences.
 	 *
-	 * @param activity
+	 * @param context
 	 * @return The stored credentials (ATTENTION: Might be empty. Check by calling isEmpty() on Credentials)
 	 */
-	public static Credential getCredential(Activity activity) {
-		SharedPreferences sharedPref = activity.getSharedPreferences(ThawUtil.SHARED_PREFS, Context.MODE_PRIVATE);
+	public static Credential getCredential(Context context) {
+		SharedPreferences sharedPref = context.getSharedPreferences(ThawUtil.SHARED_PREFS, Context.MODE_PRIVATE);
 
 		String encryptedUsername = sharedPref.getString(USERNAME_KEY, "");
 		String encryptedPassword = sharedPref.getString(PASSWORD_KEY, "");

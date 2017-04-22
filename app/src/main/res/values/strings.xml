@@ -16,6 +16,8 @@
     <string name="refresh">Refresh</string>
     <string name="staticEventNotificationTitle">Next event</string>
     <string name="eventCancelled">CANCELLED</string>
+    <string name="showCancelledEventsTitle">Show cancelled lectures.</string>
+    <string name="showCancelledEventsSummary">Shows cancelled lectures in another color.</string>
 
     <!-- Room Search -->
     <string name="from">from</string>

@@ -30,7 +30,11 @@
             app:nowLineColor="@color/colorAccent"
             app:showNowLine="true"
             app:textSize="12sp"
-            app:todayBackgroundColor="#1848adff"/>
+            app:todayBackgroundColor="#1848adff"
+            app:todayHeaderTextColor="@color/colorAccent"
+            app:showDistinctPastFutureColor="true"
+            app:showDistinctWeekendColor="true"
+            app:futureWeekendBackgroundColor="@color/weekViewWeekEndColor"/>
 
     </RelativeLayout>
 

@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#009688</color>
+    <color name="colorPrimaryDark">#00796b</color>
+    <color name="colorAccent">#ff5722</color>
     <color name="actionBar_icon_color">#FFFFFF</color>
     <color name="drawer_icon_color">#000</color>
+
+    <!-- WeekView Colors -->
     <color name="eventColorCancelled">#525252</color>
+    <color name="weekViewWeekEndColor">#E6E6E6</color>
 </resources>

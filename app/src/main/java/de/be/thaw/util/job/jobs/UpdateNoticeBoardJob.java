@@ -21,7 +21,11 @@ import java.util.concurrent.TimeUnit;
 
 import de.be.thaw.MainActivity;
 import de.be.thaw.R;
+import de.be.thaw.auth.Authentication;
+import de.be.thaw.auth.Credential;
 import de.be.thaw.cache.BoardUtil;
+import de.be.thaw.connect.zpa.exception.ZPABadCredentialsException;
+import de.be.thaw.connect.zpa.exception.ZPALoginFailedException;
 import de.be.thaw.model.noticeboard.BoardEntry;
 import de.be.thaw.connect.zpa.ZPAConnection;
 
@@ -40,10 +44,11 @@ public class UpdateNoticeBoardJob extends Job {
 	@Override
 	protected Result onRunJob(Params params) {
 		// Fetch new notice board entries!
-		ZPAConnection connection = new ZPAConnection();
+		Credential credentials = Authentication.getCredential(getContext());
 
 		BoardEntry[] entries = null;
 		try {
+			ZPAConnection connection = new ZPAConnection(credentials.getUsername(), credentials.getPassword());
 			entries = connection.getBoardNews();
 		} catch (Exception e) {
 			e.printStackTrace();

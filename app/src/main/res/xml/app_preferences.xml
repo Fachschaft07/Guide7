@@ -19,6 +19,12 @@
             android:key="staticScheduleNotificationKey"
             android:defaultValue="false"/>
 
+        <android.support.v7.preference.SwitchPreferenceCompat
+            android:title="@string/showCancelledEventsTitle"
+            android:summary="@string/showCancelledEventsSummary"
+            android:key="showCancelledEvents"
+            android:defaultValue="true"/>
+
     </android.support.v7.preference.PreferenceCategory>
 
     <android.support.v7.preference.PreferenceCategory
