@@ -19,6 +19,10 @@
     <string name="showCancelledEventsTitle">Show cancelled lectures.</string>
     <string name="showCancelledEventsSummary">Shows cancelled lectures in another color.</string>
 
+    <!-- Deadlines and Appointments -->
+    <string name="appointmentLoadingError">An error occurred. :(</string>
+    <string name="searchingForAppointments">Searching for appointments...</string>
+
     <!-- Room Search -->
     <string name="from">from</string>
     <string name="to">to</string>
@@ -77,6 +81,7 @@
     <string name="navigation_drawer_info">Information</string>
     <string name="navigation_drawer_item_blackboard">Notice board</string>
     <string name="navigation_drawer_item_schedule">Schedule</string>
+    <string name="navigation_drawer_item_appointments">Appointments</string>
     <string name="navigation_drawer_item_menu">Canteen Menu</string>
     <string name="navigation_drawer_item_roomsearch">Room search</string>
     <string name="navigation_drawer_item_settings">Settings</string>

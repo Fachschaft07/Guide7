@@ -20,6 +20,10 @@
     <string name="showCancelledEventsTitle">Ausfallende Vorlesungen anzeigen</string>
     <string name="showCancelledEventsSummary">Zeigt ausgefallene Vorlesungen in einer anderen Farbe an.</string>
 
+    <!-- Deadlines and Appointments -->
+    <string name="appointmentLoadingError">Es ist ein Fehler aufgetreten. :(</string>
+    <string name="searchingForAppointments">Termine werden gesucht...</string>
+
     <!-- Room Search -->
     <string name="from">von</string>
     <string name="to">bis</string>
@@ -78,6 +82,7 @@
     <string name="navigation_drawer_info">Informationen</string>
     <string name="navigation_drawer_item_blackboard">Schwarzes Brett</string>
     <string name="navigation_drawer_item_schedule">Stundenplan</string>
+    <string name="navigation_drawer_item_appointments">Termine</string>
     <string name="navigation_drawer_item_menu">Speiseplan</string>
     <string name="navigation_drawer_item_roomsearch">Raumsuche</string>
     <string name="navigation_drawer_item_settings">Einstellungen</string>

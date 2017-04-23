@@ -280,7 +280,7 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 			month = params[1];
 			week = params[2];
 
-			Credential credential = Authentication.getCredential(getActivity());
+			Credential credential = Authentication.getCredential(activity);
 
 			ZPAConnection connection = null;
 			try {
@@ -341,7 +341,7 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 			if (schedule != null) {
 				// Write Schedule to Cache
 				try {
-					ScheduleUtil.store(schedule, getActivity(), year, month, week);
+					ScheduleUtil.store(schedule, activity, year, month, week);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

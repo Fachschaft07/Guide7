@@ -30,6 +30,7 @@ import java.security.cert.CertificateException;
 import de.be.thaw.auth.Authentication;
 import de.be.thaw.auth.CertificateUtil;
 import de.be.thaw.exception.ExceptionHandler;
+import de.be.thaw.fragments.AppointmentFragment;
 import de.be.thaw.fragments.InfoFragment;
 import de.be.thaw.fragments.MenuFragment;
 import de.be.thaw.fragments.NoticeBoardFragment;
@@ -164,6 +165,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 		if (menu != null) {
 			setIcon(menu, R.id.drawer_action_blackboard, FontAwesomeIcons.fa_newspaper_o, R.color.drawer_icon_color);
 			setIcon(menu, R.id.drawer_action_schedule, FontAwesomeIcons.fa_table, R.color.drawer_icon_color);
+			setIcon(menu, R.id.drawer_action_appointments, FontAwesomeIcons.fa_calendar, R.color.drawer_icon_color);
 			setIcon(menu, R.id.drawer_action_menu, FontAwesomeIcons.fa_cutlery, R.color.drawer_icon_color);
 			setIcon(menu, R.id.drawer_action_roomsearch, FontAwesomeIcons.fa_search, R.color.drawer_icon_color);
 			setIcon(menu, R.id.drawer_action_settings, FontAwesomeIcons.fa_cogs, R.color.drawer_icon_color);
@@ -275,6 +277,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 				case R.id.drawer_action_schedule:
 					WeekPlanFragment weekPlanFragment = WeekPlanFragment.newInstance();
 					selectItem(weekPlanFragment, item.getTitle());
+					break;
+
+				case R.id.drawer_action_appointments:
+					AppointmentFragment appointmentFragment = AppointmentFragment.newInstance();
+					selectItem(appointmentFragment, item.getTitle());
 					break;
 
 				case R.id.drawer_action_roomsearch:

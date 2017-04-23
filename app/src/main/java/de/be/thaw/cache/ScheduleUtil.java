@@ -36,17 +36,19 @@ public class ScheduleUtil {
 	 * @param week
 	 */
 	public static void store(Schedule schedule, Context context, int year, int month, int week) throws IOException {
-		ObjectMapper mapper = new ObjectMapper();
-		String scheduleJson = mapper.writeValueAsString(schedule);
+		if (context != null) {
+			ObjectMapper mapper = new ObjectMapper();
+			String scheduleJson = mapper.writeValueAsString(schedule);
 
-		File scheduleStorage = new File(context.getFilesDir(), getFileName(year, month, week));
-		FileWriter writer = new FileWriter(scheduleStorage, false);
+			File scheduleStorage = new File(context.getFilesDir(), getFileName(year, month, week));
+			FileWriter writer = new FileWriter(scheduleStorage, false);
 
-		writer.write(scheduleJson); // Write Schedule to file.
+			writer.write(scheduleJson); // Write Schedule to file.
 
-		writer.close();
+			writer.close();
 
-		Log.i(TAG, "Stored Schedule to file. Year: " + year + " Month: " + month + " Week: " + week);
+			Log.i(TAG, "Stored Schedule to file. Year: " + year + " Month: " + month + " Week: " + week);
+		}
 	}
 
 	/**
@@ -58,17 +60,19 @@ public class ScheduleUtil {
 	 * @return
 	 */
 	public static Schedule retrieve(Context context, int year, int month, int week) throws IOException {
-		File scheduleStorage = new File(context.getFilesDir(), getFileName(year, month, week));
+		if (context != null) {
+			File scheduleStorage = new File(context.getFilesDir(), getFileName(year, month, week));
 
-		if (scheduleStorage.exists()) {
-			ObjectMapper mapper = new ObjectMapper();
-			Schedule schedule = mapper.readValue(scheduleStorage, Schedule.class);
+			if (scheduleStorage.exists()) {
+				ObjectMapper mapper = new ObjectMapper();
+				Schedule schedule = mapper.readValue(scheduleStorage, Schedule.class);
 
-			Log.i(TAG, "Retrieved stored Schedule from file. Year: " + year + " Month: " + month + " Week: " + week);
-			return schedule;
-		} else {
-			return null;
+				Log.i(TAG, "Retrieved stored Schedule from file. Year: " + year + " Month: " + month + " Week: " + week);
+				return schedule;
+			}
 		}
+
+		return null;
 	}
 
 	/**
@@ -87,23 +91,25 @@ public class ScheduleUtil {
 	 * @param context
 	 */
 	public static void clear(Context context) {
-		File internalDir = context.getFilesDir();
+		if (context != null) {
+			File internalDir = context.getFilesDir();
 
-		// Get all cache files
-		File[] cacheFiles = internalDir.listFiles(new FileFilter() {
+			// Get all cache files
+			File[] cacheFiles = internalDir.listFiles(new FileFilter() {
 
-			@Override
-			public boolean accept(File file) {
-				return file.getName().contains(SCHEDULE_FILE);
+				@Override
+				public boolean accept(File file) {
+					return file.getName().contains(SCHEDULE_FILE);
+				}
+
+			});
+
+			for (File file : cacheFiles) {
+				file.delete();
 			}
 
-		});
-
-		for (File file : cacheFiles) {
-			file.delete();
+			Log.i(TAG, "Cleared Schedule cache files.");
 		}
-
-		Log.i(TAG, "Cleared Schedule cache files.");
 	}
 
 }
