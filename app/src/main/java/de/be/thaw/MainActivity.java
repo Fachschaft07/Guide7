@@ -15,11 +15,19 @@ import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
+import com.joanzapata.iconify.widget.IconButton;
+import com.joanzapata.iconify.widget.IconTextView;
+
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.security.KeyManagementException;
@@ -27,8 +35,11 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 
-import de.be.thaw.auth.Authentication;
+import de.be.thaw.auth.Auth;
 import de.be.thaw.auth.CertificateUtil;
+import de.be.thaw.auth.User;
+import de.be.thaw.auth.exception.AuthException;
+import de.be.thaw.auth.exception.NoUserStoredException;
 import de.be.thaw.exception.ExceptionHandler;
 import de.be.thaw.fragments.AppointmentFragment;
 import de.be.thaw.fragments.InfoFragment;
@@ -39,6 +50,7 @@ import de.be.thaw.fragments.RoomSearchFragment;
 import de.be.thaw.fragments.SettingsFragment;
 import de.be.thaw.fragments.WeekPlanFragment;
 import de.be.thaw.util.job.jobs.StaticWeekPlanNotificationJob;
+import de.be.thaw.util.job.jobs.UpcomingAppointmentNotificationJob;
 import de.be.thaw.util.job.jobs.UpdateNoticeBoardJob;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, SharedPreferences.OnSharedPreferenceChangeListener {
@@ -88,9 +100,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 		// Check if there is an initial fragment to call set in the extra.
 		if (getIntent().hasExtra(CALL_FRAGMENT_EXTRA)) {
 			selectFragmentById(getIntent().getIntExtra(CALL_FRAGMENT_EXTRA, INITIAL_FRAGMENT));
-		}
-
-		if (savedInstanceState == null) {
+		} else if (savedInstanceState == null) {
 			// Set Start Fragment
 			selectInitialFragment();
 		}
@@ -107,6 +117,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 		if (StaticWeekPlanNotificationJob.isActivated(this)) {
 			StaticWeekPlanNotificationJob.scheduleJob();
+		}
+
+		if (UpcomingAppointmentNotificationJob.isActivated(this)) {
+			UpcomingAppointmentNotificationJob.scheduleJob();
 		}
 
 		// Issue change listener to react to preference changes.
@@ -131,6 +145,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 			} else {
 				StaticWeekPlanNotificationJob.cancelJob(this);
 			}
+		} else if (key.equals("upcomingAppointmentNotification")) {
+			boolean activated = sharedPreferences.getBoolean(key, false);
+
+			if (activated) {
+				UpcomingAppointmentNotificationJob.scheduleJob();
+			} else {
+				UpcomingAppointmentNotificationJob.cancelJob();
+			}
 		}
 	}
 
@@ -153,7 +175,57 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 		navigationView = (NavigationView) findViewById(R.id.nav_view);
 		navigationView.setNavigationItemSelectedListener(this);
 
+		// Get logged in user.
+		try {
+			final User user = Auth.getInstance().getCurrentUser(this);
+
+			final IconTextView drawerHeaderText = (IconTextView) navigationView.getHeaderView(0).findViewById(R.id.nav_header_text);
+
+			drawerHeaderText.post(new Runnable() {
+
+				@Override
+				public void run() {
+					drawerHeaderText.setText("{fa-user} " + getResources().getString(R.string.welcome) + " " + user.getName() + " (" + user.getGroup() + ")");
+				}
+
+			});
+
+			// Modify drawer header to not overlap the status bar.
+			LinearLayout layout = (LinearLayout) navigationView.getHeaderView(0).findViewById(R.id.nav_header_layout);
+			LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) layout.getLayoutParams();
+			layoutParams.setMargins(layoutParams.leftMargin, getStatusBarHeight(), layoutParams.rightMargin, layoutParams.bottomMargin);
+			layout.setLayoutParams(layoutParams);
+
+			IconButton signoutButton = (IconButton) navigationView.getHeaderView(0).findViewById(R.id.nav_header_signout);
+			signoutButton.setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View view) {
+					performLogout();
+				}
+
+			});
+		} catch (NoUserStoredException e) {
+			e.printStackTrace();
+		}
+
 		initializeIcons(navigationView.getMenu());
+	}
+
+
+
+	/**
+	 * Get height of the status bar.
+	 *
+	 * @return
+	 */
+	private int getStatusBarHeight() {
+		int result = 0;
+		int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+		if (resourceId > 0) {
+			result = getResources().getDimensionPixelSize(resourceId);
+		}
+		return result;
 	}
 
 	/**
@@ -172,8 +244,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 			setIcon(menu, R.id.drawer_action_datapolicy, FontAwesomeIcons.fa_paragraph, R.color.drawer_icon_color);
 			setIcon(menu, R.id.drawer_action_info, FontAwesomeIcons.fa_info_circle, R.color.drawer_icon_color);
-
-			setIcon(menu, R.id.drawer_action_logout, FontAwesomeIcons.fa_sign_out, R.color.drawer_icon_color);
 		}
 	}
 
@@ -309,10 +379,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 					selectItem(infoFragment, item.getTitle());
 					break;
 
-				case R.id.drawer_action_logout:
-					performLogout();
-					break;
-
 				default:
 					break;
 			}
@@ -397,7 +463,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 	 */
 	private void performLogout() {
 		// Logout
-		Authentication.clearCredential(this);
+		try {
+			Auth.getInstance().clearCurrentUser(this);
+		} catch (AuthException e) {
+			e.printStackTrace();
+		}
 
 		// Return to Login Activity
 		Intent intent = new Intent(this, LoginActivity.class);

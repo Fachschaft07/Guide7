@@ -35,12 +35,4 @@
         </menu>
     </item>
 
-    <item android:title="@string/navigation_drawer_other">
-        <menu>
-            <item
-                android:id="@+id/drawer_action_logout"
-                android:title="@string/navigation_drawer_item_logout"/>
-        </menu>
-    </item>
-
 </menu>

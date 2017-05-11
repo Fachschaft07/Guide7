@@ -19,9 +19,12 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 
-import de.be.thaw.auth.Authentication;
+import de.be.thaw.auth.Auth;
 import de.be.thaw.auth.CertificateUtil;
 import de.be.thaw.auth.Credential;
+import de.be.thaw.auth.User;
+import de.be.thaw.auth.exception.NoUserStoredException;
+import de.be.thaw.auth.exception.UserStoreException;
 import de.be.thaw.exception.ExceptionHandler;
 import de.be.thaw.connect.zpa.ZPAConnection;
 import de.be.thaw.connect.zpa.exception.ZPABadCredentialsException;
@@ -60,10 +63,15 @@ public class LoginActivity extends AppCompatActivity {
 		Intent intent = getIntent();
 		boolean doAutoLogin = intent.getBooleanExtra(AUTO_LOGIN_EXTRA, true);
 
-		// Check for already existant credentials
-		Credential credential = Authentication.getCredential(this);
+		// Check for already existant user.
+		User user = null;
+		try {
+			user = Auth.getInstance().getCurrentUser(this);
+		} catch (NoUserStoredException e) {
+			// There is no credential.
+		}
 
-		if (doAutoLogin && !credential.isEmpty()) {
+		if (doAutoLogin && user != null) {
 			goToMainActivity();
 		}
 
@@ -75,13 +83,10 @@ public class LoginActivity extends AppCompatActivity {
 		usernameField = (EditText) findViewById(R.id.username);
 		passwordField = (EditText) findViewById(R.id.password);
 
-		// Set username and password if any already
-		if (credential.hasUsername()) {
-			usernameField.setText(credential.getUsername());
-		}
-
-		if (credential.hasPassword()) {
-			passwordField.setText(credential.getPassword());
+		// Set username and password if user available.
+		if (user != null) {
+			usernameField.setText(user.getCredential().getUsername());
+			passwordField.setText(user.getCredential().getPassword());
 		}
 	}
 
@@ -89,19 +94,26 @@ public class LoginActivity extends AppCompatActivity {
 		final String username = usernameField.getText().toString();
 		final String password = passwordField.getText().toString();
 
+		final User user = new User(null, null, new Credential(username, password));
+
 		// Try Login
 		new LoginTestTask(this, new Runnable() {
 
 			@Override
 			public void run() {
-				// Save credentials.
-				Credential credential = new Credential(username, password);
-				Authentication.saveCredential(LoginActivity.this, credential);
+				// Save user.
+				try {
+					Auth.getInstance().setCurrentUser(LoginActivity.this, user);
+				} catch (UserStoreException e) {
+					e.printStackTrace();
+				} catch (NoUserStoredException e) {
+					e.printStackTrace();
+				}
 
 				goToMainActivity();
 			}
 
-		}).execute(username, password);
+		}).execute(user);
 	}
 
 	private void goToMainActivity() {
@@ -114,7 +126,7 @@ public class LoginActivity extends AppCompatActivity {
 	/**
 	 * Test Login to ZPA.
 	 */
-	private class LoginTestTask extends AsyncTask<String, Integer, Boolean> {
+	private class LoginTestTask extends AsyncTask<User, Integer, Boolean> {
 
 		private ProgressDialog progress;
 		private Activity activity;
@@ -130,12 +142,13 @@ public class LoginActivity extends AppCompatActivity {
 		}
 
 		@Override
-		protected Boolean doInBackground(String... params) {
+		protected Boolean doInBackground(User... users) {
+			User user = users[0]; // Only one user obviously.
+
 			try {
-				ZPAConnection connection = new ZPAConnection(params[0], params[1]);
+				ZPAConnection connection = new ZPAConnection(user, true);
 			} catch (Exception e) {
 				this.e = e; // Store Exception for later.
-				e.printStackTrace();
 				return false;
 			}
 

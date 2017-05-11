@@ -21,7 +21,7 @@ import de.be.thaw.model.schedule.ScheduleItem;
  * 
  * @author Benjamin Eder
  */
-public class WeekPlanParser implements Parser<Schedule> {
+public class WeekPlanParser implements Parser<WeekPlanParser.ScheduleResult> {
 
 	/**
 	 * Class for the Week Plan Table
@@ -49,17 +49,25 @@ public class WeekPlanParser implements Parser<Schedule> {
 	private static final String CANCEL_NOTICE = "Fällt aus";
 	
 	@Override
-	public Schedule parse(Document doc) throws ParseException {
+	public ScheduleResult parse(Document doc) throws ParseException {
 		Element tableBody = getTableBodyElement(doc);
 		Elements planDays = getPlanDays(tableBody);
 		
 		List<ScheduleDay> scheduleDays = new ArrayList<>();
-		
+
+		boolean parsedCompletely = true;
+
 		for (int i = 0; i < planDays.size(); i++) {
-			scheduleDays.add(parseDay(planDays.get(i)));
+			ScheduleDayResult result = parseDay(planDays.get(i));
+
+			scheduleDays.add(result.getResult());
+
+			if (!result.isParsedCompletely()) {
+				parsedCompletely = false;
+			}
 		}
 		
-		return new Schedule(scheduleDays.toArray(new ScheduleDay[scheduleDays.size()]));
+		return new ScheduleResult(parsedCompletely, new Schedule(scheduleDays.toArray(new ScheduleDay[scheduleDays.size()])));
 	}
 	
 	/**
@@ -68,76 +76,107 @@ public class WeekPlanParser implements Parser<Schedule> {
 	 * @return
 	 * @throws ParseException
 	 */
-	private ScheduleDay parseDay(Element dayElement) throws ParseException {
+	private ScheduleDayResult parseDay(Element dayElement) throws ParseException {
 		Date date = getDateFromDayElement(dayElement);
 
 		List<ScheduleItem> items = new ArrayList<>();
-		
+
 		Elements possibleItems = dayElement.getElementsByTag("div");
-		
+
+		boolean parsedCompletely = true;
 		if (possibleItems != null && !possibleItems.isEmpty()) {
 			for (int i = 0; i < possibleItems.size(); i++) {
 				Element item = possibleItems.get(i);
-				
-				Elements possibleHeaders = item.getElementsByClass(ITEM_HEADER_CLASS);
-				Elements possibleContents = item.getElementsByClass(ITEM_CONTENT_CLASS);
-				
-				if (!possibleHeaders.isEmpty() && !possibleContents.isEmpty()) {
-					if (possibleHeaders.size() == 1 && possibleContents.size() == 1) {
-						Element header = possibleHeaders.get(0);
-						Element content = possibleContents.get(0);
 
-						String headerText = getHeaderFromItemElement(header);
-						String contentText = getContentFromItemElement(content);
+				try {
+					Elements possibleHeaders = item.getElementsByClass(ITEM_HEADER_CLASS);
+					Elements possibleContents = item.getElementsByClass(ITEM_CONTENT_CLASS);
 
-						boolean isCancelled = false;
+					if (!possibleHeaders.isEmpty() && !possibleContents.isEmpty()) {
+						if (possibleHeaders.size() == 1 && possibleContents.size() == 1) {
+							Element header = possibleHeaders.get(0);
+							Element content = possibleContents.get(0);
 
-						if (headerText.contains(CANCEL_NOTICE)) {
-							isCancelled = true;
+							String headerText = getHeaderFromItemElement(header);
+							String contentText = getContentFromItemElement(content);
 
-							headerText = headerText.substring(0, headerText.indexOf(CANCEL_NOTICE)).trim();
-						}
+							boolean isCancelled = false;
 
-						String[] splittedHeader = headerText.split(" ");
-						String endDate = splittedHeader[splittedHeader.length - 1];
-						String startDate = splittedHeader[splittedHeader.length - 3];
+							if (headerText.contains(CANCEL_NOTICE)) {
+								isCancelled = true;
 
+								headerText = headerText.substring(0, headerText.indexOf(CANCEL_NOTICE)).trim();
+							}
 
-						Date start = null;
-						Date end = null;
-						try {
-							start = TIME_PARSER.parse(startDate);
-							end = TIME_PARSER.parse(endDate);
+							Date[] timeNotations = getParsedTimeNotations(headerText);
 
+							if (timeNotations.length != 2) {
+								throw new ParseException("A schedule item needs to have a defined start and end date.");
+							}
+
+							Date start = timeNotations[0];
 							start.setYear(date.getYear());
 							start.setMonth(date.getMonth());
 							start.setDate(date.getDate());
 
+							Date end = timeNotations[1];
 							end.setYear(date.getYear());
 							end.setMonth(date.getMonth());
 							end.setDate(date.getDate());
-						} catch (java.text.ParseException e) {
-							throw new ParseException(e);
+
+
+							// Handle content.
+							String[] splittedContent = contentText.split("\n");
+
+							String title = splittedContent[0];
+							String description = "";
+							for (int a = 1; a < splittedContent.length; a++) {
+								description += splittedContent[a];
+							}
+
+							// Append headertext to title
+							title += " (" + headerText + ")";
+
+							items.add(new ScheduleItem(title, description, start, end, isCancelled));
+						} else {
+							throw new ParseException("Ambiguous Item Content.");
 						}
-
-
-						String[] splittedContent = contentText.split("\n");
-
-						String title = splittedContent[0];
-						String description = "";
-						for (int a = 1; a < splittedContent.length; a++) {
-							description += splittedContent[a];
-						}
-
-						items.add(new ScheduleItem(title, description, start, end, isCancelled));
-					} else {
-						throw new ParseException("Ambiguous Item Content.");
 					}
+				} catch (ParseException e) {
+					e.printStackTrace();
+
+					// The item could not be parsed but continue anyway.
+					parsedCompletely = false; // Notice that it hasn't completed without trouble.
 				}
 			}
 		}
-		
-		return new ScheduleDay(items.toArray(new ScheduleItem[items.size()]), date);
+
+		return new ScheduleDayResult(parsedCompletely, new ScheduleDay(items.toArray(new ScheduleItem[items.size()]), date));
+	}
+
+	/**
+	 * Get all parsable time notations within the passed string.
+	 *
+	 * @param string
+	 * @return
+	 */
+	private Date[] getParsedTimeNotations(String string) {
+		String[] parts = string.split(" "); // Split when approaching a space.
+		List<Date> timeNotations = new ArrayList<>();
+
+		for (String part : parts) {
+			try {
+				Date date = TIME_PARSER.parse(part);
+
+				if (date != null) {
+					timeNotations.add(date);
+				}
+			} catch (java.text.ParseException e) {
+				// Just jump this part.
+			}
+		}
+
+		return timeNotations.toArray(new Date[timeNotations.size()]);
 	}
 
 	/**
@@ -215,6 +254,52 @@ public class WeekPlanParser implements Parser<Schedule> {
 		}
 		
 		throw new ParseException("Could not parse the table body element.");
+	}
+
+	/**
+	 * Schedule day parsing result containing the items and additional information.
+	 */
+	private class ScheduleDayResult {
+
+		private final boolean parsedCompletely;
+		private final ScheduleDay result;
+
+		public ScheduleDayResult(boolean parsedCompletely, ScheduleDay result) {
+			this.parsedCompletely = parsedCompletely;
+			this.result = result;
+		}
+
+		public boolean isParsedCompletely() {
+			return parsedCompletely;
+		}
+
+		public ScheduleDay getResult() {
+			return result;
+		}
+
+	}
+
+	/**
+	 * Result object of the week plan parser.
+	 */
+	public static class ScheduleResult {
+
+		private final boolean parsedCompletely;
+		private final Schedule schedule;
+
+		public ScheduleResult(boolean parsedCompletely, Schedule schedule) {
+			this.parsedCompletely = parsedCompletely;
+			this.schedule = schedule;
+		}
+
+		public boolean isParsedCompletely() {
+			return parsedCompletely;
+		}
+
+		public Schedule getSchedule() {
+			return schedule;
+		}
+
 	}
 	
 }

@@ -5,7 +5,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.preference.PreferenceManager;
@@ -21,11 +20,10 @@ import java.util.concurrent.TimeUnit;
 
 import de.be.thaw.MainActivity;
 import de.be.thaw.R;
-import de.be.thaw.auth.Authentication;
+import de.be.thaw.auth.Auth;
 import de.be.thaw.auth.Credential;
+import de.be.thaw.auth.exception.NoUserStoredException;
 import de.be.thaw.cache.BoardUtil;
-import de.be.thaw.connect.zpa.exception.ZPABadCredentialsException;
-import de.be.thaw.connect.zpa.exception.ZPALoginFailedException;
 import de.be.thaw.model.noticeboard.BoardEntry;
 import de.be.thaw.connect.zpa.ZPAConnection;
 
@@ -44,11 +42,16 @@ public class UpdateNoticeBoardJob extends Job {
 	@Override
 	protected Result onRunJob(Params params) {
 		// Fetch new notice board entries!
-		Credential credentials = Authentication.getCredential(getContext());
+		Credential credential = null;
+		try {
+			credential = Auth.getInstance().getCurrentUser(getContext()).getCredential();
+		} catch (NoUserStoredException e) {
+			e.printStackTrace();
+		}
 
 		BoardEntry[] entries = null;
 		try {
-			ZPAConnection connection = new ZPAConnection(credentials.getUsername(), credentials.getPassword());
+			ZPAConnection connection = new ZPAConnection(credential.getUsername(), credential.getPassword());
 			entries = connection.getBoardNews();
 		} catch (Exception e) {
 			e.printStackTrace();

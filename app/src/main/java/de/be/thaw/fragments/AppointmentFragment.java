@@ -1,5 +1,6 @@
 package de.be.thaw.fragments;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -9,17 +10,19 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import com.joanzapata.iconify.widget.IconTextView;
-
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,11 +32,8 @@ import java.util.List;
 import de.be.thaw.R;
 import de.be.thaw.cache.AppointmentUtil;
 import de.be.thaw.connect.fk07.FK07Connection;
-import de.be.thaw.connect.parser.canteen.MenuParser;
 import de.be.thaw.connect.parser.fk07.AppointmentsParser;
 import de.be.thaw.model.appointments.Appointment;
-import de.be.thaw.model.canteen.Meal;
-import de.be.thaw.model.canteen.Menu;
 
 public class AppointmentFragment extends Fragment implements MainFragment {
 
@@ -42,12 +42,14 @@ public class AppointmentFragment extends Fragment implements MainFragment {
 	/**
 	 * Object containing the items for the list view.
 	 */
-	private ArrayAdapter<Appointment> arrayAdapter;
+	private AppointmentAdapter appointmentAdapter;
 
 	/**
 	 * Layout responsible for pull to refresh.
 	 */
 	private SwipeRefreshLayout swipeContainer;
+
+	private EditText filterField;
 
 	public AppointmentFragment() {
 		// Required empty public constructor
@@ -92,7 +94,7 @@ public class AppointmentFragment extends Fragment implements MainFragment {
 		// Inflate the layout for this fragment
 		View view = inflater.inflate(R.layout.fragment_appointments, container, false);
 
-		arrayAdapter = new AppointmentArrayAdapter(getActivity());
+		appointmentAdapter = new AppointmentAdapter(getActivity());
 
 		// Initialize Views
 		swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.boardlist_swipe_layout);
@@ -110,12 +112,55 @@ public class AppointmentFragment extends Fragment implements MainFragment {
 				android.R.color.holo_red_light);
 
 		ListView boardList = (ListView) view.findViewById(R.id.boardlist);
-		boardList.setAdapter(arrayAdapter);
+		boardList.setAdapter(appointmentAdapter);
+
+
+		final Button resetFilterButton = (Button) view.findViewById(R.id.appointment_filter_remove);
+		resetFilterButton.setVisibility(Button.INVISIBLE);
+		resetFilterButton.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+				onResetFilter(view);
+			}
+
+		});
+
+		filterField = (EditText) view.findViewById(R.id.appointment_filter);
+		filterField.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+				appointmentAdapter.getFilter().filter(charSequence);
+
+				resetFilterButton.setVisibility(charSequence != null && charSequence.length() > 0 ? Button.VISIBLE : Button.INVISIBLE);
+			}
+
+			@Override
+			public void afterTextChanged(Editable editable) {
+
+			}
+
+		});
 
 		// Initialize board list
 		updateAppointments(null);
 
 		return view;
+	}
+
+	/**
+	 * Reset the filter.
+	 *
+	 * @param view
+	 */
+	public void onResetFilter(View view) {
+		filterField.setText("");
 	}
 
 	/**
@@ -147,14 +192,11 @@ public class AppointmentFragment extends Fragment implements MainFragment {
 			List<Appointment> appointmentList = new ArrayList<>();
 
 			Calendar now = Calendar.getInstance();
-			now.set(Calendar.DAY_OF_MONTH, 1);
-			now.set(Calendar.HOUR_OF_DAY, 0);
-			now.set(Calendar.MINUTE, 0);
-			now.set(Calendar.SECOND, 0);
-			now.set(Calendar.MILLISECOND, 0);
+			resetCalendarToMonth(now);
 
 			for (Appointment appointment : appointments) {
-				Calendar appointmentMonth =  appointment.getMonth();
+				Calendar appointmentMonth = appointment.getDate();
+				resetCalendarToMonth(appointmentMonth);
 
 				if (appointmentMonth.getTimeInMillis() - now.getTimeInMillis() >= 0) { // Check if present or future month
 					appointmentList.add(appointment);
@@ -162,9 +204,21 @@ public class AppointmentFragment extends Fragment implements MainFragment {
 			}
 
 			// Apply appointments
-			arrayAdapter.clear();
-			arrayAdapter.addAll(appointmentList);
+			appointmentAdapter.clear();
+			appointmentAdapter.addAll(appointmentList);
 		}
+	}
+
+	/**
+	 * Resets a passed calendar to have nothing but the year and month set.
+	 * @param calendar
+	 */
+	private void resetCalendarToMonth(Calendar calendar) {
+		calendar.set(Calendar.DAY_OF_MONTH, 1);
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
 	}
 
 	/**
@@ -220,7 +274,7 @@ public class AppointmentFragment extends Fragment implements MainFragment {
 		}
 
 		@Override
-		protected void onPostExecute(Appointment[] appointments) {
+		protected void onPostExecute(final Appointment[] appointments) {
 			super.onPostExecute(appointments);
 
 			if (progress.isShowing()) {
@@ -234,22 +288,56 @@ public class AppointmentFragment extends Fragment implements MainFragment {
 			}
 
 			if (appointments != null) {
-				updateAppointments(appointments);
+				getActivity().runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						updateAppointments(appointments);
+					}
+
+				});
 			}
 		}
 
 	}
 
 	/**
-	 * Custom adapter to display menu entries.
+	 * Custom adapter to display appointment entries.
 	 */
-	private class AppointmentArrayAdapter extends ArrayAdapter<Appointment> {
+	private class AppointmentAdapter extends ArrayAdapter<Appointment> implements Filterable {
 
 		private final Context context;
 
-		public AppointmentArrayAdapter(Context context) {
+		/**
+		 * List holding all appointments.
+		 */
+		private List<Appointment> model = new ArrayList<>();
+
+		/**
+		 * List of filtered indices.
+		 */
+		private List<Integer> filtered;
+
+		private Filter filter;
+
+		public AppointmentAdapter(Context context) {
 			super(context, -1);
 			this.context = context;
+		}
+
+		@Override
+		public int getCount() {
+			return filtered == null ? model.size() : filtered.size();
+		}
+
+		@Override
+		public Appointment getItem(int index) {
+			return filtered == null ? model.get(index) : model.get(filtered.get(index));
+		}
+
+		@Override
+		public long getItemId(int index) {
+			return index;
 		}
 
 		@NonNull
@@ -264,11 +352,86 @@ public class AppointmentFragment extends Fragment implements MainFragment {
 			TextView timeSpanView = (TextView) view.findViewById(R.id.appointment_entry_timeSpan);
 			TextView descriptionView = (TextView) view.findViewById(R.id.appointment_entry_description);
 
-			monthView.setText(AppointmentsParser.MONTH_YEAR_FORMAT.format(appointment.getMonth().getTime()));
+			monthView.setText(AppointmentsParser.MONTH_YEAR_FORMAT.format(appointment.getDate().getTime()));
 			timeSpanView.setText(appointment.getTimeSpan());
 			descriptionView.setText(appointment.getDescription());
 
 			return view;
+		}
+
+		@NonNull
+		@Override
+		public Filter getFilter() {
+			if (filter == null) {
+				filter = new AppointmentFilter();
+			}
+
+			return filter;
+		}
+
+		/**
+		 * Clear the Adapter model.
+		 */
+		public void clear() {
+			model.clear();
+		}
+
+		/**
+		 * Add all passed appointments to adapter.
+		 *
+		 * @param appointmentList
+		 */
+		public void addAll(List<Appointment> appointmentList) {
+			model.addAll(appointmentList);
+		}
+
+		/**
+		 * Filter filtering appointments.
+		 */
+		private class AppointmentFilter extends Filter {
+
+			@Override
+			protected FilterResults performFiltering(CharSequence constraint) {
+				FilterResults results = new FilterResults();
+
+				if (constraint == null && constraint.length() == 0) {
+					results.count = 0;
+					results.values = null;
+				} else {
+					String filter = constraint.toString().toLowerCase();
+					List<Integer> filteredIndices = new ArrayList<>();
+
+					for (int i = 0; i < model.size(); i++) {
+						Appointment appointment = model.get(i);
+
+						if (appointment.getDescription().toLowerCase().contains(filter)
+								|| appointment.getTimeSpan().toLowerCase().contains(filter)
+								|| AppointmentsParser.MONTH_YEAR_FORMAT.format(appointment.getDate().getTime()).toLowerCase().contains(filter)) {
+							filteredIndices.add(i);
+						}
+					}
+
+					results.count = filteredIndices.size();
+					results.values = filteredIndices;
+
+					String debugTest = "Found results: \n";
+					for (int result : filteredIndices) {
+						debugTest += model.get(result).getDescription() + "\n";
+					}
+
+					Log.i("FILTERAPPOINTMENTS", debugTest);
+				}
+
+				return results;
+			}
+
+			@Override
+			protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+				Log.i("FILTERAPPOINTMENTS", charSequence + " -> " + filterResults.values);
+				filtered = (List<Integer>) filterResults.values;
+				notifyDataSetChanged();
+			}
+
 		}
 
 	}

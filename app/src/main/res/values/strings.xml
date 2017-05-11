@@ -2,6 +2,9 @@
     <!-- General -->
     <string name="app_name">Guide7</string>
     <string name="developer_email">barny.eder@gmail.com</string>
+    <string name="filter">Filter...</string>
+    <string name="welcome">Welcome</string>
+    <string name="logout">Logout</string>
 
     <!-- Login -->
     <string name="passwordHint">Password</string>
@@ -30,11 +33,6 @@
     <string name="roomSearchError">An error happened while searching for rooms. :(</string>
     <string name="seats">Seats</string>
 
-    <!-- Settings -->
-    <string name="scheduleSettings">Schedule</string>
-    <string name="scheduleView">Schedule display</string>
-    <string name="days">Days</string>
-
     <!-- Notice Board -->
     <string name="currentlyNotAvailableBlackboard">The Notice board is currently not available due to the FI System shutdown.</string>
     <string name="searchingForBoardEntriesMessage">Searching for news...</string>
@@ -42,10 +40,14 @@
     <string name="noticeBoardChangedNotificationTitle">Notice board</string>
     <string name="noticeBoardChangedNotificationMessage">The notice board has been changed, might be worth to take a glimpse!</string>
 
+    <!-- Appointments -->
+    <string name="upcomingAppointmentNotificationTitle">Upcoming appointment</string>
+
     <!-- Error Messages -->
     <string name="loginErrorMessage">Could not login to ZPA. Check that the ZPA System is up and running or maybe there is a problem with your connection.</string>
     <string name="badLoginMessage">The provided username and/or password is wrong.</string>
     <string name="parseMonthPlanErrorMessage">Could not read schedule from ZPA.</string>
+    <string name="weekPlanParsingIncompletely">The schedule could not be read completely. Some lectures might be missing.</string>
 
     <!-- Canteen Menu -->
     <string name="searchingForCanteenMenus">Updating menu...</string>
@@ -56,6 +58,9 @@
     <string name="action_settings">Settings</string>
 
     <!-- Settings -->
+    <string name="scheduleSettings">Schedule</string>
+    <string name="scheduleView">Schedule display</string>
+    <string name="days">Days</string>
     <string name="weekplan_group">Schedule</string>
     <string name="displayedDays">Displayed days</string>
     <string name="displayedDaysSummary">How many days should be shown in the schedule</string>
@@ -64,6 +69,9 @@
     <string name="noticeboard_group">Notice board</string>
     <string name="noticeboard_notification_prop">Change notification</string>
     <string name="noticeboard_notification_prop_summary">Shows a notification once the notice board changes.</string>
+    <string name="appointments_group">Appointments</string>
+    <string name="appointments_notification_title">Upcoming appointment notification (Experimental)</string>
+    <string name="appointments_notification_summary">Get notified about upcoming appointments a day before.</string>
 
     <!-- Info -->
     <string name="libraries">Libraries</string>

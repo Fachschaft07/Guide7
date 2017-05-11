@@ -38,4 +38,15 @@
 
     </android.support.v7.preference.PreferenceCategory>
 
+    <android.support.v7.preference.PreferenceCategory
+        android:title="@string/appointments_group">
+
+        <android.support.v7.preference.SwitchPreferenceCompat
+            android:title="@string/appointments_notification_title"
+            android:summary="@string/appointments_notification_summary"
+            android:key="upcomingAppointmentNotification"
+            android:defaultValue="false"/>
+
+    </android.support.v7.preference.PreferenceCategory>
+
 </android.support.v7.preference.PreferenceScreen>

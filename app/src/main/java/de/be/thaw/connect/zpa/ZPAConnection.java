@@ -22,9 +22,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+import de.be.thaw.auth.User;
 import de.be.thaw.connect.parser.exception.ParseException;
-import de.be.thaw.connect.studentenwerk.StudentenwerkConnection;
-import de.be.thaw.model.canteen.Menu;
 import de.be.thaw.model.freerooms.Room;
 import de.be.thaw.model.noticeboard.BoardEntry;
 import de.be.thaw.model.schedule.Schedule;
@@ -123,6 +122,7 @@ public class ZPAConnection {
 
 	/**
 	 * Create new ZPA Connection
+	 *
 	 * @param username
 	 * @param password
 	 */
@@ -131,15 +131,70 @@ public class ZPAConnection {
 	}
 
 	/**
+	 * Create new ZPA Connection and login using the passed user.
+	 * The passed user will be filled with additional initial info if wished.
+	 *
+	 * @param user     the user to login with.
+	 * @param fillUser fill the user object with additional info?
+	 */
+	public ZPAConnection(User user, boolean fillUser) throws ZPALoginFailedException, ZPABadCredentialsException {
+		login(user, fillUser);
+	}
+
+	/**
+	 * Login with the passed user.
+	 *
+	 * @param user     the user to log in with.
+	 * @param fillUser whether to fill the passed user object with additional info.
+	 * @throws ZPALoginFailedException
+	 * @throws ZPABadCredentialsException
+	 */
+	private void login(User user, boolean fillUser) throws ZPALoginFailedException, ZPABadCredentialsException {
+		Document doc = login(user.getCredential().getUsername(), user.getCredential().getPassword());
+
+		if (fillUser) {
+			fillUser(user, doc);
+		}
+	}
+
+	/**
+	 * Try to fill the user with info from the passed document.
+	 *
+	 * @param user
+	 * @param doc
+	 */
+	private void fillUser(User user, Document doc) {
+		// Parse name and group from zpa header.
+		try {
+			String headerText = doc.getElementsByClass("header").get(0).getElementsByClass("left").text();
+
+			if (headerText != null && !headerText.isEmpty()) {
+				String[] components = headerText.split(" ");
+
+				String name = components[components.length - 3] + " " + components[components.length - 2];
+				user.setName(name);
+
+				String group = components[components.length - 1];
+				group = group.substring(1, group.length() - 1);
+				user.setGroup(group);
+			}
+		} catch (Exception e) {
+			// Do nothing. This should not crash the application.
+		}
+	}
+
+	/**
 	 * Try to login into the ZPA.
 	 *
 	 * @param username
 	 * @param password
+	 * @return the document got for an successful login.
 	 * @throws ZPALoginFailedException
-	 * @return
 	 */
-	public boolean login(String username, String password) throws ZPALoginFailedException, ZPABadCredentialsException {
+	public Document login(String username, String password) throws ZPALoginFailedException, ZPABadCredentialsException {
 		connection = getZPAConnection(ZPA_URL + ZPA_LOGIN_SUFFIX);
+
+		Document doc = null;
 
 		try {
 			Connection.Response response = connection.execute();
@@ -152,7 +207,7 @@ public class ZPAConnection {
 			connection.data("username", username);
 			connection.data("password", password);
 
-			Document doc = connection.post();
+			doc = connection.post();
 			middlewaretoken = getMiddleWareToken(doc);
 			String login = getLoginError(doc);
 
@@ -169,7 +224,7 @@ public class ZPAConnection {
 
 		Log.i(ZPA_CONNECTION_TAG, "ZPA Login OK!");
 
-		return true;
+		return doc;
 	}
 
 	/**
@@ -275,7 +330,7 @@ public class ZPAConnection {
 	 * @return
 	 * @throws IOException
 	 */
-	public Schedule getWeekplan(String date) throws ParseException, IOException {
+	public WeekPlanParser.ScheduleResult getWeekplan(String date) throws ParseException, IOException {
 		Map<String, String> parameter = new HashMap<>();
 		parameter.put("date", date);
 
@@ -294,7 +349,7 @@ public class ZPAConnection {
 	 * @return
 	 * @throws IOException
 	 */
-	public Schedule getWeekplan(int year, int month, int week) throws ParseException, IOException {
+	public WeekPlanParser.ScheduleResult getWeekplan(int year, int month, int week) throws ParseException, IOException {
 		Calendar cal = Calendar.getInstance();
 		cal.clear();
 		cal.set(Calendar.YEAR, year);
@@ -305,11 +360,13 @@ public class ZPAConnection {
 
 	/**
 	 * Get the schedule of a whole month!
+	 *
 	 * @param month
 	 * @param year
 	 * @return
 	 * @throws ExecutionException
 	 * @throws InterruptedException
+	 * @deprecated this method is deprecated, weekplans are usually fetched by week and not by month due to the long loading times.
 	 */
 	public Schedule getMonthPlan(int month, int year) throws ParseException, IOException {
 		int currentDay = 1;
@@ -330,7 +387,7 @@ public class ZPAConnection {
 				currentDay++;
 			}
 
-			Schedule currentWeek = getWeekplan(buildDateString(currentDay, month - 1, year, WeekPlanParser.DATE_PARSER));
+			Schedule currentWeek = getWeekplan(buildDateString(currentDay, month - 1, year, WeekPlanParser.DATE_PARSER)).getSchedule();
 
 			if (currentWeek != null) {
 				// Add ScheduleDays until the daysInMonth is reached.
@@ -357,6 +414,7 @@ public class ZPAConnection {
 
 	/**
 	 * Build a date string
+	 *
 	 * @param day
 	 * @param month
 	 * @param year
@@ -372,6 +430,7 @@ public class ZPAConnection {
 
 	/**
 	 * Build a date string.
+	 *
 	 * @param date
 	 * @param formatter
 	 * @return

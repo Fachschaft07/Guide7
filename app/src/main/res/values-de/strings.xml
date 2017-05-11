@@ -3,6 +3,9 @@
     <!-- General -->
     <string name="app_name">Guide7</string>
     <string name="developer_email">barny.eder@gmail.com</string>
+    <string name="filter">Filtern...</string>
+    <string name="welcome">Hallo</string>
+    <string name="logout">Abmelden</string>
 
     <!-- Login -->
     <string name="passwordHint">Passwort</string>
@@ -31,11 +34,6 @@
     <string name="roomSearchError">Es ist ein Fehler aufgetreten. :(</string>
     <string name="seats">Plätze</string>
 
-    <!-- Settings -->
-    <string name="scheduleSettings">Stundenplan</string>
-    <string name="scheduleView">Ansicht</string>
-    <string name="days">Tage</string>
-
     <!-- Notice Board -->
     <string name="currentlyNotAvailableBlackboard">Das Schwarze Brett ist wegen des geschlossenen FI Systems nicht verfügbar.</string>
     <string name="searchingForBoardEntriesMessage">Neuigkeiten werden gesucht...</string>
@@ -43,10 +41,14 @@
     <string name="noticeBoardChangedNotificationTitle">Schwarzes Brett</string>
     <string name="noticeBoardChangedNotificationMessage">Das Schwarze Brett wurde geändert, vielleicht ist etwas interessantes dabei!</string>
 
+    <!-- Appointments -->
+    <string name="upcomingAppointmentNotificationTitle">Bevorstehender Termin</string>
+
     <!-- Error Messages -->
     <string name="loginErrorMessage">Anmeldung am ZPA fehlgeschlagen. Prüfe nach ob das ZPA online ist oder ob eine Internetverbindung besteht.</string>
     <string name="badLoginMessage">Der angegebene Nutzername und/oder das Passwort sind falsch.</string>
     <string name="parseMonthPlanErrorMessage">Stundenplan konnte nicht vom ZPA gelesen werden.</string>
+    <string name="weekPlanParsingIncompletely">Der Stundenplan konnte nicht komplett gelesen werden und enhält möglicherweise nicht alle Vorlesungen.</string>
 
     <!-- Canteen Menu -->
     <string name="searchingForCanteenMenus">Speiseplan wird erneuert...</string>
@@ -57,6 +59,9 @@
     <string name="action_settings">Einstellungen</string>
 
     <!-- Settings -->
+    <string name="scheduleSettings">Stundenplan</string>
+    <string name="scheduleView">Ansicht</string>
+    <string name="days">Tage</string>
     <string name="weekplan_group">Stundenplan</string>
     <string name="displayedDays">Anzuzeigende Tage</string>
     <string name="displayedDaysSummary">Wie viele Tage im Stundenplan auf einmal zu sehen sind</string>
@@ -65,6 +70,9 @@
     <string name="noticeboard_group">Schwarzes Brett</string>
     <string name="noticeboard_notification_prop">Änderungsbenachrichtigung</string>
     <string name="noticeboard_notification_prop_summary">Zeigt eine Benachrichtigung falls das Schwarze Brett sich geändert hat</string>
+    <string name="appointments_group">Termine</string>
+    <string name="appointments_notification_title">Benachrichtigung über kommende Termine (Experimentell)</string>
+    <string name="appointments_notification_summary">Erhalte eine Benachrichtigung wenn ein Termin nur noch einen Tag entfernt ist.</string>
 
     <!-- Info -->
     <string name="libraries">Bibliotheken</string>

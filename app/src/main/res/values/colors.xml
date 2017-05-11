@@ -6,6 +6,9 @@
     <color name="actionBar_icon_color">#FFFFFF</color>
     <color name="drawer_icon_color">#000</color>
 
+    <!-- General -->
+    <color name="nearlyWhite">#EAEAEA</color>
+
     <!-- WeekView Colors -->
     <color name="eventColorCancelled">#525252</color>
     <color name="weekViewWeekEndColor">#E6E6E6</color>

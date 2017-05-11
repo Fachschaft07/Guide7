@@ -1,37 +1,61 @@
 package de.be.thaw.auth;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
+ * Credentials consisting of a username and password.
+ * <p>
  * Created by Benjamin Eder on 12.02.2017.
  */
-
 public class Credential {
 
-    private final String username;
-    private final String password;
+	/**
+	 * The Username.
+	 */
+	@JsonProperty("username")
+	private final String username;
 
-    public Credential(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
+	/**
+	 * The password.
+	 */
+	@JsonProperty("password")
+	private final String password;
 
-    public String getUsername() {
-        return username;
-    }
+	/**
+	 * Create new credential.
+	 * This is also used by jackson to create an immutable instance.
+	 *
+	 * @param username The username of the credential.
+	 * @param password The password of the credential.
+	 */
+	@JsonCreator
+	public Credential(@JsonProperty("username") String username,
+					  @JsonProperty("password") String password) {
+		if (username == null || password == null) {
+			throw new NullPointerException("Credential username or password cannot be null.");
+		}
 
-    public String getPassword() {
-        return password;
-    }
+		this.username = username;
+		this.password = password;
+	}
 
-    public boolean isEmpty() {
-        return username == null || username.isEmpty() || password == null || password.isEmpty();
-    }
+	/**
+	 * Get the credentials username.
+	 *
+	 * @return
+	 */
+	public String getUsername() {
+		return username;
+	}
 
-    public boolean hasUsername() {
-        return username != null;
-    }
-
-    public boolean hasPassword() {
-        return password != null;
-    }
+	/**
+	 * Get the credentials password.
+	 *
+	 * @return
+	 */
+	public String getPassword() {
+		return password;
+	}
 
 }

@@ -7,8 +7,8 @@ android {
         applicationId "de.be.thaw"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 18
-        versionName "Build 18"
+        versionCode 19
+        versionName "Build 19"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

@@ -27,6 +27,7 @@ public class AppointmentsParser implements Parser<Appointment[]> {
 	private static final String CONTENT_TABLE_CLASS = "table-faculty-seven";
 
 	public static final DateFormat MONTH_YEAR_FORMAT = new SimpleDateFormat("MMM yyyy");
+	private static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM");
 
 	@Override
 	public Appointment[] parse(Document doc) throws ParseException {
@@ -49,16 +50,50 @@ public class AppointmentsParser implements Parser<Appointment[]> {
 					Element row = rowElements.get(i);
 
 					if (row.childNodeSize() == 2) {
-						Element timeSpanTD = row.children().get(0);
+						String timeSpan = row.children().get(0).text();
 						Element descriptionTD = row.children().get(1);
 
-						appointmentList.add(new Appointment(cal, timeSpanTD.text(), descriptionTD.text()));
+						// try to get an specific date for the appointment.
+						Date date = getNextDateInString(timeSpan);
+						boolean hasSpecificDate = date != null;
+						if (hasSpecificDate) {
+							Calendar dateCal = Calendar.getInstance();
+							dateCal.setTime(date);
+
+							cal.set(Calendar.DAY_OF_MONTH, dateCal.get(Calendar.DAY_OF_MONTH));
+						} else {
+							System.out.print("FUCK!");
+						}
+
+						appointmentList.add(new Appointment(cal, timeSpan, descriptionTD.text(), hasSpecificDate));
 					}
 				}
 			}
 		}
 
 		return appointmentList.toArray(new Appointment[appointmentList.size()]);
+	}
+
+	/**
+	 * Get next date in string or <code>null</code> if no date could be parsed.
+	 *
+	 * @param string
+	 * @return
+	 */
+	private Date getNextDateInString(String string) {
+		String[] parts = string.split(" ");
+
+		for (String part : parts) {
+			try {
+				Date date = DATE_FORMAT.parse(part);
+
+				return date;
+			} catch (java.text.ParseException e) {
+				// Ignore the error.
+			}
+		}
+
+		return null;
 	}
 
 }

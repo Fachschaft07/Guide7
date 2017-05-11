@@ -2,7 +2,6 @@ package de.be.thaw.fragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.RectF;
@@ -12,13 +11,11 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.alamkanak.weekview.DateTimeInterpreter;
-import com.alamkanak.weekview.MonthLoader;
 import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewEvent;
 
@@ -30,16 +27,17 @@ import java.util.concurrent.ExecutionException;
 
 import de.be.thaw.EventDetailActivity;
 import de.be.thaw.R;
-import de.be.thaw.auth.Authentication;
+import de.be.thaw.auth.Auth;
 import de.be.thaw.auth.Credential;
+import de.be.thaw.auth.exception.NoUserStoredException;
 import de.be.thaw.cache.ScheduleUtil;
+import de.be.thaw.connect.parser.WeekPlanParser;
 import de.be.thaw.model.ScheduleEvent;
 import de.be.thaw.model.schedule.Schedule;
 import de.be.thaw.model.schedule.ScheduleDay;
 import de.be.thaw.model.schedule.ScheduleItem;
 import de.be.thaw.ui.AlertDialogManager;
 import de.be.thaw.ui.LoadSnackbar;
-import de.be.thaw.ui.ProgressDialogManager;
 import de.be.thaw.ui.weekview.WeeklyLoader;
 import de.be.thaw.util.ThawUtil;
 import de.be.thaw.util.TimeUtil;
@@ -267,6 +265,8 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 		private int month;
 		private int week;
 
+		private boolean scheduleParsedCompletely = true;
+
 		public LoadScheduleTask(Activity activity, AlertDialogManager alertDialogManager, WeekView weekView, LoadSnackbar snackbar) {
 			this.activity = activity;
 			this.weekView = weekView;
@@ -280,25 +280,34 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 			month = params[1];
 			week = params[2];
 
-			Credential credential = Authentication.getCredential(activity);
+			Credential credential = null;
+			try {
+				credential = Auth.getInstance().getCurrentUser(getContext()).getCredential();
+			} catch (NoUserStoredException e) {
+				error = e;
+				return null;
+			}
 
 			ZPAConnection connection = null;
 			try {
 				connection = new ZPAConnection(credential.getUsername(), credential.getPassword());
 			} catch (Exception e) {
-				e.printStackTrace();
-
 				error = e;
+				return null;
 			}
 
 			Schedule schedule = null;
 			if (connection != null) {
 				try {
-					schedule = connection.getWeekplan(year, month, week);
-				} catch (Exception e) {
-					e.printStackTrace();
+					WeekPlanParser.ScheduleResult result = connection.getWeekplan(year, month, week);
 
+					// Check and store the parsing state.
+					scheduleParsedCompletely = result.isParsedCompletely();
+
+					schedule = result.getSchedule();
+				} catch (Exception e) {
 					error = e;
+					return null;
 				}
 			}
 
@@ -325,13 +334,15 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 
 			snackbar.dismiss();
 
-			if (error != null) {
+			if (error != null || !scheduleParsedCompletely) {
 				// Show error
 				String errorMessage = activity.getResources().getString(R.string.parseMonthPlanErrorMessage);
 				if (error instanceof ZPABadCredentialsException) {
-					errorMessage = getResources().getString(R.string.badLoginMessage);
+					errorMessage = activity.getResources().getString(R.string.badLoginMessage);
 				} else if (error instanceof ZPALoginFailedException) {
 					errorMessage = activity.getResources().getString(R.string.loginErrorMessage);
+				} else if (!scheduleParsedCompletely) {
+					errorMessage = activity.getResources().getString(R.string.weekPlanParsingIncompletely);
 				}
 
 				alertDialogManager.setMessage(errorMessage);

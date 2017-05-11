@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.net.Credentials;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,11 +20,11 @@ import android.widget.TextView;
 import java.io.IOException;
 
 import de.be.thaw.R;
-import de.be.thaw.auth.Authentication;
+import de.be.thaw.auth.Auth;
 import de.be.thaw.auth.Credential;
+import de.be.thaw.auth.User;
+import de.be.thaw.auth.exception.NoUserStoredException;
 import de.be.thaw.cache.BoardUtil;
-import de.be.thaw.connect.zpa.exception.ZPABadCredentialsException;
-import de.be.thaw.connect.zpa.exception.ZPALoginFailedException;
 import de.be.thaw.model.noticeboard.BoardEntry;
 import de.be.thaw.util.ThawUtil;
 import de.be.thaw.connect.zpa.ZPAConnection;
@@ -173,11 +172,19 @@ public class NoticeBoardFragment extends Fragment implements MainFragment {
 
 		@Override
 		protected BoardEntry[] doInBackground(Void... params) {
-			Credential credentials = Authentication.getCredential(getContext());
+			User user = null;
+			try {
+				user = Auth.getInstance().getCurrentUser(getContext());
+			} catch (NoUserStoredException e1) {
+				this.e = e;
+				return null;
+			}
+
+			Credential credential = user.getCredential();
 
 			BoardEntry[] entries = null;
 			try {
-				ZPAConnection connection = new ZPAConnection(credentials.getUsername(), credentials.getPassword());
+				ZPAConnection connection = new ZPAConnection(credential.getUsername(), credential.getPassword());
 				entries = connection.getBoardNews();
 			} catch (Exception e) {
 				e.printStackTrace();

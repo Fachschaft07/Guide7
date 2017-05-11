@@ -1,5 +1,8 @@
 package de.be.thaw.model.appointments;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Calendar;
 
 /**
@@ -8,53 +11,60 @@ import java.util.Calendar;
 public class Appointment {
 
 	/**
-	 * Calendar containing the month and year.
+	 * Calendar containing the date of the appointment.
 	 */
-	private Calendar month;
+	@JsonProperty("date")
+	private Calendar date;
 
 	/**
 	 * Timespan this message applies to.
 	 * Can't be parsed properly because the format is not fixed.
 	 */
+	@JsonProperty("timeSpan")
 	private String timeSpan;
+
+	/**
+	 * Whether the appointment has a specific date which could be parsed.
+	 * If it has not it is not applicable for notifications.
+	 */
+	@JsonProperty("hasSpecificDate")
+	private boolean hasSpecificDate;
 
 	/**
 	 * The "content" of an appointment.
 	 */
+	@JsonProperty("description")
 	private String description;
 
 	public Appointment() {
 
 	}
 
-	public Appointment(Calendar month, String timeSpan, String description) {
-		this.month = month;
+	@JsonCreator
+	public Appointment(@JsonProperty("date") Calendar date,
+					   @JsonProperty("timeSpan") String timeSpan,
+					   @JsonProperty("description") String description,
+					   @JsonProperty("hasSpecificDate") boolean hasSpecificDate) {
+		this.date = date;
 		this.timeSpan = timeSpan;
 		this.description = description;
+		this.hasSpecificDate = hasSpecificDate;
 	}
 
-	public Calendar getMonth() {
-		return month;
-	}
-
-	public void setMonth(Calendar month) {
-		this.month = month;
+	public Calendar getDate() {
+		return date;
 	}
 
 	public String getTimeSpan() {
 		return timeSpan;
 	}
 
-	public void setTimeSpan(String timeSpan) {
-		this.timeSpan = timeSpan;
-	}
-
 	public String getDescription() {
 		return description;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public boolean hasSpecificDate() {
+		return hasSpecificDate;
 	}
 
 }
