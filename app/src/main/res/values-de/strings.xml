@@ -9,9 +9,9 @@
 
     <!-- Login -->
     <string name="passwordHint">Passwort</string>
-    <string name="usernameHint">Nutzerkennung</string>
+    <string name="usernameHint">Benutzername</string>
     <string name="loginButtonLabel">Anmelden</string>
-    <string name="loginRequestLabel">Gib deine ZPA Anmeldedaten ein.</string>
+    <string name="loginRequestLabel">Benutzen Sie die Anmeldedaten für das ZPA System.</string>
     <string name="loginNotice">Das Anmelden ist einmalig, danach wirst du immer automatisch angemeldet.</string>
     <string name="loginMessage">Anmeldung am ZPA</string>
 

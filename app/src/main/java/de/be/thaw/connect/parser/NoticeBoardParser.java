@@ -15,7 +15,7 @@ import de.be.thaw.model.noticeboard.BoardEntry;
 /**
  * Created by Benjamin Eder on 12.03.2017.
  */
-public class NoticeBoardParser implements Parser<BoardEntry[]> {
+public class NoticeBoardParser implements Parser<Document, BoardEntry[]> {
 
 	public static final SimpleDateFormat DATE_PARSER = new SimpleDateFormat("dd.MM.yyyy");
 
@@ -23,13 +23,27 @@ public class NoticeBoardParser implements Parser<BoardEntry[]> {
 	public BoardEntry[] parse(Document doc) throws ParseException {
 		Elements elms = doc.getElementsByTag("tbody");
 
-		// There should be only one tbody element so get the first otherwise throw Exception
-		if (elms.size() != 1) {
-			throw new ParseException("None or more than one tbody element found!");
+		// Get all Rows under tbody elements -> These are the Entries.
+		List<BoardEntry> entries = new ArrayList<>();
+
+		if (elms != null) {
+			for (Element tbody : elms) {
+				entries.addAll(parseTableBody(tbody));
+			}
 		}
 
-		Element tbody = elms.get(0);
+		return entries.toArray(new BoardEntry[entries.size()]);
+	}
 
+	/**
+	 * Parse board entries from table body elements.
+	 *
+	 * @param tbody element to parse
+	 * @return the parsed board entries
+	 *
+	 * @throws ParseException in case something went wrong during the parse process
+	 */
+	private List<BoardEntry> parseTableBody(Element tbody) throws ParseException {
 		// Get all Rows under tbody -> These are the Entries.
 		List<BoardEntry> entries = new ArrayList<>();
 
@@ -68,7 +82,7 @@ public class NoticeBoardParser implements Parser<BoardEntry[]> {
 			}
 		}
 
-		return entries.toArray(new BoardEntry[entries.size()]);
+		return entries;
 	}
 
 }

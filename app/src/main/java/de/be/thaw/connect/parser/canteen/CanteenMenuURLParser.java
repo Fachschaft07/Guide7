@@ -13,7 +13,7 @@ import de.be.thaw.connect.parser.exception.ParseException;
  *
  * Created by Benjamin Eder on 18.03.2017.
  */
-public class CanteenMenuURLParser implements Parser<String> {
+public class CanteenMenuURLParser implements Parser<Document, String> {
 
 	@Override
 	public String parse(Document doc) throws ParseException {

@@ -32,6 +32,7 @@
             android:layout_weight="1"
             android:text="TextView"
             android:textAlignment="textEnd"
+            android:gravity="end"
             android:textAllCaps="false"/>
     </LinearLayout>
 

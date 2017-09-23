@@ -43,7 +43,7 @@ public class ScheduleEvent extends WeekViewEvent implements Parcelable {
 
 	@Override
 	public String getLocation() {
-		return item.getDescription();
+		return item.getDescription() + "\n" + item.getLocation();
 	}
 
 	protected ScheduleEvent(Parcel in) {

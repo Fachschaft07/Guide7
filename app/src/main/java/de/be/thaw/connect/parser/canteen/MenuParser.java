@@ -23,7 +23,7 @@ import de.be.thaw.model.canteen.Menu;
  * Created by Benjamin Eder on 18.03.2017.
  */
 
-public class MenuParser implements Parser<Menu[]> {
+public class MenuParser implements Parser<Document, Menu[]> {
 
 	public static final DateFormat DATE_FORMAT = new SimpleDateFormat("EEEE, dd.MM.yyyy");
 

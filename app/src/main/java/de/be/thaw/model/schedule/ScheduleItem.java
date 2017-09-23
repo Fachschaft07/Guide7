@@ -10,23 +10,46 @@ public class ScheduleItem implements Parcelable {
 
 	private Date start;
 	private Date end;
+	private Date timestamp;
 
 	private String title;
-	
 	private String description;
+	private String location;
+	private String url;
 
 	private boolean eventCancelled;
 
-	public ScheduleItem() {
-
-	}
-
-	public ScheduleItem(String title, String description, Date start, Date end, boolean eventCancelled) {
+	public ScheduleItem(String title, String description) {
 		this.title = title;
 		this.description = description;
-		this.start = start;
-		this.end = end;
-		this.eventCancelled = eventCancelled;
+	}
+
+	public ScheduleItem() {
+		// Default constructor for JSON Builder.
+	}
+
+	public Date getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(Date timestamp) {
+		this.timestamp = timestamp;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
 	public String getTitle() {
@@ -72,18 +95,24 @@ public class ScheduleItem implements Parcelable {
 	protected ScheduleItem(Parcel in) {
 		title = in.readString();
 		description = in.readString();
+		location = in.readString();
+		url = in.readString();
 		eventCancelled = in.readByte() != 0;
 		start = (Date) in.readValue(getClass().getClassLoader());
 		end = (Date) in.readValue(getClass().getClassLoader());
+		timestamp = (Date) in.readValue(getClass().getClassLoader());
 	}
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(title);
 		dest.writeString(description);
+		dest.writeString(location);
+		dest.writeString(url);
 		dest.writeByte((byte) (eventCancelled ? 1 : 0));
 		dest.writeValue(getStart());
 		dest.writeValue(getEnd());
+		dest.writeValue(getTimestamp());
 	}
 
 	@Override

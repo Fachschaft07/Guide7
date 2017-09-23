@@ -40,6 +40,10 @@ import de.be.thaw.auth.CertificateUtil;
 import de.be.thaw.auth.User;
 import de.be.thaw.auth.exception.AuthException;
 import de.be.thaw.auth.exception.NoUserStoredException;
+import de.be.thaw.cache.AppointmentUtil;
+import de.be.thaw.cache.BoardUtil;
+import de.be.thaw.cache.MenuUtil;
+import de.be.thaw.cache.ScheduleUtil;
 import de.be.thaw.exception.ExceptionHandler;
 import de.be.thaw.fragments.AppointmentFragment;
 import de.be.thaw.fragments.InfoFragment;
@@ -49,6 +53,7 @@ import de.be.thaw.fragments.MainFragment;
 import de.be.thaw.fragments.RoomSearchFragment;
 import de.be.thaw.fragments.SettingsFragment;
 import de.be.thaw.fragments.WeekPlanFragment;
+import de.be.thaw.util.ThawUtil;
 import de.be.thaw.util.job.jobs.StaticWeekPlanNotificationJob;
 import de.be.thaw.util.job.jobs.UpcomingAppointmentNotificationJob;
 import de.be.thaw.util.job.jobs.UpdateNoticeBoardJob;
@@ -75,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 	/**
 	 * URL to the Data Policy.
 	 */
-	private static final String DATA_POLICY_URL = "https://sites.google.com/view/datapolicyguide7/";
+	private static final String DATA_POLICY_URL = "https://sites.google.com/view/guide7-privacy-statement/";
 
 	private NavigationView navigationView;
 
@@ -468,6 +473,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 		} catch (AuthException e) {
 			e.printStackTrace();
 		}
+
+		// Clear caches
+		ThawUtil.clearChaches(this);
 
 		// Return to Login Activity
 		Intent intent = new Intent(this, LoginActivity.class);

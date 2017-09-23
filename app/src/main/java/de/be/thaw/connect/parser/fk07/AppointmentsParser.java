@@ -22,7 +22,7 @@ import de.be.thaw.model.canteen.Menu;
 /**
  * Created by Benjamin Eder on 18.03.2017.
  */
-public class AppointmentsParser implements Parser<Appointment[]> {
+public class AppointmentsParser implements Parser<Document, Appointment[]> {
 
 	private static final String CONTENT_TABLE_CLASS = "table-faculty-seven";
 
@@ -51,21 +51,23 @@ public class AppointmentsParser implements Parser<Appointment[]> {
 
 					if (row.childNodeSize() == 2) {
 						String timeSpan = row.children().get(0).text();
-						Element descriptionTD = row.children().get(1);
+						String description = row.children().get(1).html();
 
-						// try to get an specific date for the appointment.
-						Date date = getNextDateInString(timeSpan);
-						boolean hasSpecificDate = date != null;
-						if (hasSpecificDate) {
-							Calendar dateCal = Calendar.getInstance();
-							dateCal.setTime(date);
+						if (!timeSpan.isEmpty() && !description.isEmpty()) {
+							// try to get an specific date for the appointment.
+							Date date = getNextDateInString(timeSpan);
+							boolean hasSpecificDate = date != null;
+							if (hasSpecificDate) {
+								Calendar dateCal = Calendar.getInstance();
+								dateCal.setTime(date);
 
-							cal.set(Calendar.DAY_OF_MONTH, dateCal.get(Calendar.DAY_OF_MONTH));
-						} else {
-							System.out.print("FUCK!");
+								cal.set(Calendar.DAY_OF_MONTH, dateCal.get(Calendar.DAY_OF_MONTH));
+							} else {
+								System.out.print("FUCK!");
+							}
+
+							appointmentList.add(new Appointment(cal, timeSpan, description, hasSpecificDate));
 						}
-
-						appointmentList.add(new Appointment(cal, timeSpan, descriptionTD.text(), hasSpecificDate));
 					}
 				}
 			}

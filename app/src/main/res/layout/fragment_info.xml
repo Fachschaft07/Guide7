@@ -29,11 +29,11 @@
     <ImageView
         android:id="@+id/imageView4"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@mipmap/icon"
-        android:layout_marginTop="15dp"
+        android:layout_height="60dp"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        app:srcCompat="@drawable/logo_banner" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -70,8 +70,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/textView10"
-                    android:text="android-job Copyright © 2007-2016 by Evernote Corporation\njsoup Copyright © 2009 - 2016 Jonathan Hedley"
-                    android:textSize="12sp"/>
+                    android:text="android-job Copyright © 2007-2016 by Evernote Corporation\njsoup Copyright © 2009 - 2016 Jonathan Hedley\niCal4j Copyright © 2012 Ben Fortuna"
+                    android:textSize="12sp" />
+
             </LinearLayout>
         </ScrollView>
     </RelativeLayout>

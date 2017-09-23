@@ -5,12 +5,19 @@ import android.util.Log;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import net.fortuna.ical4j.data.CalendarBuilder;
+import net.fortuna.ical4j.data.ParserException;
+import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.Property;
+
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -36,6 +43,7 @@ import de.be.thaw.connect.zpa.exception.ZPALoginFailedException;
 import de.be.thaw.connect.parser.NoticeBoardParser;
 import de.be.thaw.connect.parser.WeekPlanParser;
 import de.be.thaw.connect.parser.Parser;
+import de.be.thaw.model.schedule.ScheduleItem;
 
 public class ZPAConnection {
 
@@ -95,6 +103,11 @@ public class ZPAConnection {
 	 * Middlewaretoken Input Elements Name.
 	 */
 	private static final String ZPA_MIDDLEWARETOKEN_NAME = "csrfmiddlewaretoken";
+
+	/**
+	 * Rss feed xml link type from html.
+	 */
+	private static final String LINK_TYPE_RSS_XML = "application/rss+xml";
 
 	/**
 	 * The "SessionId" of the ZPA Cookie
@@ -264,7 +277,7 @@ public class ZPAConnection {
 	public BoardEntry[] getBoardNews(boolean personal) throws IOException, ParseException {
 		Document doc = getZPAUrl(personal ? ZPA_STUDENT_NOTICE_BOARD : ZPA_PUBLIC_NOTICE_BOARD);
 
-		Parser<BoardEntry[]> parser = new NoticeBoardParser();
+		Parser<Document, BoardEntry[]> parser = new NoticeBoardParser();
 		return parser.parse(doc);
 	}
 
@@ -324,92 +337,69 @@ public class ZPAConnection {
 	}
 
 	/**
-	 * Get ZPA Weekplan by date.
+	 * Get weekplan from rss feed.
 	 *
-	 * @param date
-	 * @return
-	 * @throws IOException
+	 * @return the parsed schedule events
+	 * @throws IOException in case something goes wrong during fetching.
 	 */
-	public WeekPlanParser.ScheduleResult getWeekplan(String date) throws ParseException, IOException {
-		Map<String, String> parameter = new HashMap<>();
-		parameter.put("date", date);
+	public List<ScheduleItem> getRSSWeekplan() throws IOException, ParseException {
+		long timer = System.currentTimeMillis();
 
-		Document weekplanHTML = postZPAUrl(ZPA_STUDENT_WEEKPLAN_SUFFIX, parameter);
-
-		WeekPlanParser parser = new WeekPlanParser();
-		return parser.parse(weekplanHTML);
+		List<ScheduleItem> result = getRSSWeekplan(fetchWeekplanRSSURL());
+		Log.i(ZPA_CONNECTION_TAG, "Fetching weekplan RSS took " + (System.currentTimeMillis() - timer) + "ms");
+		return result;
 	}
 
 	/**
-	 * Get Schedule for a week.
+	 * Get rss weekplan using the provided url.
 	 *
-	 * @param year
-	 * @param month
-	 * @param week
-	 * @return
-	 * @throws IOException
+	 * @param rssUrl url where to find the weekplan rss feed.
+	 * @return the parsed schedule events
+	 * @throws IOException in case something goes wrong during fetching.
 	 */
-	public WeekPlanParser.ScheduleResult getWeekplan(int year, int month, int week) throws ParseException, IOException {
-		Calendar cal = Calendar.getInstance();
-		cal.clear();
-		cal.set(Calendar.YEAR, year);
-		cal.set(Calendar.WEEK_OF_YEAR, week);
-
-		return getWeekplan(buildDateString(cal.get(Calendar.DAY_OF_MONTH) + 1, month - 1, year, WeekPlanParser.DATE_PARSER));
-	}
-
-	/**
-	 * Get the schedule of a whole month!
-	 *
-	 * @param month
-	 * @param year
-	 * @return
-	 * @throws ExecutionException
-	 * @throws InterruptedException
-	 * @deprecated this method is deprecated, weekplans are usually fetched by week and not by month due to the long loading times.
-	 */
-	public Schedule getMonthPlan(int month, int year) throws ParseException, IOException {
-		int currentDay = 1;
-
-		Calendar calendar = Calendar.getInstance();
-		calendar.set(year, month - 1, currentDay); // Month is zero based
-
-		// Get the number of days in that month
-		int daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-
-		ScheduleDay[] days = new ScheduleDay[daysInMonth];
-		int dayIndex = 0;
-
-		while (currentDay <= daysInMonth) {
-			calendar.set(year, month - 1, currentDay);
-
-			if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
-				currentDay++;
-			}
-
-			Schedule currentWeek = getWeekplan(buildDateString(currentDay, month - 1, year, WeekPlanParser.DATE_PARSER)).getSchedule();
-
-			if (currentWeek != null) {
-				// Add ScheduleDays until the daysInMonth is reached.
-				for (ScheduleDay day : currentWeek.getWeekdays()) {
-					calendar.setTime(day.getDate());
-					int m = calendar.get(Calendar.MONTH);
-					if (m == (month - 1)) {
-						if (dayIndex < daysInMonth) {
-							days[dayIndex] = day;
-							dayIndex++;
-							currentDay++;
-						} else {
-							break;
-						}
-					}
-				}
-			} else {
-				break;
-			}
+	public List<ScheduleItem> getRSSWeekplan(URL rssUrl) throws IOException, ParseException {
+		CalendarBuilder calendarBuilder = new CalendarBuilder();
+		net.fortuna.ical4j.model.Calendar calendar = null;
+		try {
+			calendar = calendarBuilder.build(rssUrl.openStream());
+		} catch (ParserException e) {
+			throw new ParseException(e);
 		}
 
-		return new Schedule(days);
+		return new WeekPlanParser().parse(calendar);
+	}
+
+	/**
+	 * Fetch weekplan RSS feed url from ZPA.
+	 *
+	 * @return the weekplans RSS feed url
+	 */
+	private URL fetchWeekplanRSSURL() throws IOException, ParseException {
+		Document doc = getZPAUrl(ZPA_STUDENT_WEEKPLAN_SUFFIX);
+
+		// Fetch rss feed url from document.
+		Elements elms = doc.getElementsByAttributeValue("type", LINK_TYPE_RSS_XML);
+
+		// Make sure its only one, otherwise just take the first (And hopefully be right about it).
+		if (elms.isEmpty()) {
+			throw new ParseException("Did not find any rss urls.");
+		}
+		Element link = elms.get(0);
+
+		// Check if it's a link element which it must!
+		if (!link.tagName().equalsIgnoreCase("a")) {
+			throw new ParseException("Did not find a valid rss link.");
+		}
+
+		// Get rss feed url.
+		String url = link.attr("href");
+
+		// Check if valid url.
+		if (url == null || url.isEmpty()) {
+			throw new ParseException("Found rss url is invalid.");
+		}
+
+		return new URL(url);
 	}
 
 	/**

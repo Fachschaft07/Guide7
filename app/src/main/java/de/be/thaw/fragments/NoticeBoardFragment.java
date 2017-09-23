@@ -7,9 +7,14 @@ import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.RecyclerView;
+import android.text.Html;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +23,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import de.be.thaw.R;
 import de.be.thaw.auth.Auth;
@@ -233,6 +241,11 @@ public class NoticeBoardFragment extends Fragment implements MainFragment {
 
 		private final Context context;
 
+		/**
+		 * Cache parsed html contents in this map for a item position.
+		 */
+		private Map<Integer, Spanned> contentCache = new HashMap<>();
+
 		public BoardArrayAdapter(Activity activity) {
 			super(activity, -1);
 			this.context = activity;
@@ -241,28 +254,76 @@ public class NoticeBoardFragment extends Fragment implements MainFragment {
 		@NonNull
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			View view = inflater.inflate(R.layout.board_entry, parent, false);
+			ViewHolder holder = null;
 
-			TextView authorView = (TextView) view.findViewById(R.id.entry_author);
-			TextView titleView = (TextView) view.findViewById(R.id.entry_title);
-			TextView fromView = (TextView) view.findViewById(R.id.entry_from);
-			TextView toView = (TextView) view.findViewById(R.id.entry_to);
-			TextView contentView = (TextView) view.findViewById(R.id.entry_content);
+			if (convertView == null) {
+				holder = new ViewHolder();
+
+				LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				convertView = inflater.inflate(R.layout.board_entry, parent, false);
+
+				holder.authorView = (TextView) convertView.findViewById(R.id.entry_author);
+				holder.titleView = (TextView) convertView.findViewById(R.id.entry_title);
+				holder.fromView = (TextView) convertView.findViewById(R.id.entry_from);
+				holder.toView = (TextView) convertView.findViewById(R.id.entry_to);
+				holder.contentView = (TextView) convertView.findViewById(R.id.entry_content);
+
+				convertView.setTag(holder);
+
+				/*
+				 * Make HTML links inside the TextView clickable.
+				 */
+				holder.contentView.setMovementMethod(LinkMovementMethod.getInstance());
+			} else {
+				holder = (ViewHolder) convertView.getTag();
+			}
 
 			// Set Contents
 			final BoardEntry item = getItem(position);
 
-			authorView.setText(item.getAuthor());
-			titleView.setText(item.getTitle());
+			holder.authorView.setText(item.getAuthor());
+			holder.titleView.setText(item.getTitle());
 
-			fromView.setText(NoticeBoardParser.DATE_PARSER.format(item.getFrom()));
-			toView.setText(NoticeBoardParser.DATE_PARSER.format(item.getTo()));
+			holder.fromView.setText(NoticeBoardParser.DATE_PARSER.format(item.getFrom()));
+			holder.toView.setText(NoticeBoardParser.DATE_PARSER.format(item.getTo()));
 
-			contentView.setText(ThawUtil.fromHTML(item.getContent()));
+			Spanned content = contentCache.get(position);
+			if (content == null) {
+				content = ThawUtil.fromHTML(item.getContent());
+				contentCache.put(position, content);
+			}
+			holder.contentView.setText(content);
 
-			return view;
+			return convertView;
 		}
+
+		/**
+		 * Clear cache.
+		 */
+		private void clearCache() {
+			contentCache.clear();
+		}
+
+		@Override
+		public void notifyDataSetChanged() {
+			super.notifyDataSetChanged();
+
+			clearCache();
+		}
+
+		/**
+		 * View holder for a board entry.
+		 */
+		private class ViewHolder {
+
+			TextView authorView;
+			TextView titleView;
+			TextView fromView;
+			TextView toView;
+			TextView contentView;
+
+		}
+
 	}
 
 }

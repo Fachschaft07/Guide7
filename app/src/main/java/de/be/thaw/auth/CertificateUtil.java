@@ -42,7 +42,7 @@ public class CertificateUtil {
 			// Load CAs from an InputStream
 			CertificateFactory cf = CertificateFactory.getInstance("X.509");
 
-			InputStream is = activity.getResources().openRawResource(R.raw.zpa_certificate);
+			InputStream is = activity.getResources().openRawResource(R.raw.zpa);
 			Certificate ca;
 			try {
 				ca = cf.generateCertificate(is);

@@ -3,7 +3,7 @@
     <domain-config>
         <domain includeSubdomains="true">w3-o.cs.hm.edu</domain>
         <trust-anchors>
-            <certificates src="@raw/zpa_certificate"/>
+            <certificates src="@raw/zpa"/>
         </trust-anchors>
     </domain-config>
 </network-security-config>

@@ -12,8 +12,11 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import de.be.thaw.model.schedule.Schedule;
+import de.be.thaw.model.schedule.ScheduleItem;
 import de.be.thaw.util.ThawUtil;
 
 /**
@@ -29,61 +32,49 @@ public class ScheduleUtil {
 
 	/**
 	 * Store Schedule in cache.
-	 * @param schedule
+	 * @param items
 	 * @param context
-	 * @param year
-	 * @param month
-	 * @param week
 	 */
-	public static void store(Schedule schedule, Context context, int year, int month, int week) throws IOException {
+	public static void store(List<ScheduleItem> items, Context context) throws IOException {
 		if (context != null) {
 			ObjectMapper mapper = new ObjectMapper();
-			String scheduleJson = mapper.writeValueAsString(schedule);
+			String scheduleJson = mapper.writeValueAsString(items.toArray(new ScheduleItem[items.size()]));
 
-			File scheduleStorage = new File(context.getFilesDir(), getFileName(year, month, week));
+			File scheduleStorage = new File(context.getFilesDir(), SCHEDULE_FILE);
 			FileWriter writer = new FileWriter(scheduleStorage, false);
 
 			writer.write(scheduleJson); // Write Schedule to file.
 
 			writer.close();
 
-			Log.i(TAG, "Stored Schedule to file. Year: " + year + " Month: " + month + " Week: " + week);
+			Log.i(TAG, "Stored Schedule to file.");
 		}
 	}
 
 	/**
 	 * Retrieve stored schedule from file.
 	 * @param context
-	 * @param year
-	 * @param month
-	 * @param week
 	 * @return
 	 */
-	public static Schedule retrieve(Context context, int year, int month, int week) throws IOException {
+	public static List<ScheduleItem> retrieve(Context context) throws IOException {
 		if (context != null) {
-			File scheduleStorage = new File(context.getFilesDir(), getFileName(year, month, week));
+			File scheduleStorage = new File(context.getFilesDir(), SCHEDULE_FILE);
 
 			if (scheduleStorage.exists()) {
 				ObjectMapper mapper = new ObjectMapper();
-				Schedule schedule = mapper.readValue(scheduleStorage, Schedule.class);
+				ScheduleItem[] items = mapper.readValue(scheduleStorage, ScheduleItem[].class);
 
-				Log.i(TAG, "Retrieved stored Schedule from file. Year: " + year + " Month: " + month + " Week: " + week);
-				return schedule;
+				List<ScheduleItem> itemList = new ArrayList<>();
+				for (ScheduleItem item : items) {
+					itemList.add(item);
+				}
+
+				Log.i(TAG, "Retrieved stored Schedule from file.");
+				return itemList;
 			}
 		}
 
 		return null;
-	}
-
-	/**
-	 * Get File name.
-	 * @param year
-	 * @param month
-	 * @param week
-	 * @return
-	 */
-	private static String getFileName(int year, int month, int week) {
-		return SCHEDULE_FILE + "_" + year + "_" + month + "_" + week + ".json";
 	}
 
 	/**

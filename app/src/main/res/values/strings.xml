@@ -10,7 +10,7 @@
     <string name="passwordHint">Password</string>
     <string name="usernameHint">Username</string>
     <string name="loginButtonLabel">Sign in</string>
-    <string name="loginRequestLabel">Enter your ZPA credentials</string>
+    <string name="loginRequestLabel">Use ZPA System credentials to login.</string>
     <string name="loginNotice">You will be logged in automatically after this initial login.</string>
     <string name="loginMessage">Login to ZPA...</string>
 

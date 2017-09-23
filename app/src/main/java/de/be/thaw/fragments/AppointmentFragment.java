@@ -11,7 +11,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
+import android.text.Spanned;
 import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,13 +29,16 @@ import android.widget.TextView;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.be.thaw.R;
 import de.be.thaw.cache.AppointmentUtil;
 import de.be.thaw.connect.fk07.FK07Connection;
 import de.be.thaw.connect.parser.fk07.AppointmentsParser;
 import de.be.thaw.model.appointments.Appointment;
+import de.be.thaw.util.ThawUtil;
 
 public class AppointmentFragment extends Fragment implements MainFragment {
 
@@ -314,6 +319,11 @@ public class AppointmentFragment extends Fragment implements MainFragment {
 		private List<Appointment> model = new ArrayList<>();
 
 		/**
+		 * Cache for parsed HTML contents.
+		 */
+		private Map<Integer, Spanned> contentChache = new HashMap<>();
+
+		/**
 		 * List of filtered indices.
 		 */
 		private List<Integer> filtered;
@@ -343,20 +353,41 @@ public class AppointmentFragment extends Fragment implements MainFragment {
 		@NonNull
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
+			ViewHolder holder = null;
+
+			if (convertView == null) {
+				holder = new ViewHolder();
+
+				LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				convertView = inflater.inflate(R.layout.appointment_entry, parent, false);
+
+				holder.monthView = (TextView) convertView.findViewById(R.id.appointment_entry_month);
+				holder.timeSpanView = (TextView) convertView.findViewById(R.id.appointment_entry_timeSpan);
+				holder.descriptionView = (TextView) convertView.findViewById(R.id.appointment_entry_description);
+
+				convertView.setTag(holder);
+
+				/*
+				 * Make HTML links clickable.
+				 */
+				holder.descriptionView.setMovementMethod(LinkMovementMethod.getInstance());
+			} else {
+				holder = (ViewHolder) convertView.getTag();
+			}
+
 			final Appointment appointment = getItem(position);
 
-			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			View view = inflater.inflate(R.layout.appointment_entry, parent, false);
+			holder.monthView.setText(AppointmentsParser.MONTH_YEAR_FORMAT.format(appointment.getDate().getTime()));
+			holder.timeSpanView.setText(appointment.getTimeSpan());
 
-			TextView monthView = (TextView) view.findViewById(R.id.appointment_entry_month);
-			TextView timeSpanView = (TextView) view.findViewById(R.id.appointment_entry_timeSpan);
-			TextView descriptionView = (TextView) view.findViewById(R.id.appointment_entry_description);
+			Spanned description = contentChache.get(position);
+			if (description == null) {
+				description = ThawUtil.fromHTML(appointment.getDescription());
+				contentChache.put(position, description);
+			}
+			holder.descriptionView.setText(description);
 
-			monthView.setText(AppointmentsParser.MONTH_YEAR_FORMAT.format(appointment.getDate().getTime()));
-			timeSpanView.setText(appointment.getTimeSpan());
-			descriptionView.setText(appointment.getDescription());
-
-			return view;
+			return convertView;
 		}
 
 		@NonNull
@@ -383,6 +414,31 @@ public class AppointmentFragment extends Fragment implements MainFragment {
 		 */
 		public void addAll(List<Appointment> appointmentList) {
 			model.addAll(appointmentList);
+		}
+
+		@Override
+		public void notifyDataSetChanged() {
+			super.notifyDataSetChanged();
+
+			clearCache();
+		}
+
+		/**
+		 * Clear cached contents.
+		 */
+		private void clearCache() {
+			contentChache.clear();
+		}
+
+		/**
+		 * View holder for appointment entries.
+		 */
+		private class ViewHolder {
+
+			TextView monthView;
+			TextView timeSpanView;
+			TextView descriptionView;
+
 		}
 
 		/**

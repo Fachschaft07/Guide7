@@ -4,8 +4,8 @@ import org.jsoup.nodes.Document;
 
 import de.be.thaw.connect.parser.exception.ParseException;
 
-public interface Parser<T> {
+public interface Parser<T, R> {
 
-	T parse(Document doc) throws ParseException;
+	R parse(T toParse) throws ParseException;
 	
 }

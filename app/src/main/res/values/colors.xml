@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#00796b</color>
     <color name="colorAccent">#ff5722</color>
     <color name="actionBar_icon_color">#FFFFFF</color>
-    <color name="drawer_icon_color">#000</color>
+    <color name="drawer_icon_color">#000000</color>
 
     <!-- General -->
     <color name="nearlyWhite">#EAEAEA</color>

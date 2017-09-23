@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.alamkanak.weekview.DateTimeInterpreter;
+import com.alamkanak.weekview.MonthLoader;
 import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewEvent;
 
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 import de.be.thaw.EventDetailActivity;
 import de.be.thaw.R;
@@ -31,14 +33,11 @@ import de.be.thaw.auth.Auth;
 import de.be.thaw.auth.Credential;
 import de.be.thaw.auth.exception.NoUserStoredException;
 import de.be.thaw.cache.ScheduleUtil;
-import de.be.thaw.connect.parser.WeekPlanParser;
 import de.be.thaw.model.ScheduleEvent;
 import de.be.thaw.model.schedule.Schedule;
-import de.be.thaw.model.schedule.ScheduleDay;
 import de.be.thaw.model.schedule.ScheduleItem;
 import de.be.thaw.ui.AlertDialogManager;
 import de.be.thaw.ui.LoadSnackbar;
-import de.be.thaw.ui.weekview.WeeklyLoader;
 import de.be.thaw.util.ThawUtil;
 import de.be.thaw.util.TimeUtil;
 import de.be.thaw.connect.zpa.ZPAConnection;
@@ -96,8 +95,11 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 	 * Refresh Schedule.
 	 */
 	public void refresh() {
-		// Clear Schedule Cache
-		ScheduleUtil.clear(getActivity());
+		try {
+			refreshSchedule();
+		} catch (ExecutionException | InterruptedException e) {
+			e.printStackTrace();
+		}
 
 		weekView.notifyDatasetChanged(); // Causes Loader to reload!
 	}
@@ -185,7 +187,42 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 		weekView.goToHour(START_HOUR);
 		weekView.setNumberOfVisibleDays(getDisplayableDays());
 
-		weekView.setWeekViewLoader(new WeeklyLoader(new ZPAWeekChangeListener()));
+		weekView.setMonthChangeListener(new MonthLoader.MonthChangeListener() {
+
+			@Override
+			public List<? extends WeekViewEvent> onMonthChange(int newYear, int newMonth) {
+				List<ScheduleItem> items = null;
+
+				try {
+					items = ScheduleUtil.retrieve(getContext());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+
+				List<ScheduleEvent> events = new ArrayList<>();
+
+				if (items != null) {
+					for (ScheduleItem item : items) {
+						// Restrict to items of the given month.
+						if (item != null && item.getStart().getMonth() == newMonth) {
+							ScheduleEvent event = new ScheduleEvent(item);
+							event.setColor(getColorForItem(item));
+
+							if (item.isEventCancelled()) {
+								if (showCancelledEvents()) {
+									events.add(event);
+								}
+							} else {
+								events.add(event);
+							}
+						}
+					}
+				}
+
+				return events;
+			}
+
+		});
 
 		// Set an action when any event is clicked.
 		weekView.setOnEventClickListener(new WeekView.EventClickListener() {
@@ -232,25 +269,45 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 		});
 
 		loadSnackbar = new LoadSnackbar(Snackbar.make(getActivity().findViewById(R.id.content_frame), "Stundenplan wird heruntergeladen...", Snackbar.LENGTH_INDEFINITE));
+
+		// Initialize Schedule.
+		initializeSchedule();
 	}
 
 	/**
-	 * Refresh Schedule for the passed month
-	 *
-	 * @param year
-	 * @param month
-	 * @param week
+	 * Initialize schedule by loading cached events or load from server.
+	 */
+	private void initializeSchedule() {
+		List<ScheduleItem> items = null;
+
+		try {
+			items = ScheduleUtil.retrieve(getContext());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		if (items == null) {
+			try {
+				refreshSchedule();
+			} catch (ExecutionException | InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	/**
+	 * Refresh Schedule
 	 * @throws ExecutionException
 	 * @throws InterruptedException
 	 */
-	private void refreshSchedule(int year, int month, int week) throws ExecutionException, InterruptedException {
-		new LoadScheduleTask(getActivity(), alertDialogManager, weekView, loadSnackbar).execute(year, month, week);
+	private void refreshSchedule() throws ExecutionException, InterruptedException {
+		new LoadScheduleTask(getActivity(), alertDialogManager, weekView, loadSnackbar).execute();
 	}
 
 	/**
 	 * Task to load schedule asynchronously.
 	 */
-	private class LoadScheduleTask extends AsyncTask<Integer, Integer, Schedule> {
+	private class LoadScheduleTask extends AsyncTask<Integer, Integer, List<ScheduleItem>> {
 
 		private final AlertDialogManager alertDialogManager;
 
@@ -261,12 +318,6 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 
 		private Exception error;
 
-		private int year;
-		private int month;
-		private int week;
-
-		private boolean scheduleParsedCompletely = true;
-
 		public LoadScheduleTask(Activity activity, AlertDialogManager alertDialogManager, WeekView weekView, LoadSnackbar snackbar) {
 			this.activity = activity;
 			this.weekView = weekView;
@@ -275,11 +326,7 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 		}
 
 		@Override
-		protected Schedule doInBackground(Integer... params) {
-			year = params[0];
-			month = params[1];
-			week = params[2];
-
+		protected List<ScheduleItem> doInBackground(Integer... params) {
 			Credential credential = null;
 			try {
 				credential = Auth.getInstance().getCurrentUser(getContext()).getCredential();
@@ -296,22 +343,15 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 				return null;
 			}
 
-			Schedule schedule = null;
-			if (connection != null) {
-				try {
-					WeekPlanParser.ScheduleResult result = connection.getWeekplan(year, month, week);
-
-					// Check and store the parsing state.
-					scheduleParsedCompletely = result.isParsedCompletely();
-
-					schedule = result.getSchedule();
-				} catch (Exception e) {
-					error = e;
-					return null;
-				}
+			List<ScheduleItem> items = null;
+			try {
+				items = connection.getRSSWeekplan();
+			} catch (Exception e) {
+				error = e;
+				return null;
 			}
 
-			return schedule;
+			return items;
 		}
 
 		@Override
@@ -322,101 +362,43 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 		}
 
 		@Override
-		protected void onCancelled(Schedule schedule) {
-			super.onCancelled(schedule);
+		protected void onCancelled(List<ScheduleItem> items) {
+			super.onCancelled(items);
 
 			snackbar.dismiss();
 		}
 
 		@Override
-		protected void onPostExecute(Schedule schedule) {
-			super.onPostExecute(schedule);
+		protected void onPostExecute(List<ScheduleItem> items) {
+			super.onPostExecute(items);
 
 			snackbar.dismiss();
 
-			if (error != null || !scheduleParsedCompletely) {
+			if (error != null) {
 				// Show error
 				String errorMessage = activity.getResources().getString(R.string.parseMonthPlanErrorMessage);
 				if (error instanceof ZPABadCredentialsException) {
 					errorMessage = activity.getResources().getString(R.string.badLoginMessage);
 				} else if (error instanceof ZPALoginFailedException) {
 					errorMessage = activity.getResources().getString(R.string.loginErrorMessage);
-				} else if (!scheduleParsedCompletely) {
-					errorMessage = activity.getResources().getString(R.string.weekPlanParsingIncompletely);
 				}
 
 				alertDialogManager.setMessage(errorMessage);
 				alertDialogManager.show();
 			}
 
-			if (schedule != null) {
+			if (items != null) {
 				// Write Schedule to Cache
 				try {
-					ScheduleUtil.store(schedule, activity, year, month, week);
+					ScheduleUtil.store(items, activity);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 
 
 				// Week View Callback
-				if (schedule != null) {
-					weekView.notifyDatasetChanged();
-				}
+				weekView.notifyDatasetChanged();
 			}
 		}
 	}
-
-	/**
-	 * Month Changelistener to load months from ZPA.
-	 */
-	private class ZPAWeekChangeListener implements WeeklyLoader.WeekChangeListener {
-
-		@Override
-		public List<? extends WeekViewEvent> onWeekChange(int newYear, int newMonth, int newWeek) {
-			ArrayList<ScheduleEvent> events = new ArrayList<>();
-
-			Schedule schedule = null;
-			try {
-				schedule = ScheduleUtil.retrieve(getActivity(), newYear, newMonth, newWeek);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-			if (schedule == null) {
-				try {
-					refreshSchedule(newYear, newMonth, newWeek);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-
-			if (schedule != null) {
-				// Create Events
-				for (ScheduleDay day : schedule.getWeekdays()) {
-					if (day != null) {
-
-
-						for (ScheduleItem item : day.getItems()) {
-							if (item != null) {
-								ScheduleEvent event = new ScheduleEvent(item);
-								event.setColor(getColorForItem(item));
-
-								if (item.isEventCancelled()) {
-									if (showCancelledEvents()) {
-										item.setTitle(getResources().getString(R.string.eventCancelled) + " " + item.getTitle());
-										events.add(event);
-									}
-								} else {
-									events.add(event);
-								}
-							}
-						}
-					}
-				}
-			}
-
-			return events;
-		}
-	}
-
 }

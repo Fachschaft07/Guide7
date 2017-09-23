@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -58,9 +59,9 @@ public class StaticWeekPlanNotificationJob extends Job {
 		// Get stored entries for this week
 		Calendar cal = Calendar.getInstance();
 
-		Schedule schedule = null;
+		List<ScheduleItem> items = null;
 		try {
-			schedule = ScheduleUtil.retrieve(getContext(), cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.WEEK_OF_YEAR));
+			items = ScheduleUtil.retrieve(getContext());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -68,21 +69,20 @@ public class StaticWeekPlanNotificationJob extends Job {
 
 		Calendar eventCal = Calendar.getInstance();
 		ScheduleItem event = null;
-		if (schedule != null) {
-			for (ScheduleDay day : schedule.getWeekdays()) {
-				eventCal.setTime(day.getDate());
+		if (items != null) {
+			long difference = Long.MAX_VALUE;
+
+			for (ScheduleItem item : items) {
+				eventCal.setTime(item.getStart());
 
 				if (cal.get(Calendar.DAY_OF_MONTH) == eventCal.get(Calendar.DAY_OF_MONTH)) {
-					long difference = Long.MAX_VALUE;
-					for (ScheduleItem item : day.getItems()) {
-						if (!item.isEventCancelled()) {
-							eventCal.setTime(item.getStart());
+					if (!item.isEventCancelled()) {
+						eventCal.setTime(item.getStart());
 
-							long newDiff = eventCal.getTimeInMillis() - cal.getTimeInMillis();
-							if (newDiff > 0 && newDiff < difference) {
-								event = item;
-								difference = newDiff;
-							}
+						long newDiff = eventCal.getTimeInMillis() - cal.getTimeInMillis();
+						if (newDiff > 0 && newDiff < difference) {
+							event = item;
+							difference = newDiff;
 						}
 					}
 					break;

@@ -28,6 +28,7 @@ import de.be.thaw.auth.exception.UserStoreException;
 import de.be.thaw.exception.ExceptionHandler;
 import de.be.thaw.connect.zpa.ZPAConnection;
 import de.be.thaw.connect.zpa.exception.ZPABadCredentialsException;
+import de.be.thaw.util.ThawUtil;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -47,18 +48,9 @@ public class LoginActivity extends AppCompatActivity {
 		// Try to set up ZPA Certificate
 		try {
 			CertificateUtil.initCertificate(this);
-		} catch (CertificateException e) {
-			e.printStackTrace();
-		} catch (KeyStoreException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		} catch (KeyManagementException e) {
+		} catch (CertificateException | KeyStoreException | IOException | NoSuchAlgorithmException | KeyManagementException e) {
 			e.printStackTrace();
 		}
-
 
 		Intent intent = getIntent();
 		boolean doAutoLogin = intent.getBooleanExtra(AUTO_LOGIN_EXTRA, true);
@@ -74,7 +66,6 @@ public class LoginActivity extends AppCompatActivity {
 		if (doAutoLogin && user != null) {
 			goToMainActivity();
 		}
-
 
 		// Build GUI
 		setContentView(R.layout.activity_login);
@@ -104,11 +95,12 @@ public class LoginActivity extends AppCompatActivity {
 				// Save user.
 				try {
 					Auth.getInstance().setCurrentUser(LoginActivity.this, user);
-				} catch (UserStoreException e) {
-					e.printStackTrace();
-				} catch (NoUserStoredException e) {
+				} catch (UserStoreException | NoUserStoredException e) {
 					e.printStackTrace();
 				}
+
+				// Clear all previously cached data.
+				ThawUtil.clearChaches(LoginActivity.this);
 
 				goToMainActivity();
 			}
