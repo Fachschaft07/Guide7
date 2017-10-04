@@ -4,7 +4,7 @@ import java.util.Date;
 
 /**
  * An entry in the notice board.
- *
+ * <p>
  * Created by Benjamin Eder on 12.03.2017.
  */
 public class BoardEntry {
@@ -57,6 +57,7 @@ public class BoardEntry {
 
 	/**
 	 * Get the Author.
+	 *
 	 * @return
 	 */
 	public String getAuthor() {
@@ -65,6 +66,7 @@ public class BoardEntry {
 
 	/**
 	 * Get the entries title.
+	 *
 	 * @return
 	 */
 	public String getTitle() {
@@ -73,6 +75,7 @@ public class BoardEntry {
 
 	/**
 	 * Get the Entries HTML Content.
+	 *
 	 * @return
 	 */
 	public String getContent() {
@@ -81,6 +84,7 @@ public class BoardEntry {
 
 	/**
 	 * Get the date from which this entry is valid.
+	 *
 	 * @return
 	 */
 	public Date getFrom() {
@@ -89,6 +93,7 @@ public class BoardEntry {
 
 	/**
 	 * Get the date to which this entry is valid.
+	 *
 	 * @return
 	 */
 	public Date getTo() {
@@ -113,6 +118,30 @@ public class BoardEntry {
 
 	public void setTo(Date to) {
 		this.to = to;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		BoardEntry that = (BoardEntry) o;
+
+		if (author != null ? !author.equals(that.author) : that.author != null) return false;
+		if (title != null ? !title.equals(that.title) : that.title != null) return false;
+		if (content != null ? !content.equals(that.content) : that.content != null) return false;
+		if (from != null ? !from.equals(that.from) : that.from != null) return false;
+		return to != null ? to.equals(that.to) : that.to == null;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = author != null ? author.hashCode() : 0;
+		result = 31 * result + (title != null ? title.hashCode() : 0);
+		result = 31 * result + (content != null ? content.hashCode() : 0);
+		result = 31 * result + (from != null ? from.hashCode() : 0);
+		result = 31 * result + (to != null ? to.hashCode() : 0);
+		return result;
 	}
 
 	@Override

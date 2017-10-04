@@ -38,7 +38,7 @@
     <string name="searchingForBoardEntriesMessage">Searching for news...</string>
     <string name="boardEntrySearchError">An error occurred while searching for news. :(</string>
     <string name="noticeBoardChangedNotificationTitle">Notice board</string>
-    <string name="noticeBoardChangedNotificationMessage">The notice board has been changed, might be worth to take a glimpse!</string>
+    <string name="noticeBoardChangedNotificationMessage">entries in the notice board have been changed.</string>
 
     <!-- Appointments -->
     <string name="upcomingAppointmentNotificationTitle">Upcoming appointment</string>

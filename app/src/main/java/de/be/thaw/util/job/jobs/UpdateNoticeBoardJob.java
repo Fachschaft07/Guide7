@@ -14,7 +14,9 @@ import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobRequest;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -67,22 +69,22 @@ public class UpdateNoticeBoardJob extends Job {
 			return Result.FAILURE;
 		}
 
-		// Move old Entries in an entry set for easy title comparison.
-		Set<String> entrySet = new HashSet<>();
-		for (BoardEntry entry : oldEntries) {
-			entrySet.add(entry.getTitle());
+		Set<BoardEntry> oldEntryLookup = new HashSet<>();
+		for (BoardEntry e : oldEntries) {
+			oldEntryLookup.add(e);
 		}
 
 		// Check for new ones or changed ones.
-		boolean noticeBoardChanged = false;
+		List<BoardEntry> newEntries = new ArrayList<>();
 		for (BoardEntry entry : entries) {
-			if (!entrySet.contains(entry.getTitle())) {
-				noticeBoardChanged = true;
-				break;
+			if (!oldEntryLookup.contains(entry)) {
+				newEntries.add(entry);
 			}
 		}
 
-		if (noticeBoardChanged) {
+		newEntries.add(entries[0]);
+
+		if (newEntries.size() > 0) {
 			// Update notice board file
 			try {
 				BoardUtil.store(entries, getContext());
@@ -91,7 +93,7 @@ public class UpdateNoticeBoardJob extends Job {
 			}
 
 			// Issue notification that the notice board changed.
-			issueNotification();
+			issueNotification(newEntries);
 		}
 
 		return Result.SUCCESS;
@@ -99,8 +101,9 @@ public class UpdateNoticeBoardJob extends Job {
 
 	/**
 	 * Issue notification that the notice board changed!
+	 * @param newEntries
 	 */
-	private void issueNotification() {
+	private void issueNotification(List<BoardEntry> newEntries) {
 		Intent resultIntent = new Intent(getContext(), MainActivity.class);
 		resultIntent.putExtra(MainActivity.CALL_FRAGMENT_EXTRA, R.id.drawer_action_blackboard);
 
@@ -112,11 +115,18 @@ public class UpdateNoticeBoardJob extends Job {
 						PendingIntent.FLAG_UPDATE_CURRENT
 				);
 
+		String text;
+		if (newEntries.size() == 1) {
+			text = newEntries.get(0).getTitle() + "\n\n" + newEntries.get(0).getContent();
+		} else {
+			text = newEntries.size() + " " + getContext().getResources().getString(R.string.noticeBoardChangedNotificationMessage);
+		}
+
 		NotificationCompat.Builder notificationBuilder =
 				new NotificationCompat.Builder(getContext())
 						.setSmallIcon(R.drawable.notification_icon)
 						.setContentTitle(getContext().getResources().getString(R.string.noticeBoardChangedNotificationTitle))
-						.setContentText(getContext().getResources().getString(R.string.noticeBoardChangedNotificationMessage))
+						.setContentText(text)
 						.setContentIntent(resultPendingIntent)
 						.setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE | Notification.DEFAULT_LIGHTS)
 						.setAutoCancel(true);

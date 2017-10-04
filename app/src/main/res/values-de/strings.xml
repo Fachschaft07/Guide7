@@ -39,7 +39,7 @@
     <string name="searchingForBoardEntriesMessage">Neuigkeiten werden gesucht...</string>
     <string name="boardEntrySearchError">Bei der Suche nach Neuigkeiten ist ein Fehler aufgetreten. :(</string>
     <string name="noticeBoardChangedNotificationTitle">Schwarzes Brett</string>
-    <string name="noticeBoardChangedNotificationMessage">Das Schwarze Brett wurde geändert, vielleicht ist etwas interessantes dabei!</string>
+    <string name="noticeBoardChangedNotificationMessage">Einträge des Schwarzen Bretts wurden geändert.</string>
 
     <!-- Appointments -->
     <string name="upcomingAppointmentNotificationTitle">Bevorstehender Termin</string>

@@ -46,7 +46,7 @@ public class StaticWeekPlanNotificationJob extends Job {
 	public static final int NOTIFICATION_ID = 2;
 
 	/**
-	 * How much time to wait after a event happend before searching for the next event.
+	 * How much time to wait after a event happened before searching for the next event.
 	 * (in minutes). (At least one!)
 	 */
 	private static final int BUFFER = 1;
@@ -85,7 +85,6 @@ public class StaticWeekPlanNotificationJob extends Job {
 							difference = newDiff;
 						}
 					}
-					break;
 				}
 			}
 		}
@@ -115,7 +114,7 @@ public class StaticWeekPlanNotificationJob extends Job {
 			cal.setTime(item.getStart());
 
 			String start = TimeUtil.getTimeString(cal);
-			String room = item.getDescription().split("/")[1].trim();
+			String room = item.getLocation();
 
 			NotificationCompat.Builder notificationBuilder =
 					new NotificationCompat.Builder(getContext())
