@@ -5,6 +5,7 @@
     <string name="filter">Filter...</string>
     <string name="welcome">Welcome</string>
     <string name="logout">Logout</string>
+	<string name="ok">OK</string>
 
     <!-- Login -->
     <string name="passwordHint">Password</string>
@@ -21,6 +22,12 @@
     <string name="eventCancelled">CANCELLED</string>
     <string name="showCancelledEventsTitle">Show cancelled lectures.</string>
     <string name="showCancelledEventsSummary">Shows cancelled lectures in another color.</string>
+    <string name="weekPlanChangeNotificationTitle">Change Notifications</string>
+	<string name="weekPlanChangeNotificationSummary">Get notified when your schedule changes.</string>
+	<string name="scheduleChangedTitle">Schedule changed</string>
+	<string name="newScheduleItem">New schedule item</string>
+	<string name="scheduleChangedItems">changed items</string>
+	<string name="scheduleNewItems">new items</string>
 
     <!-- Deadlines and Appointments -->
     <string name="appointmentLoadingError">An error occurred. :(</string>
@@ -72,6 +79,10 @@
     <string name="appointments_group">Appointments</string>
     <string name="appointments_notification_title">Upcoming appointment notification (Experimental)</string>
     <string name="appointments_notification_summary">Get notified about upcoming appointments a day before.</string>
+	<string name="otherSettings">Other</string>
+	<string name="clearCacheTitle">Clear Cache</string>
+	<string name="clearCacheSummary">Delete all cached data (Except for the login credentials).</string>
+	<string name="clearCacheSuccessMessage">Cache has been cleared.</string>
 
     <!-- Info -->
     <string name="libraries">Libraries</string>

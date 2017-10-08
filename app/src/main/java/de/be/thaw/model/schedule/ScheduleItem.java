@@ -17,11 +17,17 @@ public class ScheduleItem implements Parcelable {
 	private String location;
 	private String url;
 
+	/**
+	 * Unique ID of the schedule item.
+	 */
+	private String UID;
+
 	private boolean eventCancelled;
 
-	public ScheduleItem(String title, String description) {
+	public ScheduleItem(String title, String description, String UID) {
 		this.title = title;
 		this.description = description;
+		this.UID = UID;
 	}
 
 	public ScheduleItem() {
@@ -92,6 +98,14 @@ public class ScheduleItem implements Parcelable {
 		this.eventCancelled = eventCancelled;
 	}
 
+	public String getUID() {
+		return UID;
+	}
+
+	public void setUID(String UID) {
+		this.UID = UID;
+	}
+
 	protected ScheduleItem(Parcel in) {
 		title = in.readString();
 		description = in.readString();
@@ -101,6 +115,7 @@ public class ScheduleItem implements Parcelable {
 		start = (Date) in.readValue(getClass().getClassLoader());
 		end = (Date) in.readValue(getClass().getClassLoader());
 		timestamp = (Date) in.readValue(getClass().getClassLoader());
+		UID = in.readString();
 	}
 
 	@Override
@@ -113,6 +128,40 @@ public class ScheduleItem implements Parcelable {
 		dest.writeValue(getStart());
 		dest.writeValue(getEnd());
 		dest.writeValue(getTimestamp());
+		dest.writeString(UID);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		ScheduleItem that = (ScheduleItem) o;
+
+		if (eventCancelled != that.eventCancelled) return false;
+		if (start != null ? !start.equals(that.start) : that.start != null) return false;
+		if (end != null ? !end.equals(that.end) : that.end != null) return false;
+		if (title != null ? !title.equals(that.title) : that.title != null) return false;
+		if (description != null ? !description.equals(that.description) : that.description != null)
+			return false;
+		if (location != null ? !location.equals(that.location) : that.location != null)
+			return false;
+		if (url != null ? !url.equals(that.url) : that.url != null) return false;
+		return UID != null ? UID.equals(that.UID) : that.UID == null;
+
+	}
+
+	@Override
+	public int hashCode() {
+		int result = start != null ? start.hashCode() : 0;
+		result = 31 * result + (end != null ? end.hashCode() : 0);
+		result = 31 * result + (title != null ? title.hashCode() : 0);
+		result = 31 * result + (description != null ? description.hashCode() : 0);
+		result = 31 * result + (location != null ? location.hashCode() : 0);
+		result = 31 * result + (url != null ? url.hashCode() : 0);
+		result = 31 * result + (UID != null ? UID.hashCode() : 0);
+		result = 31 * result + (eventCancelled ? 1 : 0);
+		return result;
 	}
 
 	@Override

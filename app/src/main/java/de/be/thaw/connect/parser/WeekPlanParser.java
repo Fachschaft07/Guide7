@@ -64,6 +64,11 @@ public class WeekPlanParser implements Parser<Calendar, List<ScheduleItem>> {
 	private static final String URL_PROPERTY = "URL";
 
 	/**
+	 * Unique ID of a schedule item.
+	 */
+	private static final String UID_PROPERTY = "UID";
+
+	/**
 	 * String determining a special note.
 	 */
 	private static final String SPECIAL_NOTICE = "***";
@@ -80,6 +85,7 @@ public class WeekPlanParser implements Parser<Calendar, List<ScheduleItem>> {
 			String end = component.getProperty(END_PROPERTY).getValue();
 			String timestamp = component.getProperty(TIMESTAMP_PROPERTY).getValue();
 			String url = component.getProperty(URL_PROPERTY).getValue();
+			String UID = component.getProperty(UID_PROPERTY).getValue();
 
 			Date startDate = null;
 			Date endDate = null;
@@ -119,7 +125,7 @@ public class WeekPlanParser implements Parser<Calendar, List<ScheduleItem>> {
 				}
 			}
 
-			ScheduleItem item = new ScheduleItem(summary, description);
+			ScheduleItem item = new ScheduleItem(summary, description, UID);
 
 			item.setStart(startDate);
 			item.setEnd(endDate);

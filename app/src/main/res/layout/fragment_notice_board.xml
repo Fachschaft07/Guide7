@@ -1,17 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.SwipeRefreshLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/boardlist_swipe_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			  xmlns:app="http://schemas.android.com/apk/res-auto"
+			  android:layout_width="match_parent"
+			  android:layout_height="match_parent"
+			  android:descendantFocusability="beforeDescendants"
+			  android:focusableInTouchMode="true"
+			  android:orientation="vertical">
 
-    <ListView
-        android:id="@+id/boardlist"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        />
-</android.support.v4.widget.SwipeRefreshLayout>
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="@android:color/white">
+
+		<EditText
+			android:id="@+id/notice_board_filter"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true"
+			android:layout_alignParentTop="true"
+			android:background="@null"
+			android:ems="10"
+			android:hint="@string/filter"
+			android:inputType="text"
+			android:padding="10sp"
+			android:textColor="@android:color/black"
+			android:textColorHint="@color/nearlyWhite"
+			android:layout_toLeftOf="@+id/notice_board_filter_remove"
+			android:layout_toStartOf="@+id/notice_board_filter_remove"/>
+
+		<com.joanzapata.iconify.widget.IconButton
+			android:id="@+id/notice_board_filter_remove"
+			android:layout_width="50dp"
+			android:layout_height="wrap_content"
+			android:layout_alignBottom="@+id/notice_board_filter"
+			android:layout_alignParentEnd="true"
+			android:layout_alignParentRight="true"
+			android:layout_alignParentTop="true"
+			android:background="@null"
+			android:text="{fa-times-circle}"
+			android:textAllCaps="false"
+			android:textColor="@android:color/darker_gray"
+			android:textSize="24sp"/>
+	</RelativeLayout>
+
+	<android.support.v4.widget.SwipeRefreshLayout
+		android:id="@+id/boardlist_swipe_layout"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:orientation="vertical">
+
+		<ListView
+			android:id="@+id/boardlist"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true"
+			android:layout_alignParentTop="true"
+			/>
+
+	</android.support.v4.widget.SwipeRefreshLayout>
+
+</LinearLayout>

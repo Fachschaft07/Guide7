@@ -17,8 +17,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.Iconify;
@@ -26,8 +24,6 @@ import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import com.joanzapata.iconify.widget.IconButton;
 import com.joanzapata.iconify.widget.IconTextView;
-
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.security.KeyManagementException;
@@ -40,10 +36,6 @@ import de.be.thaw.auth.CertificateUtil;
 import de.be.thaw.auth.User;
 import de.be.thaw.auth.exception.AuthException;
 import de.be.thaw.auth.exception.NoUserStoredException;
-import de.be.thaw.cache.AppointmentUtil;
-import de.be.thaw.cache.BoardUtil;
-import de.be.thaw.cache.MenuUtil;
-import de.be.thaw.cache.ScheduleUtil;
 import de.be.thaw.exception.ExceptionHandler;
 import de.be.thaw.fragments.AppointmentFragment;
 import de.be.thaw.fragments.InfoFragment;
@@ -53,10 +45,12 @@ import de.be.thaw.fragments.MainFragment;
 import de.be.thaw.fragments.RoomSearchFragment;
 import de.be.thaw.fragments.SettingsFragment;
 import de.be.thaw.fragments.WeekPlanFragment;
+import de.be.thaw.util.Preference;
 import de.be.thaw.util.ThawUtil;
 import de.be.thaw.util.job.jobs.StaticWeekPlanNotificationJob;
 import de.be.thaw.util.job.jobs.UpcomingAppointmentNotificationJob;
 import de.be.thaw.util.job.jobs.UpdateNoticeBoardJob;
+import de.be.thaw.util.job.jobs.UpdateScheduleJob;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -120,6 +114,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 			UpdateNoticeBoardJob.scheduleJob();
 		}
 
+		if (UpdateScheduleJob.isActivated(this)) {
+			// Recurring Task which updates the schedule.
+			UpdateScheduleJob.scheduleJob();
+		}
+
 		if (StaticWeekPlanNotificationJob.isActivated(this)) {
 			StaticWeekPlanNotificationJob.scheduleJob();
 		}
@@ -134,30 +133,51 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		if (key.equals("noticeboardNotificationKey")) {
-			boolean activated = sharedPreferences.getBoolean(key, true);
+		Preference p = Preference.of(key);
 
-			if (activated) {
-				UpdateNoticeBoardJob.scheduleJob();
-			} else {
-				UpdateNoticeBoardJob.cancelJob();
-			}
-		} else if (key.equals("staticScheduleNotificationKey")) {
-			boolean activated = sharedPreferences.getBoolean(key, false);
+		boolean activated = false;
+		switch (p) {
+			case NOTICE_BOARD_CHANGE_NOTIFICATION_ENABLED:
+				activated = p.getBoolean(this);
 
-			if (activated) {
-				StaticWeekPlanNotificationJob.scheduleJob();
-			} else {
-				StaticWeekPlanNotificationJob.cancelJob(this);
-			}
-		} else if (key.equals("upcomingAppointmentNotification")) {
-			boolean activated = sharedPreferences.getBoolean(key, false);
+				if (activated) {
+					UpdateNoticeBoardJob.scheduleJob();
+				} else {
+					UpdateNoticeBoardJob.cancelJob();
+				}
+				break;
 
-			if (activated) {
-				UpcomingAppointmentNotificationJob.scheduleJob();
-			} else {
-				UpcomingAppointmentNotificationJob.cancelJob();
-			}
+			case STATIC_WEEK_PLAN_NOTIFICATION_ENABLED:
+				activated = p.getBoolean(this);
+
+				if (activated) {
+					StaticWeekPlanNotificationJob.scheduleJob();
+				} else {
+					StaticWeekPlanNotificationJob.cancelJob(this);
+				}
+				break;
+
+			case UPCOMING_APPOINTMENT_NOTIFICATION_ENABLED:
+				activated = p.getBoolean(this);
+
+				if (activated) {
+					UpcomingAppointmentNotificationJob.scheduleJob();
+				} else {
+					UpcomingAppointmentNotificationJob.cancelJob();
+				}
+				break;
+
+			case WEEK_PLAN_CHANGE_NOTIFICATION_ENABLED:
+				activated = p.getBoolean(this);
+
+				if (activated) {
+					UpdateScheduleJob.scheduleJob();
+				} else {
+					UpdateScheduleJob.cancelJob();
+				}
+				break;
+
+			default:
 		}
 	}
 
@@ -475,7 +495,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 		}
 
 		// Clear caches
-		ThawUtil.clearChaches(this);
+		ThawUtil.clearCaches(this);
 
 		// Return to Login Activity
 		Intent intent = new Intent(this, LoginActivity.class);

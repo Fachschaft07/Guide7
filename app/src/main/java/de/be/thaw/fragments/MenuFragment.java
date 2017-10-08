@@ -94,12 +94,12 @@ public class MenuFragment extends Fragment implements MainFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
-		View view = inflater.inflate(R.layout.fragment_notice_board, container, false);
+		View view = inflater.inflate(R.layout.fragment_menu, container, false);
 
 		menuAdapter = new MenuArrayAdapter(getActivity());
 
 		// Initialize Views
-		swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.boardlist_swipe_layout);
+		swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.menulist_swipe_layout);
 		swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 
 			@Override
@@ -113,7 +113,7 @@ public class MenuFragment extends Fragment implements MainFragment {
 				android.R.color.holo_orange_light,
 				android.R.color.holo_red_light);
 
-		ListView boardList = (ListView) view.findViewById(R.id.boardlist);
+		ListView boardList = (ListView) view.findViewById(R.id.menulist);
 		boardList.setAdapter(menuAdapter);
 
 		// Initialize board list

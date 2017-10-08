@@ -28,6 +28,7 @@ import de.be.thaw.auth.exception.NoUserStoredException;
 import de.be.thaw.cache.BoardUtil;
 import de.be.thaw.model.noticeboard.BoardEntry;
 import de.be.thaw.connect.zpa.ZPAConnection;
+import de.be.thaw.util.Preference;
 
 /**
  * Recurring Task which is checking for Notice board changes by updating and
@@ -82,9 +83,7 @@ public class UpdateNoticeBoardJob extends Job {
 			}
 		}
 
-		newEntries.add(entries[0]);
-
-		if (newEntries.size() > 0) {
+		if (!newEntries.isEmpty()) {
 			// Update notice board file
 			try {
 				BoardUtil.store(entries, getContext());
@@ -117,7 +116,7 @@ public class UpdateNoticeBoardJob extends Job {
 
 		String text;
 		if (newEntries.size() == 1) {
-			text = newEntries.get(0).getTitle() + "\n\n" + newEntries.get(0).getContent();
+			text = newEntries.get(0).getTitle();
 		} else {
 			text = newEntries.size() + " " + getContext().getResources().getString(R.string.noticeBoardChangedNotificationMessage);
 		}
@@ -159,7 +158,7 @@ public class UpdateNoticeBoardJob extends Job {
 	 * @return
 	 */
 	public static boolean isActivated(Context context) {
-		return PreferenceManager.getDefaultSharedPreferences(context).getBoolean("noticeboardNotificationKey", true);
+		return Preference.NOTICE_BOARD_CHANGE_NOTIFICATION_ENABLED.getBoolean(context);
 	}
 
 }

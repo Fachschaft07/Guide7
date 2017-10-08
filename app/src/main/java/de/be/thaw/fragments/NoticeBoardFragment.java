@@ -12,13 +12,17 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.Html;
 import android.text.Spanned;
+import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -34,6 +38,7 @@ import de.be.thaw.auth.User;
 import de.be.thaw.auth.exception.NoUserStoredException;
 import de.be.thaw.cache.BoardUtil;
 import de.be.thaw.model.noticeboard.BoardEntry;
+import de.be.thaw.ui.list.filter.FilterArrayAdapter;
 import de.be.thaw.util.ThawUtil;
 import de.be.thaw.connect.zpa.ZPAConnection;
 import de.be.thaw.connect.parser.NoticeBoardParser;
@@ -51,6 +56,11 @@ public class NoticeBoardFragment extends Fragment implements MainFragment {
 	 * Layout responsible for pull to refresh.
 	 */
 	private SwipeRefreshLayout swipeContainer;
+
+	/**
+	 * TextField used to filter.
+	 */
+	private EditText filterField;
 
 	public NoticeBoardFragment() {
 		// Required empty public constructor
@@ -116,10 +126,52 @@ public class NoticeBoardFragment extends Fragment implements MainFragment {
 		ListView boardList = (ListView) view.findViewById(R.id.boardlist);
 		boardList.setAdapter(boardAdapter);
 
+		final Button resetFilterButton = (Button) view.findViewById(R.id.notice_board_filter_remove);
+		resetFilterButton.setVisibility(Button.INVISIBLE);
+		resetFilterButton.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+				onResetFilter(view);
+			}
+
+		});
+
+		filterField = (EditText) view.findViewById(R.id.notice_board_filter);
+		filterField.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+				boardAdapter.getFilter().filter(charSequence);
+
+				resetFilterButton.setVisibility(charSequence != null && charSequence.length() > 0 ? Button.VISIBLE : Button.INVISIBLE);
+			}
+
+			@Override
+			public void afterTextChanged(Editable editable) {
+
+			}
+
+		});
+
 		// Initialize board list
 		updateEntries(null);
 
 		return view;
+	}
+
+	/**
+	 * Reset the filter.
+	 *
+	 * @param view
+	 */
+	public void onResetFilter(View view) {
+		filterField.setText("");
 	}
 
 	/**
@@ -237,9 +289,7 @@ public class NoticeBoardFragment extends Fragment implements MainFragment {
 	/**
 	 * Custom adapter to display board entries.
 	 */
-	private class BoardArrayAdapter extends ArrayAdapter<BoardEntry> {
-
-		private final Context context;
+	private class BoardArrayAdapter extends FilterArrayAdapter<BoardEntry> {
 
 		/**
 		 * Cache parsed html contents in this map for a item position.
@@ -247,8 +297,7 @@ public class NoticeBoardFragment extends Fragment implements MainFragment {
 		private Map<Integer, Spanned> contentCache = new HashMap<>();
 
 		public BoardArrayAdapter(Activity activity) {
-			super(activity, -1);
-			this.context = activity;
+			super(activity);
 		}
 
 		@NonNull
@@ -309,6 +358,11 @@ public class NoticeBoardFragment extends Fragment implements MainFragment {
 			super.notifyDataSetChanged();
 
 			clearCache();
+		}
+
+		@Override
+		public boolean applyFilter(BoardEntry item, String filter) {
+			return item.getContent().toLowerCase().contains(filter) || item.getTitle().toLowerCase().contains(filter) || item.getAuthor().toLowerCase().contains(filter);
 		}
 
 		/**

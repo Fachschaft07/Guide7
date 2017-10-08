@@ -44,6 +44,6 @@
         android:paddingTop="10sp"
         android:text="TextView"
         android:textColor="@android:color/black"
-        android:textSize="18sp"/>
+        android:textSize="14sp"/>
 
 </LinearLayout>

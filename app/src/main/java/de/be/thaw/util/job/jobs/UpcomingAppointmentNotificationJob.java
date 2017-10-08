@@ -22,6 +22,7 @@ import de.be.thaw.MainActivity;
 import de.be.thaw.R;
 import de.be.thaw.cache.AppointmentUtil;
 import de.be.thaw.model.appointments.Appointment;
+import de.be.thaw.util.Preference;
 
 /**
  * Job aiming to notify the user about upcoming appointments.
@@ -106,7 +107,6 @@ public class UpcomingAppointmentNotificationJob extends Job {
 		// Build & Schedule Job.
 		new JobRequest.Builder(TAG).setExtras(extras)
 				.setExecutionWindow(startMs, endMs)
-				.setPersisted(true)
 				.build()
 				.schedule();
 
@@ -148,7 +148,6 @@ public class UpcomingAppointmentNotificationJob extends Job {
 		// Schedule immediately.
 		new JobRequest.Builder(TAG).setExact(1_000L)
 				.setUpdateCurrent(true)
-				.setPersisted(true)
 				.build()
 				.schedule();
 	}
@@ -165,7 +164,7 @@ public class UpcomingAppointmentNotificationJob extends Job {
 	 * @return
 	 */
 	public static boolean isActivated(Context context) {
-		return PreferenceManager.getDefaultSharedPreferences(context).getBoolean("upcomingAppointmentNotification", true);
+		return Preference.UPCOMING_APPOINTMENT_NOTIFICATION_ENABLED.getBoolean(context);
 	}
 
 }

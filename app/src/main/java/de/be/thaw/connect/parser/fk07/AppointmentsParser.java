@@ -57,16 +57,16 @@ public class AppointmentsParser implements Parser<Document, Appointment[]> {
 							// try to get an specific date for the appointment.
 							Date date = getNextDateInString(timeSpan);
 							boolean hasSpecificDate = date != null;
-							if (hasSpecificDate) {
-								Calendar dateCal = Calendar.getInstance();
-								dateCal.setTime(date);
 
-								cal.set(Calendar.DAY_OF_MONTH, dateCal.get(Calendar.DAY_OF_MONTH));
-							} else {
-								System.out.print("FUCK!");
+							Calendar dateCalendar = Calendar.getInstance();
+							dateCalendar.setTimeInMillis(cal.getTimeInMillis());
+
+							if (hasSpecificDate) {
+								dateCalendar.setTime(date);
+								dateCalendar.set(Calendar.YEAR, cal.get(Calendar.YEAR));
 							}
 
-							appointmentList.add(new Appointment(cal, timeSpan, description, hasSpecificDate));
+							appointmentList.add(new Appointment(dateCalendar, timeSpan, description, hasSpecificDate));
 						}
 					}
 				}

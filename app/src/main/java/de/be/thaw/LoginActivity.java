@@ -100,7 +100,7 @@ public class LoginActivity extends AppCompatActivity {
 				}
 
 				// Clear all previously cached data.
-				ThawUtil.clearChaches(LoginActivity.this);
+				ThawUtil.clearCaches(LoginActivity.this);
 
 				goToMainActivity();
 			}

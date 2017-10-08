@@ -6,6 +6,7 @@
     <string name="filter">Filtern...</string>
     <string name="welcome">Hallo</string>
     <string name="logout">Abmelden</string>
+	<string name="ok">OK</string>
 
     <!-- Login -->
     <string name="passwordHint">Passwort</string>
@@ -22,6 +23,12 @@
     <string name="eventCancelled">FÄLLT AUS</string>
     <string name="showCancelledEventsTitle">Ausfallende Vorlesungen anzeigen</string>
     <string name="showCancelledEventsSummary">Zeigt ausgefallene Vorlesungen in einer anderen Farbe an.</string>
+    <string name="weekPlanChangeNotificationTitle">Änderungsbenachrichtigung</string>
+    <string name="weekPlanChangeNotificationSummary">Erhalte Benachrichtigungen wenn sich dein Stundenplan ändert.</string>
+    <string name="scheduleChangedTitle">Stundenplan Änderung</string>
+    <string name="newScheduleItem">Neuer Stundenplan Eintrag</string>
+    <string name="scheduleChangedItems">veränderte Einträge</string>
+    <string name="scheduleNewItems">neue Einträge</string>
 
     <!-- Deadlines and Appointments -->
     <string name="appointmentLoadingError">Es ist ein Fehler aufgetreten. :(</string>
@@ -73,6 +80,10 @@
     <string name="appointments_group">Termine</string>
     <string name="appointments_notification_title">Benachrichtigung über kommende Termine (Experimentell)</string>
     <string name="appointments_notification_summary">Erhalte eine Benachrichtigung wenn ein Termin nur noch einen Tag entfernt ist.</string>
+	<string name="otherSettings">Andere Einstellungen</string>
+	<string name="clearCacheTitle">Zwischenspeicher leeren</string>
+	<string name="clearCacheSummary">Lösche alle zwischengespeicherten Daten (Außer Anmeldeinformationen).</string>
+	<string name="clearCacheSuccessMessage">Zwischenspeicher wurde geleert.</string>
 
     <!-- Info -->
     <string name="libraries">Bibliotheken</string>

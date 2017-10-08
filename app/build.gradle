@@ -7,8 +7,8 @@ android {
         applicationId "de.be.thaw"
         minSdkVersion 15
         targetSdkVersion 26
-        versionCode 21
-        versionName "Build 21"
+        versionCode 22
+        versionName "Build 22"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -54,6 +54,6 @@ dependencies {
     compile 'com.github.alamkanak:android-week-view:1.2.6'
     compile 'com.android.support.constraint:constraint-layout:1.0.0'
     compile 'com.joanzapata.iconify:android-iconify-fontawesome:2.2.2'
-    compile 'com.evernote:android-job:1.1.7'
+    compile 'com.evernote:android-job:1.2.0'
     compile 'org.mnode.ical4j:ical4j:2.0.5'
 }

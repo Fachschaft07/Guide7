@@ -6,6 +6,7 @@ import com.evernote.android.job.JobCreator;
 import de.be.thaw.util.job.jobs.StaticWeekPlanNotificationJob;
 import de.be.thaw.util.job.jobs.UpcomingAppointmentNotificationJob;
 import de.be.thaw.util.job.jobs.UpdateNoticeBoardJob;
+import de.be.thaw.util.job.jobs.UpdateScheduleJob;
 
 /**
  * The Job Creator is mapping a Job Tag to a specific Job class.
@@ -25,6 +26,9 @@ public class ThawJobCreator implements JobCreator {
 
 			case UpcomingAppointmentNotificationJob.TAG:
 				return new UpcomingAppointmentNotificationJob();
+
+			case UpdateScheduleJob.TAG:
+				return new UpdateScheduleJob();
 
 			// Add more here if you need another background job! :)
 

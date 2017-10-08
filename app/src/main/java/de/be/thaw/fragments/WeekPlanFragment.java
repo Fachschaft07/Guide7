@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
 
 import de.be.thaw.EventDetailActivity;
 import de.be.thaw.R;
@@ -33,16 +32,16 @@ import de.be.thaw.auth.Auth;
 import de.be.thaw.auth.Credential;
 import de.be.thaw.auth.exception.NoUserStoredException;
 import de.be.thaw.cache.ScheduleUtil;
-import de.be.thaw.model.ScheduleEvent;
-import de.be.thaw.model.schedule.Schedule;
-import de.be.thaw.model.schedule.ScheduleItem;
-import de.be.thaw.ui.AlertDialogManager;
-import de.be.thaw.ui.LoadSnackbar;
-import de.be.thaw.util.ThawUtil;
-import de.be.thaw.util.TimeUtil;
 import de.be.thaw.connect.zpa.ZPAConnection;
 import de.be.thaw.connect.zpa.exception.ZPABadCredentialsException;
 import de.be.thaw.connect.zpa.exception.ZPALoginFailedException;
+import de.be.thaw.model.ScheduleEvent;
+import de.be.thaw.model.schedule.ScheduleItem;
+import de.be.thaw.ui.AlertDialogManager;
+import de.be.thaw.ui.LoadSnackbar;
+import de.be.thaw.util.Preference;
+import de.be.thaw.util.ThawUtil;
+import de.be.thaw.util.TimeUtil;
 
 public class WeekPlanFragment extends Fragment implements MainFragment {
 
@@ -146,7 +145,8 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 	 */
 	private int getDisplayableDays() {
 		if (displayableDays == -1) {
-			displayableDays = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(getContext()).getString("displayedDaysPrefKey", "2"));
+			displayableDays = Preference.DISPLAYED_DAYS.getInteger(getContext());
+			System.out.println("DISP" + displayableDays);
 		}
 
 		return displayableDays;
@@ -204,7 +204,7 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 				if (items != null) {
 					for (ScheduleItem item : items) {
 						// Restrict to items of the given month.
-						if (item != null && item.getStart().getMonth() == newMonth) {
+						if (item != null && item.getStart() != null && item.getStart().getMonth() == newMonth) {
 							ScheduleEvent event = new ScheduleEvent(item);
 							event.setColor(getColorForItem(item));
 

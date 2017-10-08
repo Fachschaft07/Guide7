@@ -1,6 +1,5 @@
 package de.be.thaw.fragments;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -14,15 +13,11 @@ import android.text.Editable;
 import android.text.Spanned;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -38,6 +33,7 @@ import de.be.thaw.cache.AppointmentUtil;
 import de.be.thaw.connect.fk07.FK07Connection;
 import de.be.thaw.connect.parser.fk07.AppointmentsParser;
 import de.be.thaw.model.appointments.Appointment;
+import de.be.thaw.ui.list.filter.FilterArrayAdapter;
 import de.be.thaw.util.ThawUtil;
 
 public class AppointmentFragment extends Fragment implements MainFragment {
@@ -216,6 +212,7 @@ public class AppointmentFragment extends Fragment implements MainFragment {
 
 	/**
 	 * Resets a passed calendar to have nothing but the year and month set.
+	 *
 	 * @param calendar
 	 */
 	private void resetCalendarToMonth(Calendar calendar) {
@@ -309,45 +306,20 @@ public class AppointmentFragment extends Fragment implements MainFragment {
 	/**
 	 * Custom adapter to display appointment entries.
 	 */
-	private class AppointmentAdapter extends ArrayAdapter<Appointment> implements Filterable {
-
-		private final Context context;
-
-		/**
-		 * List holding all appointments.
-		 */
-		private List<Appointment> model = new ArrayList<>();
+	private class AppointmentAdapter extends FilterArrayAdapter<Appointment> {
 
 		/**
 		 * Cache for parsed HTML contents.
 		 */
-		private Map<Integer, Spanned> contentChache = new HashMap<>();
+		private Map<Integer, Spanned> contentCache = new HashMap<>();
 
 		/**
-		 * List of filtered indices.
+		 * Create new AppointmentAdapter.
+		 *
+		 * @param context where the adapter should be deployed.
 		 */
-		private List<Integer> filtered;
-
-		private Filter filter;
-
 		public AppointmentAdapter(Context context) {
-			super(context, -1);
-			this.context = context;
-		}
-
-		@Override
-		public int getCount() {
-			return filtered == null ? model.size() : filtered.size();
-		}
-
-		@Override
-		public Appointment getItem(int index) {
-			return filtered == null ? model.get(index) : model.get(filtered.get(index));
-		}
-
-		@Override
-		public long getItemId(int index) {
-			return index;
+			super(context);
 		}
 
 		@NonNull
@@ -380,40 +352,14 @@ public class AppointmentFragment extends Fragment implements MainFragment {
 			holder.monthView.setText(AppointmentsParser.MONTH_YEAR_FORMAT.format(appointment.getDate().getTime()));
 			holder.timeSpanView.setText(appointment.getTimeSpan());
 
-			Spanned description = contentChache.get(position);
+			Spanned description = contentCache.get(position);
 			if (description == null) {
 				description = ThawUtil.fromHTML(appointment.getDescription());
-				contentChache.put(position, description);
+				contentCache.put(position, description);
 			}
 			holder.descriptionView.setText(description);
 
 			return convertView;
-		}
-
-		@NonNull
-		@Override
-		public Filter getFilter() {
-			if (filter == null) {
-				filter = new AppointmentFilter();
-			}
-
-			return filter;
-		}
-
-		/**
-		 * Clear the Adapter model.
-		 */
-		public void clear() {
-			model.clear();
-		}
-
-		/**
-		 * Add all passed appointments to adapter.
-		 *
-		 * @param appointmentList
-		 */
-		public void addAll(List<Appointment> appointmentList) {
-			model.addAll(appointmentList);
 		}
 
 		@Override
@@ -427,7 +373,14 @@ public class AppointmentFragment extends Fragment implements MainFragment {
 		 * Clear cached contents.
 		 */
 		private void clearCache() {
-			contentChache.clear();
+			contentCache.clear();
+		}
+
+		@Override
+		public boolean applyFilter(Appointment item, String filter) {
+			return item.getDescription().toLowerCase().contains(filter)
+					|| item.getTimeSpan().toLowerCase().contains(filter)
+					|| AppointmentsParser.MONTH_YEAR_FORMAT.format(item.getDate().getTime()).toLowerCase().contains(filter);
 		}
 
 		/**
@@ -438,55 +391,6 @@ public class AppointmentFragment extends Fragment implements MainFragment {
 			TextView monthView;
 			TextView timeSpanView;
 			TextView descriptionView;
-
-		}
-
-		/**
-		 * Filter filtering appointments.
-		 */
-		private class AppointmentFilter extends Filter {
-
-			@Override
-			protected FilterResults performFiltering(CharSequence constraint) {
-				FilterResults results = new FilterResults();
-
-				if (constraint == null && constraint.length() == 0) {
-					results.count = 0;
-					results.values = null;
-				} else {
-					String filter = constraint.toString().toLowerCase();
-					List<Integer> filteredIndices = new ArrayList<>();
-
-					for (int i = 0; i < model.size(); i++) {
-						Appointment appointment = model.get(i);
-
-						if (appointment.getDescription().toLowerCase().contains(filter)
-								|| appointment.getTimeSpan().toLowerCase().contains(filter)
-								|| AppointmentsParser.MONTH_YEAR_FORMAT.format(appointment.getDate().getTime()).toLowerCase().contains(filter)) {
-							filteredIndices.add(i);
-						}
-					}
-
-					results.count = filteredIndices.size();
-					results.values = filteredIndices;
-
-					String debugTest = "Found results: \n";
-					for (int result : filteredIndices) {
-						debugTest += model.get(result).getDescription() + "\n";
-					}
-
-					Log.i("FILTERAPPOINTMENTS", debugTest);
-				}
-
-				return results;
-			}
-
-			@Override
-			protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-				Log.i("FILTERAPPOINTMENTS", charSequence + " -> " + filterResults.values);
-				filtered = (List<Integer>) filterResults.values;
-				notifyDataSetChanged();
-			}
 
 		}
 

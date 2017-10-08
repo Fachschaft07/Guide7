@@ -32,6 +32,7 @@ import de.be.thaw.model.noticeboard.BoardEntry;
 import de.be.thaw.model.schedule.Schedule;
 import de.be.thaw.model.schedule.ScheduleDay;
 import de.be.thaw.model.schedule.ScheduleItem;
+import de.be.thaw.util.Preference;
 import de.be.thaw.util.TimeUtil;
 
 /**
@@ -170,7 +171,7 @@ public class StaticWeekPlanNotificationJob extends Job {
 	 * @return
 	 */
 	public static boolean isActivated(Context context) {
-		return PreferenceManager.getDefaultSharedPreferences(context).getBoolean("staticScheduleNotificationKey", false);
+		return Preference.STATIC_WEEK_PLAN_NOTIFICATION_ENABLED.getBoolean(context);
 	}
 
 }

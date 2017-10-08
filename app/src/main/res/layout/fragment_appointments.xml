@@ -16,6 +16,9 @@
             android:id="@+id/appointment_filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
             android:background="@null"
             android:ems="10"
             android:hint="@string/filter"
@@ -23,15 +26,13 @@
             android:padding="10sp"
             android:textColor="@android:color/black"
             android:textColorHint="@color/nearlyWhite"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"/>
+            android:layout_toLeftOf="@+id/appointment_filter_remove"
+            android:layout_toStartOf="@+id/appointment_filter_remove"/>
 
         <com.joanzapata.iconify.widget.IconButton
             android:id="@+id/appointment_filter_remove"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/appointment_filter"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
@@ -39,11 +40,11 @@
             android:text="{fa-times-circle}"
             android:textAllCaps="false"
             android:textColor="@android:color/darker_gray"
-            android:textSize="24sp"/>
+            android:textSize="24sp"
+            android:layout_alignBottom="@+id/appointment_filter"/>
     </RelativeLayout>
 
     <android.support.v4.widget.SwipeRefreshLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/boardlist_swipe_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

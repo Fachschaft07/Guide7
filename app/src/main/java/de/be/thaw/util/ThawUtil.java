@@ -41,7 +41,7 @@ public class ThawUtil {
 	 * Clear all cached data.
 	 * @param context to remove caches for
 	 */
-	public static void clearChaches(Context context) {
+	public static void clearCaches(Context context) {
 		ScheduleUtil.clear(context);
 		AppointmentUtil.clear(context);
 		MenuUtil.clear(context);
