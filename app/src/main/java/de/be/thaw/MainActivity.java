@@ -81,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 	private int checkedItemId;
 	private Fragment selectedFragment;
 	private MenuItem refreshItem;
+	private MenuItem addItem;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -319,8 +320,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 		// Set Icons
 		setIcon(menu, R.id.action_refresh, FontAwesomeIcons.fa_refresh, R.color.actionBar_icon_color);
+		setIcon(menu, R.id.action_add, FontAwesomeIcons.fa_plus, R.color.actionBar_icon_color);
 
 		refreshItem = menu.findItem(R.id.action_refresh);
+		addItem = menu.findItem(R.id.action_add);
 
 		updateMenuItems();
 
@@ -338,7 +341,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 			case R.id.action_refresh:
 				if (getCurrentFragment() != null) {
 					if (getCurrentFragment() instanceof MainFragment) {
-						((MainFragment) getCurrentFragment()).refresh();
+						((MainFragment) getCurrentFragment()).onRefresh();
 					}
 				}
 				break;
@@ -418,12 +421,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 	 * Update the actiovation state of menu items.
 	 */
 	private void updateMenuItems() {
-		if (refreshItem != null && getCurrentFragment() != null) {
+		if (refreshItem != null && addItem != null && getCurrentFragment() != null) {
 			if (getCurrentFragment() instanceof MainFragment) {
 				refreshItem.setVisible(true);
 				refreshItem.setEnabled(((MainFragment) getCurrentFragment()).isRefreshable());
+				addItem.setVisible(((MainFragment) getCurrentFragment()).isAddable());
+				addItem.setEnabled(((MainFragment) getCurrentFragment()).isAddable());
 			} else {
 				refreshItem.setVisible(false);
+				addItem.setVisible(false);
 			}
 		}
 	}

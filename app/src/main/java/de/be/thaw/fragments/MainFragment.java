@@ -8,6 +8,10 @@ public interface MainFragment {
 
 	boolean isRefreshable();
 
-	void refresh();
+	boolean isAddable();
+
+	void onRefresh();
+
+	void onAdd();
 
 }

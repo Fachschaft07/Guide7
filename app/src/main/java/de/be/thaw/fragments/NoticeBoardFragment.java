@@ -7,13 +7,10 @@ import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
-import android.text.Html;
 import android.text.Spanned;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
@@ -27,7 +24,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,7 +49,7 @@ public class NoticeBoardFragment extends Fragment implements MainFragment {
 	private ArrayAdapter<BoardEntry> boardAdapter;
 
 	/**
-	 * Layout responsible for pull to refresh.
+	 * Layout responsible for pull to onRefresh.
 	 */
 	private SwipeRefreshLayout swipeContainer;
 
@@ -88,11 +84,21 @@ public class NoticeBoardFragment extends Fragment implements MainFragment {
 		return true;
 	}
 
+	@Override
+	public boolean isAddable() {
+		return false;
+	}
+
 	/**
 	 * Refresh Fragment.
 	 */
-	public void refresh() {
+	public void onRefresh() {
 		new GetNewsTask(getActivity()).execute();
+	}
+
+	@Override
+	public void onAdd() {
+		// Do nothing
 	}
 
 	@Override
@@ -114,7 +120,7 @@ public class NoticeBoardFragment extends Fragment implements MainFragment {
 
 			@Override
 			public void onRefresh() {
-				refresh();
+				onRefresh();
 			}
 
 		});
@@ -188,7 +194,7 @@ public class NoticeBoardFragment extends Fragment implements MainFragment {
 			}
 
 			if (entries == null) { // When there are still no entries -> Update from Server
-				refresh();
+				onRefresh();
 			}
 		} else { // Store
 			try {

@@ -85,10 +85,15 @@ public class RoomSearchFragment extends Fragment implements MainFragment {
 		return true;
 	}
 
+	@Override
+	public boolean isAddable() {
+		return false;
+	}
+
 	/**
 	 * Refresh Fragment.
 	 */
-	public void refresh() {
+	public void onRefresh() {
 		Calendar start = Calendar.getInstance();
 		Calendar end = Calendar.getInstance();
 
@@ -96,6 +101,11 @@ public class RoomSearchFragment extends Fragment implements MainFragment {
 		end.set(currentDate.get(Calendar.YEAR), currentDate.get(Calendar.MONTH), currentDate.get(Calendar.DAY_OF_MONTH), currentTo.get(Calendar.HOUR_OF_DAY), currentTo.get(Calendar.MINUTE));
 
 		new RoomSearchTask(roomAdapter, getActivity()).execute(start, end);
+	}
+
+	@Override
+	public void onAdd() {
+		// Do nothing
 	}
 
 	@Override
@@ -155,7 +165,7 @@ public class RoomSearchFragment extends Fragment implements MainFragment {
 
 
 		// Refresh List
-		refresh();
+		onRefresh();
 
 		return view;
 	}

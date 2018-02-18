@@ -1,14 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "25.0.3"
+    compileSdkVersion 27
     defaultConfig {
         applicationId "de.be.thaw"
         minSdkVersion 15
-        targetSdkVersion 26
-        versionCode 22
-        versionName "Build 22"
+        targetSdkVersion 27
+        versionCode 24
+        versionName "Build 24"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -24,11 +23,6 @@ android {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
     }
-    externalNativeBuild {
-        cmake {
-            path "src/main/cpp/CMakeLists.txt"
-        }
-    }
     repositories {
         maven {
             url "https://maven.google.com"
@@ -37,23 +31,23 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    compile 'com.android.support:appcompat-v7:26.1.0'
-    compile 'com.android.support:design:26.1.0'
-    compile 'com.android.support:support-v4:26.1.0'
-    compile 'com.android.support:preference-v7:26.1.0'
-    compile 'com.android.support:preference-v14:26.1.0'
-    testCompile 'junit:junit:4.12'
-    compile files('libs/jackson-annotations-2.8.6.jar')
-    compile files('libs/jackson-core-2.8.6.jar')
-    compile files('libs/jackson-databind-2.8.6.jar')
-    compile files('libs/jsoup-1.10.2.jar')
-    compile 'com.github.alamkanak:android-week-view:1.2.6'
-    compile 'com.android.support.constraint:constraint-layout:1.0.0'
-    compile 'com.joanzapata.iconify:android-iconify-fontawesome:2.2.2'
-    compile 'com.evernote:android-job:1.2.0'
-    compile 'org.mnode.ical4j:ical4j:2.0.5'
+	compile fileTree(include: ['*.jar'], dir: 'libs')
+	androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+		exclude group: 'com.android.support', module: 'support-annotations'
+	})
+	compile 'com.android.support:appcompat-v7:27.0.2'
+	compile 'com.android.support:design:27.0.2'
+	compile 'com.android.support:support-v4:27.0.2'
+	compile 'com.android.support:preference-v7:27.0.2'
+	compile 'com.android.support:preference-v14:27.0.2'
+	testCompile 'junit:junit:4.12'
+	compile 'com.github.alamkanak:android-week-view:1.2.6'
+	compile 'com.android.support.constraint:constraint-layout:1.0.2'
+	compile 'com.joanzapata.iconify:android-iconify-fontawesome:2.2.2'
+	compile 'com.evernote:android-job:1.2.0'
+	compile 'org.mnode.ical4j:ical4j:2.0.5'
+	compile 'org.jsoup:jsoup:1.11.2'
+	compile 'com.fasterxml.jackson.core:jackson-core:2.8.10'
+	compile 'com.fasterxml.jackson.core:jackson-databind:2.8.10'
+	compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.10'
 }

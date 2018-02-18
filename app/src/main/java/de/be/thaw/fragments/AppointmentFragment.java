@@ -46,7 +46,7 @@ public class AppointmentFragment extends Fragment implements MainFragment {
 	private AppointmentAdapter appointmentAdapter;
 
 	/**
-	 * Layout responsible for pull to refresh.
+	 * Layout responsible for pull to onRefresh.
 	 */
 	private SwipeRefreshLayout swipeContainer;
 
@@ -78,11 +78,21 @@ public class AppointmentFragment extends Fragment implements MainFragment {
 		return true;
 	}
 
+	@Override
+	public boolean isAddable() {
+		return false;
+	}
+
 	/**
 	 * Refresh Fragment.
 	 */
-	public void refresh() {
+	public void onRefresh() {
 		new GetAppointmentsTask(getContext()).execute();
+	}
+
+	@Override
+	public void onAdd() {
+		// Do nothing
 	}
 
 	@Override
@@ -103,7 +113,7 @@ public class AppointmentFragment extends Fragment implements MainFragment {
 
 			@Override
 			public void onRefresh() {
-				refresh();
+				onRefresh();
 			}
 
 		});
@@ -178,7 +188,7 @@ public class AppointmentFragment extends Fragment implements MainFragment {
 			}
 
 			if (appointments == null) { // When there are still no menus -> Update from Server
-				refresh();
+				onRefresh();
 			}
 		} else { // Store
 			try {

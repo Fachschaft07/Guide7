@@ -19,24 +19,17 @@ import android.widget.TextView;
 
 import com.joanzapata.iconify.widget.IconTextView;
 
-import org.w3c.dom.Text;
-
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import de.be.thaw.R;
 import de.be.thaw.cache.MenuUtil;
-import de.be.thaw.connect.parser.NoticeBoardParser;
 import de.be.thaw.connect.parser.canteen.MenuParser;
 import de.be.thaw.connect.studentenwerk.StudentenwerkConnection;
 import de.be.thaw.model.canteen.Meal;
 import de.be.thaw.model.canteen.Menu;
-import de.be.thaw.model.noticeboard.BoardEntry;
-import de.be.thaw.util.ThawUtil;
 
 public class MenuFragment extends Fragment implements MainFragment {
 
@@ -48,7 +41,7 @@ public class MenuFragment extends Fragment implements MainFragment {
 	private ArrayAdapter<Menu> menuAdapter;
 
 	/**
-	 * Layout responsible for pull to refresh.
+	 * Layout responsible for pull to onRefresh.
 	 */
 	private SwipeRefreshLayout swipeContainer;
 
@@ -78,11 +71,21 @@ public class MenuFragment extends Fragment implements MainFragment {
 		return true;
 	}
 
+	@Override
+	public boolean isAddable() {
+		return false;
+	}
+
 	/**
 	 * Refresh Fragment.
 	 */
-	public void refresh() {
+	public void onRefresh() {
 		new GetMenuTask(getContext()).execute();
+	}
+
+	@Override
+	public void onAdd() {
+		// Do nothing
 	}
 
 	@Override
@@ -104,7 +107,7 @@ public class MenuFragment extends Fragment implements MainFragment {
 
 			@Override
 			public void onRefresh() {
-				refresh();
+				onRefresh();
 			}
 
 		});
@@ -136,7 +139,7 @@ public class MenuFragment extends Fragment implements MainFragment {
 			}
 
 			if (menus == null) { // When there are still no menus -> Update from Server
-				refresh();
+				onRefresh();
 			}
 		} else { // Store
 			try {

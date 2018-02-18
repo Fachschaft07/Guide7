@@ -90,10 +90,15 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 		return true;
 	}
 
+	@Override
+	public boolean isAddable() {
+		return true;
+	}
+
 	/**
 	 * Refresh Schedule.
 	 */
-	public void refresh() {
+	public void onRefresh() {
 		try {
 			refreshSchedule();
 		} catch (ExecutionException | InterruptedException e) {
@@ -101,6 +106,11 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 		}
 
 		weekView.notifyDatasetChanged(); // Causes Loader to reload!
+	}
+
+	@Override
+	public void onAdd() {
+		// TODO Implement
 	}
 
 	@Override
@@ -204,7 +214,7 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 				if (items != null) {
 					for (ScheduleItem item : items) {
 						// Restrict to items of the given month.
-						if (item != null && item.getStart() != null && item.getStart().getMonth() == newMonth) {
+						if (item != null && item.getStart() != null && item.getStart().getMonth() == newMonth - 1) {
 							ScheduleEvent event = new ScheduleEvent(item);
 							event.setColor(getColorForItem(item));
 
