@@ -35,6 +35,11 @@ public class BoardEntry {
 	private Date to;
 
 	/**
+	 * Portrait id of the author.
+	 */
+	private int portraitId;
+
+	/**
 	 * Create new Board entry.
 	 *
 	 * @param author
@@ -118,6 +123,14 @@ public class BoardEntry {
 
 	public void setTo(Date to) {
 		this.to = to;
+	}
+
+	public int getPortraitId() {
+		return portraitId;
+	}
+
+	public void setPortraitId(int portraitId) {
+		this.portraitId = portraitId;
 	}
 
 	@Override

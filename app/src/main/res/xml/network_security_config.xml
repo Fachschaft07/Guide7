@@ -4,6 +4,7 @@
         <domain includeSubdomains="true">w3-o.cs.hm.edu</domain>
         <trust-anchors>
             <certificates src="@raw/zpa"/>
+            <certificates src="@raw/w3"/>
         </trust-anchors>
     </domain-config>
 </network-security-config>

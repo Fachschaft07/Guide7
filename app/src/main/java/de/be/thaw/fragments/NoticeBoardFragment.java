@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -20,12 +23,20 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.mikhaellopez.circularimageview.CircularImageView;
+
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import de.be.thaw.R;
 import de.be.thaw.auth.Auth;
@@ -33,7 +44,11 @@ import de.be.thaw.auth.Credential;
 import de.be.thaw.auth.User;
 import de.be.thaw.auth.exception.NoUserStoredException;
 import de.be.thaw.cache.BoardUtil;
+import de.be.thaw.cache.PortraitUtil;
+import de.be.thaw.connect.fk07.FK07Connection;
+import de.be.thaw.connect.parser.exception.ParseException;
 import de.be.thaw.model.noticeboard.BoardEntry;
+import de.be.thaw.model.noticeboard.Portrait;
 import de.be.thaw.ui.list.filter.FilterArrayAdapter;
 import de.be.thaw.util.ThawUtil;
 import de.be.thaw.connect.zpa.ZPAConnection;
@@ -57,6 +72,11 @@ public class NoticeBoardFragment extends Fragment implements MainFragment {
 	 * TextField used to filter.
 	 */
 	private EditText filterField;
+
+	/**
+	 * Map containing all portraits.
+	 */
+	private Map<Integer, Portrait> portraitMap = new HashMap<>();
 
 	public NoticeBoardFragment() {
 		// Required empty public constructor
@@ -195,12 +215,35 @@ public class NoticeBoardFragment extends Fragment implements MainFragment {
 
 			if (entries == null) { // When there are still no entries -> Update from Server
 				onRefresh();
+			} else {
+				// Load author portraits from storage.
+				portraitMap.clear();
+				for (BoardEntry entry : entries) {
+					try {
+						Portrait portrait = PortraitUtil.retrieve(getActivity(), entry.getPortraitId());
+
+						if (portrait != null) {
+							portraitMap.put(portrait.getId(), portrait);
+						}
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
 			}
 		} else { // Store
 			try {
 				BoardUtil.store(entries, getActivity());
 			} catch (IOException e) {
 				e.printStackTrace();
+			}
+
+			// Store portraits
+			for (Portrait portrait : portraitMap.values()) {
+				try {
+					PortraitUtil.store(portrait, getActivity());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 
@@ -238,11 +281,11 @@ public class NoticeBoardFragment extends Fragment implements MainFragment {
 
 		@Override
 		protected BoardEntry[] doInBackground(Void... params) {
-			User user = null;
+			User user;
 			try {
 				user = Auth.getInstance().getCurrentUser(getContext());
 			} catch (NoUserStoredException e1) {
-				this.e = e;
+				this.e = e1;
 				return null;
 			}
 
@@ -255,6 +298,47 @@ public class NoticeBoardFragment extends Fragment implements MainFragment {
 			} catch (Exception e) {
 				e.printStackTrace();
 				this.e = e;
+			}
+
+			// Fetch portraits
+			portraitMap.clear();
+			if (entries != null) {
+				// Fetch distinct author names
+				Map<String, List<BoardEntry>> distinctAuthorEntries = new HashMap<>();
+				for (BoardEntry entry : entries) {
+					List<BoardEntry> l = distinctAuthorEntries.get(entry.getAuthor());
+
+					if (l == null) {
+						l = new ArrayList<>();
+						distinctAuthorEntries.put(entry.getAuthor(), l);
+					}
+
+					l.add(entry);
+				}
+
+				int i = 0;
+				for (Map.Entry<String, List<BoardEntry>> e : distinctAuthorEntries.entrySet()) {
+					String[] nameParts = e.getKey().split(",");
+					String surname = nameParts[0];
+					String firstName = nameParts[1].trim().charAt(0) + "";
+
+					FK07Connection con = new FK07Connection();
+					try {
+						Portrait portrait = con.getStaffPortrait(surname, firstName);
+
+						if (portrait != null) {
+							portrait.setId(i++);
+							portraitMap.put(portrait.getId(), portrait);
+
+							for (BoardEntry boardEntry : e.getValue()) {
+								boardEntry.setPortraitId(portrait.getId());
+							}
+						}
+					} catch (Exception exc) {
+						exc.printStackTrace();
+						this.e = exc;
+					}
+				}
 			}
 
 			return entries;
@@ -317,11 +401,12 @@ public class NoticeBoardFragment extends Fragment implements MainFragment {
 				LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				convertView = inflater.inflate(R.layout.board_entry, parent, false);
 
-				holder.authorView = (TextView) convertView.findViewById(R.id.entry_author);
-				holder.titleView = (TextView) convertView.findViewById(R.id.entry_title);
-				holder.fromView = (TextView) convertView.findViewById(R.id.entry_from);
-				holder.toView = (TextView) convertView.findViewById(R.id.entry_to);
-				holder.contentView = (TextView) convertView.findViewById(R.id.entry_content);
+				holder.authorView = convertView.findViewById(R.id.entry_author);
+				holder.titleView = convertView.findViewById(R.id.entry_title);
+				holder.fromView = convertView.findViewById(R.id.entry_from);
+				holder.toView = convertView.findViewById(R.id.entry_to);
+				holder.contentView = convertView.findViewById(R.id.entry_content);
+				holder.imageView = convertView.findViewById(R.id.image_test);
 
 				convertView.setTag(holder);
 
@@ -348,6 +433,13 @@ public class NoticeBoardFragment extends Fragment implements MainFragment {
 				contentCache.put(position, content);
 			}
 			holder.contentView.setText(content);
+
+			Portrait p = portraitMap.get(item.getPortraitId());
+			if (p != null) {
+				ByteArrayInputStream bais = new ByteArrayInputStream(p.getData());
+				Drawable drawable = Drawable.createFromStream(bais, "");
+				holder.imageView.setImageDrawable(drawable);
+			}
 
 			return convertView;
 		}
@@ -381,6 +473,7 @@ public class NoticeBoardFragment extends Fragment implements MainFragment {
 			TextView fromView;
 			TextView toView;
 			TextView contentView;
+			CircularImageView imageView;
 
 		}
 

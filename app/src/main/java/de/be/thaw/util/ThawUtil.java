@@ -11,6 +11,7 @@ import java.util.Calendar;
 import de.be.thaw.cache.AppointmentUtil;
 import de.be.thaw.cache.BoardUtil;
 import de.be.thaw.cache.MenuUtil;
+import de.be.thaw.cache.PortraitUtil;
 import de.be.thaw.cache.ScheduleUtil;
 
 /**
@@ -46,6 +47,7 @@ public class ThawUtil {
 		AppointmentUtil.clear(context);
 		MenuUtil.clear(context);
 		BoardUtil.clear(context);
+		PortraitUtil.clear(context);
 	}
 
 }

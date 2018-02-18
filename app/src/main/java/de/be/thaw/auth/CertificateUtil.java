@@ -43,10 +43,19 @@ public class CertificateUtil {
 			CertificateFactory cf = CertificateFactory.getInstance("X.509");
 
 			InputStream is = activity.getResources().openRawResource(R.raw.zpa);
-			Certificate ca;
+			Certificate zpaCert;
 			try {
-				ca = cf.generateCertificate(is);
-				Log.i("Login", "ca=" + ((X509Certificate) ca).getSubjectDN());
+				zpaCert = cf.generateCertificate(is);
+				Log.i("Login", "ca=" + ((X509Certificate) zpaCert).getSubjectDN());
+			} finally {
+				is.close();
+			}
+
+			is = activity.getResources().openRawResource(R.raw.w3);
+			Certificate w3Cert;
+			try {
+				w3Cert = cf.generateCertificate(is);
+				Log.i("Login", "ca=" + ((X509Certificate) w3Cert).getSubjectDN());
 			} finally {
 				is.close();
 			}
@@ -55,7 +64,8 @@ public class CertificateUtil {
 			String keyStoreType = KeyStore.getDefaultType();
 			KeyStore keyStore = KeyStore.getInstance(keyStoreType);
 			keyStore.load(null, null);
-			keyStore.setCertificateEntry("ca", ca);
+			keyStore.setCertificateEntry("zpa", zpaCert);
+			keyStore.setCertificateEntry("w3", w3Cert);
 
 			// Create a TrustManager that trusts the CAs in our KeyStore
 			String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();

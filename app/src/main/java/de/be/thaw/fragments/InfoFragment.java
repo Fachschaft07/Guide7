@@ -34,7 +34,7 @@ public class InfoFragment extends Fragment {
 		// Inflate the layout for this fragment
 		View view = inflater.inflate(R.layout.fragment_info, container, false);
 
-		TextView versionLabel = (TextView) view.findViewById(R.id.info_versionName);
+		TextView versionLabel = view.findViewById(R.id.info_versionName);
 
 		PackageInfo pInfo = null;
 		try {
