@@ -108,12 +108,12 @@ public class AppointmentFragment extends Fragment implements MainFragment {
 		appointmentAdapter = new AppointmentAdapter(getActivity());
 
 		// Initialize Views
-		swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.boardlist_swipe_layout);
+		swipeContainer = view.findViewById(R.id.boardlist_swipe_layout);
 		swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 
 			@Override
 			public void onRefresh() {
-				onRefresh();
+				AppointmentFragment.this.onRefresh();
 			}
 
 		});
@@ -122,11 +122,11 @@ public class AppointmentFragment extends Fragment implements MainFragment {
 				android.R.color.holo_orange_light,
 				android.R.color.holo_red_light);
 
-		ListView boardList = (ListView) view.findViewById(R.id.boardlist);
+		ListView boardList = view.findViewById(R.id.boardlist);
 		boardList.setAdapter(appointmentAdapter);
 
 
-		final Button resetFilterButton = (Button) view.findViewById(R.id.appointment_filter_remove);
+		final Button resetFilterButton = view.findViewById(R.id.appointment_filter_remove);
 		resetFilterButton.setVisibility(Button.INVISIBLE);
 		resetFilterButton.setOnClickListener(new View.OnClickListener() {
 
@@ -137,7 +137,7 @@ public class AppointmentFragment extends Fragment implements MainFragment {
 
 		});
 
-		filterField = (EditText) view.findViewById(R.id.appointment_filter);
+		filterField = view.findViewById(R.id.appointment_filter);
 		filterField.addTextChangedListener(new TextWatcher() {
 
 			@Override

@@ -120,7 +120,7 @@ public class NoticeBoardFragment extends Fragment implements MainFragment {
 
 			@Override
 			public void onRefresh() {
-				onRefresh();
+				NoticeBoardFragment.this.onRefresh();
 			}
 
 		});

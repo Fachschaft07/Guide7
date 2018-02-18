@@ -16,11 +16,7 @@ public class SecretKeyGen {
 	}
 
 	private SecretKeyGen() {
-
-	}
-
-	static {
-		System.loadLibrary("native-lib");
+		// Hide constructor
 	}
 
 	public byte[] getSecretKey() {

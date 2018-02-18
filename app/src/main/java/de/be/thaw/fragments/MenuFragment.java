@@ -102,12 +102,12 @@ public class MenuFragment extends Fragment implements MainFragment {
 		menuAdapter = new MenuArrayAdapter(getActivity());
 
 		// Initialize Views
-		swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.menulist_swipe_layout);
+		swipeContainer = view.findViewById(R.id.menulist_swipe_layout);
 		swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 
 			@Override
 			public void onRefresh() {
-				onRefresh();
+				MenuFragment.this.onRefresh();
 			}
 
 		});
@@ -116,7 +116,7 @@ public class MenuFragment extends Fragment implements MainFragment {
 				android.R.color.holo_orange_light,
 				android.R.color.holo_red_light);
 
-		ListView boardList = (ListView) view.findViewById(R.id.menulist);
+		ListView boardList = view.findViewById(R.id.menulist);
 		boardList.setAdapter(menuAdapter);
 
 		// Initialize board list
