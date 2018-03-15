@@ -54,6 +54,7 @@ public class BoardEntry {
 		this.content = content;
 		this.from = from;
 		this.to = to;
+		this.portraitId = -1;
 	}
 
 	public BoardEntry() {
