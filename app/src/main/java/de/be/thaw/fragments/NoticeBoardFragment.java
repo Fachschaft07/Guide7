@@ -440,7 +440,7 @@ public class NoticeBoardFragment extends Fragment implements MainFragment {
 				Drawable drawable = Drawable.createFromStream(bais, "");
 				holder.imageView.setImageDrawable(drawable);
 			} else {
-				holder.imageView.setImageResource(R.drawable.avatar);
+				holder.imageView.setImageResource(R.drawable.prof_avatar);
 			}
 
 			return convertView;
