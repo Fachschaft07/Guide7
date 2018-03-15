@@ -20,7 +20,7 @@
 			android:id="@+id/image_test"
 			android:layout_width="50dp"
 			android:layout_height="50dp"
-			android:src="@drawable/avatar"
+			android:src="@drawable/prof_avatar"
 			app:civ_border_color="#EAEAEA"
 			app:civ_border_width="2dp"/>
 
