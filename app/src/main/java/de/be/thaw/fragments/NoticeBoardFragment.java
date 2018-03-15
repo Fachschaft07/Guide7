@@ -439,6 +439,8 @@ public class NoticeBoardFragment extends Fragment implements MainFragment {
 				ByteArrayInputStream bais = new ByteArrayInputStream(p.getData());
 				Drawable drawable = Drawable.createFromStream(bais, "");
 				holder.imageView.setImageDrawable(drawable);
+			} else {
+				holder.imageView.setImageResource(R.drawable.prof_avatar);
 			}
 
 			return convertView;
