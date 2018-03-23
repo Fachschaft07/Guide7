@@ -46,7 +46,7 @@ dependencies {
 	compile 'com.joanzapata.iconify:android-iconify-fontawesome:2.2.2'
 	compile 'com.evernote:android-job:1.2.0'
 	compile 'org.mnode.ical4j:ical4j:2.0.5'
-	compile 'org.jsoup:jsoup:1.11.2'
+	compile 'org.jsoup:jsoup:1.10.3'
 	compile 'com.fasterxml.jackson.core:jackson-core:2.8.10'
 	compile 'com.fasterxml.jackson.core:jackson-databind:2.8.10'
 	compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.10'
