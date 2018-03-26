@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import de.be.thaw.connect.parser.Parser;
 import de.be.thaw.connect.parser.exception.ParseException;
@@ -26,7 +27,7 @@ public class AppointmentsParser implements Parser<Document, Appointment[]> {
 
 	private static final String CONTENT_TABLE_CLASS = "table-faculty-seven";
 
-	public static final DateFormat MONTH_YEAR_FORMAT = new SimpleDateFormat("MMM yyyy");
+	public static final DateFormat MONTH_YEAR_FORMAT = new SimpleDateFormat("MMM yyyy", Locale.GERMAN);
 	private static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM");
 
 	@Override

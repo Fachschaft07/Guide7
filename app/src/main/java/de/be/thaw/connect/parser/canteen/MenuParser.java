@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import de.be.thaw.connect.parser.Parser;
 import de.be.thaw.connect.parser.exception.ParseException;
@@ -25,7 +26,8 @@ import de.be.thaw.model.canteen.Menu;
 
 public class MenuParser implements Parser<Document, Menu[]> {
 
-	public static final DateFormat DATE_FORMAT = new SimpleDateFormat("EEEE, dd.MM.yyyy");
+	public static final DateFormat DATE_FORMAT =
+			new SimpleDateFormat("EEEE, dd.MM.yyyy", Locale.GERMAN);
 
 	@Override
 	public Menu[] parse(Document doc) throws ParseException {
