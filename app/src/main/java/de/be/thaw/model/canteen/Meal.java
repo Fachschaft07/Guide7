@@ -12,6 +12,10 @@ public class Meal {
 
 	private Allergen[] allergens;
 
+	private String type;
+
+	private String price;
+
 	public Meal() {
 
 	}
@@ -44,4 +48,19 @@ public class Meal {
 		this.allergens = allergens;
 	}
 
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getPrice() {
+		return price != null && !price.isEmpty() ? price : "-,- €";
+	}
+
+	public void setPrice(String price) {
+		this.price = price;
+	}
 }

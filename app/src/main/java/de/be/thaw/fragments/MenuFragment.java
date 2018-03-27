@@ -279,7 +279,7 @@ public class MenuFragment extends Fragment implements MainFragment {
 				linearLayout.addView(mealView);
 
 				TextView mealLabel = (TextView) mealView.findViewById(R.id.meal_label);
-				mealLabel.setText(meal.getName());
+				mealLabel.setText(meal.getName() + " - " + meal.getPrice());
 
 				IconTextView iconView = (IconTextView) mealView.findViewById(R.id.meal_entry_icon);
 

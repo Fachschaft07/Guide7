@@ -5,10 +5,13 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.IOException;
+import java.util.Map;
 
 import de.be.thaw.connect.parser.canteen.CanteenMenuURLParser;
 import de.be.thaw.connect.parser.canteen.MenuParser;
+import de.be.thaw.connect.parser.canteen.PriceParser;
 import de.be.thaw.connect.parser.exception.ParseException;
+import de.be.thaw.model.canteen.Meal;
 import de.be.thaw.model.canteen.Menu;
 
 /**
@@ -22,6 +25,7 @@ public class StudentenwerkConnection {
 	 * URL to the root of the Studentenwerk Menu (per Location).
 	 */
 	private static final String MENU_ROOT = "http://www.studentenwerk-muenchen.de/mensa/speiseplan/";
+	private static final String MENU_PRICE = "https://www.studentenwerk-muenchen.de/mensa/mensa-preise/";
 
 	public StudentenwerkConnection() {
 
@@ -58,7 +62,27 @@ public class StudentenwerkConnection {
 		Document menuDoc = connection.get();
 
 		MenuParser parser = new MenuParser();
-		return parser.parse(menuDoc);
+		Menu[] menu = parser.parse(menuDoc);
+
+		Map<String, String> prices = getPrices();
+		insertPrices(prices, menu);
+
+		return menu;
 	}
 
+	private Map<String, String> getPrices() throws IOException, ParseException {
+		Connection connection = getConnection(MENU_PRICE);
+		Document priceDoc = connection.get();
+		PriceParser parser = new PriceParser();
+		Map<String, String> prices = parser.parse(priceDoc);
+		return prices;
+	}
+
+	private void insertPrices(Map<String, String> prices, Menu[] menu) {
+		for (Menu m : menu) {
+			for (Meal meal : m.getMeals()) {
+				meal.setPrice(prices.get(meal.getType()));
+			}
+		}
+	}
 }
