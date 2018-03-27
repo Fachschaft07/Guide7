@@ -1,7 +1,5 @@
 package de.be.thaw.connect.parser.canteen;
 
-import android.util.Log;
-
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -60,6 +58,10 @@ public class MenuParser implements Parser<Document, Menu[]> {
 
 			List<Meal> meals = new ArrayList<>();
 			for (Element mealElement : mealElements) {
+
+				Element parent = mealElement.parent();
+				String type = parent.child(0).child(0).text();
+
 				String name = mealElement.text();
 
 				if (name == null || name.isEmpty()) {
@@ -114,6 +116,7 @@ public class MenuParser implements Parser<Document, Menu[]> {
 				Meal meal = new Meal(name);
 				meal.setMealInfo(mealInfo);
 				meal.setAllergens(allergens.toArray(new Allergen[allergens.size()]));
+				meal.setType(type);
 				meals.add(meal);
 			}
 

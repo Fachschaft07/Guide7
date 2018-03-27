@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
-import android.support.v7.preference.PreferenceManager;
 
 import com.evernote.android.job.Job;
 import com.evernote.android.job.JobManager;
@@ -122,13 +121,14 @@ public class UpdateNoticeBoardJob extends Job {
 		}
 
 		NotificationCompat.Builder notificationBuilder =
-				new NotificationCompat.Builder(getContext())
+				new NotificationCompat.Builder(getContext(), getContext().getString(R.string.channelId))
 						.setSmallIcon(R.drawable.notification_icon)
 						.setContentTitle(getContext().getResources().getString(R.string.noticeBoardChangedNotificationTitle))
 						.setContentText(text)
 						.setContentIntent(resultPendingIntent)
 						.setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE | Notification.DEFAULT_LIGHTS)
-						.setAutoCancel(true);
+						.setAutoCancel(true)
+						.setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
 		NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
 		notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());

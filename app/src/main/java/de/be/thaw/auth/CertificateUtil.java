@@ -60,12 +60,22 @@ public class CertificateUtil {
 				is.close();
 			}
 
+			is = activity.getResources().openRawResource(R.raw.stwm);
+			Certificate stwmCert;
+			try {
+				stwmCert = cf.generateCertificate(is);
+				Log.i("Login", "ca=" + ((X509Certificate) stwmCert).getSubjectDN());
+			} finally {
+				is.close();
+			}
+
 			// Create a KeyStore containing our trusted CAs
 			String keyStoreType = KeyStore.getDefaultType();
 			KeyStore keyStore = KeyStore.getInstance(keyStoreType);
 			keyStore.load(null, null);
 			keyStore.setCertificateEntry("zpa", zpaCert);
 			keyStore.setCertificateEntry("w3", w3Cert);
+			keyStore.setCertificateEntry("stwm", stwmCert);
 
 			// Create a TrustManager that trusts the CAs in our KeyStore
 			String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();

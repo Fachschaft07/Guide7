@@ -1,14 +1,9 @@
 package de.be.thaw.util.job.jobs;
 
-import android.app.Notification;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
-import android.support.v7.preference.PreferenceManager;
-import android.util.Log;
 
 import com.evernote.android.job.Job;
 import com.evernote.android.job.JobManager;
@@ -16,21 +11,11 @@ import com.evernote.android.job.JobRequest;
 
 import java.io.IOException;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import de.be.thaw.MainActivity;
 import de.be.thaw.R;
-import de.be.thaw.cache.BoardUtil;
 import de.be.thaw.cache.ScheduleUtil;
-import de.be.thaw.connect.zpa.ZPAConnection;
-import de.be.thaw.model.ScheduleEvent;
-import de.be.thaw.model.noticeboard.BoardEntry;
-import de.be.thaw.model.schedule.Schedule;
-import de.be.thaw.model.schedule.ScheduleDay;
 import de.be.thaw.model.schedule.ScheduleItem;
 import de.be.thaw.util.Preference;
 import de.be.thaw.util.TimeUtil;
@@ -118,11 +103,12 @@ public class StaticWeekPlanNotificationJob extends Job {
 			String room = item.getLocation();
 
 			NotificationCompat.Builder notificationBuilder =
-					new NotificationCompat.Builder(getContext())
+					new NotificationCompat.Builder(getContext(), getContext().getString(R.string.channelId))
 							.setSmallIcon(R.drawable.notification_icon)
 							.setContentTitle(getContext().getResources().getString(R.string.staticEventNotificationTitle))
 							.setContentText(item.getTitle() + " - " + room + " - " + start)
-							.setOngoing(true);
+							.setOngoing(true)
+							.setPriority(NotificationCompat.PRIORITY_LOW);
 
 			NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
 			notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
