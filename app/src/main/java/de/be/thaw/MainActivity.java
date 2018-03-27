@@ -1,7 +1,10 @@
 package de.be.thaw;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.support.v4.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
@@ -103,6 +106,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 		} else if (savedInstanceState == null) {
 			// Set Start Fragment
 			selectInitialFragment();
+		}
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+			String name = getString(R.string.channelId);
+			int importance = NotificationManager.IMPORTANCE_DEFAULT;
+			NotificationChannel channel = new NotificationChannel(getString(R.string.channelId), name, importance);
+			NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+			notificationManager.createNotificationChannel(channel);
 		}
 	}
 

@@ -144,13 +144,14 @@ public class UpdateScheduleJob extends Job {
 		}
 
 		NotificationCompat.Builder notificationBuilder =
-				new NotificationCompat.Builder(getContext())
+				new NotificationCompat.Builder(getContext(), getContext().getString(R.string.channelId))
 						.setSmallIcon(R.drawable.notification_icon)
 						.setContentTitle(title)
 						.setContentText(text)
 						.setContentIntent(resultPendingIntent)
 						.setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE | Notification.DEFAULT_LIGHTS)
-						.setAutoCancel(true);
+						.setAutoCancel(true)
+						.setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
 		NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
 		notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
