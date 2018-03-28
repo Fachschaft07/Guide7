@@ -7,6 +7,7 @@
     <string name="welcome">Hallo</string>
     <string name="logout">Abmelden</string>
 	<string name="ok">OK</string>
+    <string name="channelId">GUIDE7_CHANNEL</string>
 
     <!-- Login -->
     <string name="passwordHint">Passwort</string>
