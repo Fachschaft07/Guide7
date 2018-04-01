@@ -84,6 +84,9 @@
 	<string name="clearCacheTitle">Clear Cache</string>
 	<string name="clearCacheSummary">Delete all cached data (Except for the login credentials).</string>
 	<string name="clearCacheSuccessMessage">Cache has been cleared.</string>
+    <string name="clearCustomEntriesTitle">Delete custom schedule entries</string>
+    <string name="clearCustomEntriesSummary">Deletes all custom schedule entries that have been added.</string>
+    <string name="clearCustomEntriesSuccessMessage">Custom entries have been removed.</string>
 
     <!-- Info -->
     <string name="libraries">Libraries</string>
@@ -109,5 +112,16 @@
     <string name="navigation_drawer_item_datapolicy">Data policy</string>
     <string name="navigation_drawer_item_info">Info</string>
     <string name="navigation_drawer_item_logout">Logout</string>
+
+    <!-- Custom entry -->
+    <string name="custom_entry_title">Title</string>
+    <string name="custom_entry_description">Description</string>
+    <string name="custom_entry_recurring">Recurring</string>
+    <string name="custom_entry_default_duration">01:30</string>
+    <string name="custom_entry_location">Location</string>
+    <string name="custom_entry_start_date">Start date</string>
+    <string name="custom_entry_duration">Duration</string>
+    <string name="custom_entry_until">Until</string>
+
 
 </resources>

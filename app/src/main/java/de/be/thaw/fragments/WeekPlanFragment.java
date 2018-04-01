@@ -31,7 +31,9 @@ import de.be.thaw.R;
 import de.be.thaw.auth.Auth;
 import de.be.thaw.auth.Credential;
 import de.be.thaw.auth.exception.NoUserStoredException;
-import de.be.thaw.cache.ScheduleUtil;
+import de.be.thaw.model.schedule.custom.CustomScheduleItem;
+import de.be.thaw.storage.CustomEntryUtil;
+import de.be.thaw.storage.cache.ScheduleUtil;
 import de.be.thaw.connect.zpa.ZPAConnection;
 import de.be.thaw.connect.zpa.exception.ZPABadCredentialsException;
 import de.be.thaw.connect.zpa.exception.ZPALoginFailedException;
@@ -180,6 +182,8 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 	private int getColorForItem(ScheduleItem item) {
 		if (item.isEventCancelled()) {
 			return getResources().getColor(R.color.eventColorCancelled);
+		} if (item instanceof CustomScheduleItem) {
+			return getResources().getColor(R.color.eventColorCustom);
 		} else {
 			// Default color
 			return getResources().getColor(R.color.colorPrimary);
@@ -212,6 +216,11 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 				List<ScheduleEvent> events = new ArrayList<>();
 
 				if (items != null) {
+					try {
+						items.addAll(CustomEntryUtil.retrieve(getContext()));
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 					for (ScheduleItem item : items) {
 						// Restrict to items of the given month.
 						if (item != null && item.getStart() != null && item.getStart().getMonth() == newMonth - 1) {
@@ -303,6 +312,14 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 				e.printStackTrace();
 			}
 		}
+
+		try {
+			if (items != null) {
+				items.addAll(CustomEntryUtil.retrieve(getContext()));
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -356,6 +373,7 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 			List<ScheduleItem> items = null;
 			try {
 				items = connection.getRSSWeekplan();
+				items.addAll(CustomEntryUtil.retrieve(getContext()));
 			} catch (Exception e) {
 				error = e;
 				return null;
@@ -400,7 +418,13 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 			if (items != null) {
 				// Write Schedule to Cache
 				try {
-					ScheduleUtil.store(items, activity);
+					List<ScheduleItem> list = new ArrayList<>();
+					for (ScheduleItem item : items) {
+						if (!(item instanceof CustomScheduleItem)) {
+							list.add(item);
+						}
+					}
+					ScheduleUtil.store(list, activity);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

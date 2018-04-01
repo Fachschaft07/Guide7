@@ -11,5 +11,6 @@
 
     <!-- WeekView Colors -->
     <color name="eventColorCancelled">#525252</color>
+    <color name="eventColorCustom">#00CED1</color>
     <color name="weekViewWeekEndColor">#E6E6E6</color>
 </resources>

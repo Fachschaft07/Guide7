@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.be.thaw.R;
-import de.be.thaw.cache.AppointmentUtil;
+import de.be.thaw.storage.cache.AppointmentUtil;
 import de.be.thaw.connect.fk07.FK07Connection;
 import de.be.thaw.connect.parser.fk07.AppointmentsParser;
 import de.be.thaw.model.appointments.Appointment;

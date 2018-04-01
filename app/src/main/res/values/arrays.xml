@@ -17,4 +17,10 @@
         <item>5 days</item>
     </string-array>
 
+    <string-array name="recurrence_frequency">
+        <item>Daily</item>
+        <item>Weekly</item>
+        <item>Every 2 weeks</item>
+    </string-array>
+
 </resources>

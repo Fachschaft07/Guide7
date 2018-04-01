@@ -24,7 +24,7 @@ import de.be.thaw.R;
 import de.be.thaw.auth.Auth;
 import de.be.thaw.auth.Credential;
 import de.be.thaw.auth.exception.NoUserStoredException;
-import de.be.thaw.cache.BoardUtil;
+import de.be.thaw.storage.cache.BoardUtil;
 import de.be.thaw.model.noticeboard.BoardEntry;
 import de.be.thaw.connect.zpa.ZPAConnection;
 import de.be.thaw.util.Preference;

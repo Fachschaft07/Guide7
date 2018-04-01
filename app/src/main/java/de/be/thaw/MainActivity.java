@@ -41,6 +41,7 @@ import de.be.thaw.auth.exception.AuthException;
 import de.be.thaw.auth.exception.NoUserStoredException;
 import de.be.thaw.exception.ExceptionHandler;
 import de.be.thaw.fragments.AppointmentFragment;
+import de.be.thaw.fragments.CreateCustomEntryFragment;
 import de.be.thaw.fragments.InfoFragment;
 import de.be.thaw.fragments.MenuFragment;
 import de.be.thaw.fragments.NoticeBoardFragment;
@@ -55,7 +56,10 @@ import de.be.thaw.util.job.jobs.UpcomingAppointmentNotificationJob;
 import de.be.thaw.util.job.jobs.UpdateNoticeBoardJob;
 import de.be.thaw.util.job.jobs.UpdateScheduleJob;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, SharedPreferences.OnSharedPreferenceChangeListener {
+public class MainActivity extends AppCompatActivity
+		implements NavigationView.OnNavigationItemSelectedListener,
+		SharedPreferences.OnSharedPreferenceChangeListener,
+		CreateCustomEntryFragment.OnCloseListener {
 
 	/**
 	 * Key used to store the currently selected item in the instance.
@@ -356,7 +360,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 					}
 				}
 				break;
-
+			case R.id.action_add:
+				if (getCurrentFragment() instanceof WeekPlanFragment) {
+					createCustomEntry();
+				}
 			default:
 		}
 
@@ -426,6 +433,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 		drawer.closeDrawer(GravityCompat.START);
 		return true;
+	}
+
+	@Override
+	public void onCreateCustomEntryClose() {
+		WeekPlanFragment weekPlanFragment = WeekPlanFragment.newInstance();
+		selectItem(weekPlanFragment, getString(R.string.navigation_drawer_item_schedule));
+	}
+
+	private void createCustomEntry() {
+		CreateCustomEntryFragment fragment = CreateCustomEntryFragment.newInstance();
+		selectItem(fragment, "TODO");
+		fragment.setCreateEntryListener(this);
 	}
 
 	/**

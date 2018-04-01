@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import de.be.thaw.R;
-import de.be.thaw.cache.ScheduleUtil;
+import de.be.thaw.storage.cache.ScheduleUtil;
 import de.be.thaw.model.schedule.ScheduleItem;
 import de.be.thaw.util.Preference;
 import de.be.thaw.util.TimeUtil;
