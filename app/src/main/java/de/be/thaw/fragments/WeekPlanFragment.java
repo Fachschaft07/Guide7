@@ -2,6 +2,7 @@ package de.be.thaw.fragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.RectF;
@@ -281,8 +282,27 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 
 			@Override
 			public void onEventLongPress(WeekViewEvent event, RectF eventRect) {
-				// Do nothing just now. Maybe someones gettin' a great idea about this.
-				// Snackbar.make(getActivity().findViewById(R.id.content_frame), event.getName(), Snackbar.LENGTH_SHORT).show();
+				final ScheduleEvent se = (ScheduleEvent) event;
+				if (se.getItem() instanceof CustomScheduleItem) {
+					AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+					builder.setItems(R.array.custom_entry_options, new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int which) {
+								try {
+									if (which == 0) {
+										CustomEntryUtil.removeSingleEntry(se.getItem().getUID(), getContext());
+
+									} else {
+										CustomEntryUtil.removeEntries(((CustomScheduleItem) se.getItem()).getParentUID(), getContext());
+									}
+
+								} catch (IOException e) {
+									e.printStackTrace();
+								}
+								weekView.notifyDatasetChanged();
+							}
+					});
+					builder.create().show();
+				}
 			}
 
 		});

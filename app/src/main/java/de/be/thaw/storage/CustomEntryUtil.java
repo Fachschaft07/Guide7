@@ -50,7 +50,7 @@ public class CustomEntryUtil {
 				ObjectMapper mapper = new ObjectMapper();
 				CustomScheduleItem[] items = mapper.readValue(entryStorage, CustomScheduleItem[].class);
 
-				List<CustomScheduleItem> itemList = Arrays.asList(items);
+				List<CustomScheduleItem> itemList = new ArrayList<>(Arrays.asList(items));
 
 				Log.i(TAG, LOG_MESSAGE_RETRIEVED);
 
@@ -88,7 +88,7 @@ public class CustomEntryUtil {
 	public static void removeEntries(String uid, Context context) throws IOException {
 		if (context != null) {
 			List<CustomScheduleItem> items = retrieve(context);
-			for (int i = items.size(); i > 0; --i) {
+			for (int i = items.size() - 1; i >= 0; --i) {
 				if (items.get(i).getParentUID().equals(uid)) {
 					items.remove(i);
 				}

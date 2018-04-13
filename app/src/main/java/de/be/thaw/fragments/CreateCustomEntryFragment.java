@@ -58,7 +58,7 @@ public class CreateCustomEntryFragment extends Fragment
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
-		View view = inflater.inflate(R.layout.create_custom_entry, container, false);
+		View view = inflater.inflate(R.layout.fragment_create_custom_entry, container, false);
 
 		initialize(view);
 
