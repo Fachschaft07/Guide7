@@ -41,14 +41,13 @@ import de.be.thaw.auth.exception.AuthException;
 import de.be.thaw.auth.exception.NoUserStoredException;
 import de.be.thaw.exception.ExceptionHandler;
 import de.be.thaw.fragments.AppointmentFragment;
-import de.be.thaw.fragments.CreateCustomEntryFragment;
 import de.be.thaw.fragments.InfoFragment;
 import de.be.thaw.fragments.MenuFragment;
 import de.be.thaw.fragments.NoticeBoardFragment;
 import de.be.thaw.fragments.MainFragment;
 import de.be.thaw.fragments.RoomSearchFragment;
 import de.be.thaw.fragments.SettingsFragment;
-import de.be.thaw.fragments.WeekPlanFragment;
+import de.be.thaw.fragments.WeekPlanFragment;;
 import de.be.thaw.util.Preference;
 import de.be.thaw.util.ThawUtil;
 import de.be.thaw.util.job.jobs.StaticWeekPlanNotificationJob;
@@ -58,8 +57,7 @@ import de.be.thaw.util.job.jobs.UpdateScheduleJob;
 
 public class MainActivity extends AppCompatActivity
 		implements NavigationView.OnNavigationItemSelectedListener,
-		SharedPreferences.OnSharedPreferenceChangeListener,
-		CreateCustomEntryFragment.OnCloseListener {
+		SharedPreferences.OnSharedPreferenceChangeListener {
 
 	/**
 	 * Key used to store the currently selected item in the instance.
@@ -151,7 +149,7 @@ public class MainActivity extends AppCompatActivity
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		Preference p = Preference.of(key);
 
-		boolean activated = false;
+		boolean activated;
 		switch (p) {
 			case NOTICE_BOARD_CHANGE_NOTIFICATION_ENABLED:
 				activated = p.getBoolean(this);
@@ -201,10 +199,10 @@ public class MainActivity extends AppCompatActivity
 	 * Initialize Drawer.
 	 */
 	private void initializeDrawer() {
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		Toolbar toolbar = findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 
-		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+		DrawerLayout drawer = findViewById(R.id.drawer_layout);
 		ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 		toggle.syncState();
 	}
@@ -220,7 +218,7 @@ public class MainActivity extends AppCompatActivity
 		try {
 			final User user = Auth.getInstance().getCurrentUser(this);
 
-			final IconTextView drawerHeaderText = (IconTextView) navigationView.getHeaderView(0).findViewById(R.id.nav_header_text);
+			final IconTextView drawerHeaderText = navigationView.getHeaderView(0).findViewById(R.id.nav_header_text);
 
 			drawerHeaderText.post(new Runnable() {
 
@@ -232,12 +230,12 @@ public class MainActivity extends AppCompatActivity
 			});
 
 			// Modify drawer header to not overlap the status bar.
-			LinearLayout layout = (LinearLayout) navigationView.getHeaderView(0).findViewById(R.id.nav_header_layout);
+			LinearLayout layout = navigationView.getHeaderView(0).findViewById(R.id.nav_header_layout);
 			LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) layout.getLayoutParams();
 			layoutParams.setMargins(layoutParams.leftMargin, getStatusBarHeight(), layoutParams.rightMargin, layoutParams.bottomMargin);
 			layout.setLayoutParams(layoutParams);
 
-			IconButton signoutButton = (IconButton) navigationView.getHeaderView(0).findViewById(R.id.nav_header_signout);
+			IconButton signoutButton = navigationView.getHeaderView(0).findViewById(R.id.nav_header_signout);
 			signoutButton.setOnClickListener(new View.OnClickListener() {
 
 				@Override
@@ -320,7 +318,7 @@ public class MainActivity extends AppCompatActivity
 
 	@Override
 	public void onBackPressed() {
-		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+		DrawerLayout drawer = findViewById(R.id.drawer_layout);
 		if (drawer.isDrawerOpen(GravityCompat.START)) {
 			drawer.closeDrawer(GravityCompat.START);
 		} else {
@@ -361,8 +359,8 @@ public class MainActivity extends AppCompatActivity
 				}
 				break;
 			case R.id.action_add:
-				if (getCurrentFragment() instanceof WeekPlanFragment) {
-					createCustomEntry();
+				if (getCurrentFragment() instanceof MainFragment) {
+					((MainFragment) getCurrentFragment()).onAdd();
 				}
 			default:
 		}
@@ -430,21 +428,9 @@ public class MainActivity extends AppCompatActivity
 			}
 		}
 
-		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+		DrawerLayout drawer = findViewById(R.id.drawer_layout);
 		drawer.closeDrawer(GravityCompat.START);
 		return true;
-	}
-
-	@Override
-	public void onCreateCustomEntryClose() {
-		WeekPlanFragment weekPlanFragment = WeekPlanFragment.newInstance();
-		selectItem(weekPlanFragment, getString(R.string.navigation_drawer_item_schedule));
-	}
-
-	private void createCustomEntry() {
-		CreateCustomEntryFragment fragment = CreateCustomEntryFragment.newInstance();
-		selectItem(fragment, "TODO");
-		fragment.setCreateEntryListener(this);
 	}
 
 	/**

@@ -43,7 +43,7 @@ public class ScheduleEvent extends WeekViewEvent implements Parcelable {
 		return item.getDescription() + "\n" + item.getLocation();
 	}
 
-	protected ScheduleEvent(Parcel in) {
+	ScheduleEvent(Parcel in) {
 		item = (ScheduleItem) in.readValue(getClass().getClassLoader());
 		setStartTime((Calendar) in.readValue(getClass().getClassLoader()));
 		setEndTime((Calendar) in.readValue(getClass().getClassLoader()));

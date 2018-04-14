@@ -1,14 +1,13 @@
-package de.be.thaw.fragments;
+package de.be.thaw;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -18,28 +17,25 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
-import de.be.thaw.R;
 import de.be.thaw.model.schedule.custom.CustomEntry;
-import de.be.thaw.model.schedule.custom.CustomScheduleItem;
 import de.be.thaw.model.schedule.custom.CustomScheduler;
-import de.be.thaw.storage.CustomEntryUtil;
 
 /**
  * Fragment for the creation of a new custom item for the schedule.
  */
 
-public class CreateCustomEntryFragment extends Fragment
+public class CreateCustomEntryActivity extends AppCompatActivity
 		implements View.OnClickListener,
 		CompoundButton.OnCheckedChangeListener {
+
+	public static final String EXTRA_NAME = "CREATED_ENTRY";
 
 	private static final String TIME_FORMAT = "HH:mm";
 	private final int[] FREQUENCY = new int[]{
@@ -48,21 +44,11 @@ public class CreateCustomEntryFragment extends Fragment
 			CustomScheduler.BIWEEKLY
 	};
 
-	private OnCloseListener listener;
-
-	public static CreateCustomEntryFragment newInstance() {
-		return new CreateCustomEntryFragment();
-	}
-
-	@Nullable
 	@Override
-	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		super.onCreateView(inflater, container, savedInstanceState);
-		View view = inflater.inflate(R.layout.fragment_create_custom_entry, container, false);
-
-		initialize(view);
-
-		return view;
+	protected void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.fragment_create_custom_entry);
+		initialize(findViewById(android.R.id.content));
 	}
 
 	/**
@@ -94,7 +80,7 @@ public class CreateCustomEntryFragment extends Fragment
 
 		Spinner sp = view.findViewById(R.id.spFrequency);
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-				getContext(), R.array.recurrence_frequency, R.layout.support_simple_spinner_dropdown_item);
+				this, R.array.recurrence_frequency, R.layout.support_simple_spinner_dropdown_item);
 		sp.setAdapter(adapter);
 
 		Button bt = view.findViewById(R.id.bOkay);
@@ -116,9 +102,11 @@ public class CreateCustomEntryFragment extends Fragment
 				pickTime((EditText) v);
 				break;
 			case R.id.bOkay:
-				createCustomEntries();
+				Intent intent = new Intent();
+				intent.putExtra(EXTRA_NAME, createCustomEntry());
+				setResult(Activity.RESULT_OK, intent);
 			case R.id.bCancel:
-				dismiss();
+				finish();
 				break;
 		}
 	}
@@ -164,38 +152,6 @@ public class CreateCustomEntryFragment extends Fragment
 	}
 
 	/**
-	 * Creates the custom schedule entries from the user input and saves them.
-	 */
-	private void createCustomEntries() {
-		if (listener != null) {
-			CustomEntry ce = createCustomEntry();
-			List<CustomScheduleItem> items = CustomScheduler.createScheduleItems(ce);
-			try {
-				CustomEntryUtil.append(items, getContext());
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	/**
-	 * Calls the close handler for the fragment.
-	 */
-	private void dismiss() {
-		if (listener != null) {
-			listener.onCreateCustomEntryClose();
-		}
-	}
-
-	/**
-	 * Sets the listener for the close event.
-	 * @param listener New Listener object
-	 */
-	public void setCreateEntryListener(OnCloseListener listener) {
-		this.listener = listener;
-	}
-
-	/**
 	 * Toggles the optional recurring part of the view.
 	 * @param buttonView The compound button view whose state has changed
 	 * @param isChecked Visibility of the recurring part
@@ -203,7 +159,7 @@ public class CreateCustomEntryFragment extends Fragment
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 		int visibility = isChecked ? View.VISIBLE : View.GONE;
-		getView().findViewById(R.id.container_recurring).setVisibility(visibility);
+		findViewById(R.id.container_recurring).setVisibility(visibility);
 	}
 
 	/**
@@ -215,44 +171,38 @@ public class CreateCustomEntryFragment extends Fragment
 		DateFormat timeFormat = new SimpleDateFormat(TIME_FORMAT, Locale.GERMAN);
 		CustomEntry ce = new CustomEntry();
 
-		View view = getView();
-
-		if (view == null) {
-			return null;
-		}
-
 		try {
 			Calendar c = Calendar.getInstance();
 
-			EditText et = view.findViewById(R.id.startDate);
+			EditText et = findViewById(R.id.startDate);
 
 			c.setTime(dateFormat.parse(et.getText().toString()));
 
-			et = view.findViewById(R.id.startTime);
+			et = findViewById(R.id.startTime);
 			Date d = timeFormat.parse(et.getText().toString());
 			c.add(Calendar.HOUR_OF_DAY, d.getHours());
 			c.add(Calendar.MINUTE, d.getMinutes());
 
 			ce.setStart(c.getTime());
 
-			et = view.findViewById(R.id.durationTime);
+			et = findViewById(R.id.durationTime);
 			d = timeFormat.parse(et.getText().toString());
 			ce.setDuration(d.getHours() * 60 + d.getMinutes());
 
-			et = view.findViewById(R.id.entryTitle);
+			et = findViewById(R.id.entryTitle);
 			ce.setTitle(et.getText().toString());
 
-			et = view.findViewById(R.id.entryDescription);
+			et = findViewById(R.id.entryDescription);
 			ce.setDescription(et.getText().toString());
 
-			et = view.findViewById(R.id.centry_location);
+			et = findViewById(R.id.centry_location);
 			ce.setLocation(et.getText().toString());
 
-			CheckBox cb = view.findViewById(R.id.cbRecurring);
+			CheckBox cb = findViewById(R.id.cbRecurring);
 			if (cb.isChecked()) {
-				Spinner sp = view.findViewById(R.id.spFrequency);
+				Spinner sp = findViewById(R.id.spFrequency);
 				ce.setCycle(FREQUENCY[sp.getSelectedItemPosition()]);
-				et = view.findViewById(R.id.endDate);
+				et = findViewById(R.id.endDate);
 				c.setTime(dateFormat.parse(et.getText().toString()));
 				c.set(Calendar.HOUR_OF_DAY, 23);
 				c.set(Calendar.MINUTE, 59);
@@ -267,17 +217,13 @@ public class CreateCustomEntryFragment extends Fragment
 		return ce;
 	}
 
-	public interface OnCloseListener {
-		void onCreateCustomEntryClose();
-	}
-
 	/**
 	 * Helper class to catch the SetListener of pickers and set the EditText accordingly.
 	 */
 	private class FillEditText implements TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
 		private final EditText text;
 
-		public FillEditText(EditText text) {
+		FillEditText(EditText text) {
 			this.text = text;
 		}
 
