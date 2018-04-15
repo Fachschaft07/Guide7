@@ -1,4 +1,4 @@
-package de.be.thaw.cache;
+package de.be.thaw.storage.cache;
 
 import android.content.Context;
 import android.util.Log;
@@ -11,7 +11,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import de.be.thaw.model.appointments.Appointment;
-import de.be.thaw.model.canteen.Menu;
 
 /**
  * Created by Benjamin Eder on 12.03.2017.

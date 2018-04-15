@@ -17,4 +17,15 @@
         <item>5 Tage</item>
     </string-array>
 
+    <string-array name="recurrence_frequency">
+        <item>Täglich</item>
+        <item>Wöchentlich</item>
+        <item>Alle 2 Wochen</item>
+    </string-array>
+
+    <string-array name="custom_entry_options">
+        <item>Eintrag löschen</item>
+        <item>Alle löschen</item>
+    </string-array>
+
 </resources>

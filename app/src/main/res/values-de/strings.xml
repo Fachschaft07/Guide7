@@ -85,6 +85,9 @@
 	<string name="clearCacheTitle">Zwischenspeicher leeren</string>
 	<string name="clearCacheSummary">Lösche alle zwischengespeicherten Daten (Außer Anmeldeinformationen).</string>
 	<string name="clearCacheSuccessMessage">Zwischenspeicher wurde geleert.</string>
+    <string name="clearCustomEntriesTitle">Entferne eigene Stundenplaneinträge</string>
+    <string name="clearCustomEntriesSummary">Entfernt alle eigenen Stundenplaneinträge die erstellt wurden.</string>
+    <string name="clearCustomEntriesSuccessMessage">Eigene Stundenplaneinträge wurden entfernt.</string>
 
     <!-- Info -->
     <string name="libraries">Bibliotheken</string>
@@ -110,5 +113,15 @@
     <string name="navigation_drawer_item_datapolicy">Datenschutzerklärung</string>
     <string name="navigation_drawer_item_info">Info</string>
     <string name="navigation_drawer_item_logout">Abmelden</string>
+
+    <!-- Custom entry -->
+    <string name="custom_entry_title">Titel</string>
+    <string name="custom_entry_description">Beschreibung</string>
+    <string name="custom_entry_recurring">Wiederholend</string>
+    <string name="custom_entry_default_duration">01:30</string>
+    <string name="custom_entry_location">Ort</string>
+    <string name="custom_entry_start_date">Start Zeit</string>
+    <string name="custom_entry_duration">Dauer</string>
+    <string name="custom_entry_until">Bis</string>
 
 </resources>

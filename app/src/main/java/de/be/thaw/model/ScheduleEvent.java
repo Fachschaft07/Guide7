@@ -6,11 +6,8 @@ import android.os.Parcelable;
 import com.alamkanak.weekview.WeekViewEvent;
 
 import java.util.Calendar;
-import java.util.Date;
 
-import de.be.thaw.R;
 import de.be.thaw.model.schedule.ScheduleItem;
-import de.be.thaw.util.ThawUtil;
 
 /**
  * Created by Benjamin Eder on 13.02.2017.
@@ -46,7 +43,7 @@ public class ScheduleEvent extends WeekViewEvent implements Parcelable {
 		return item.getDescription() + "\n" + item.getLocation();
 	}
 
-	protected ScheduleEvent(Parcel in) {
+	ScheduleEvent(Parcel in) {
 		item = (ScheduleItem) in.readValue(getClass().getClassLoader());
 		setStartTime((Calendar) in.readValue(getClass().getClassLoader()));
 		setEndTime((Calendar) in.readValue(getClass().getClassLoader()));
@@ -57,6 +54,10 @@ public class ScheduleEvent extends WeekViewEvent implements Parcelable {
 		dest.writeValue(item);
 		dest.writeValue(getStartTime());
 		dest.writeValue(getEndTime());
+	}
+
+	public ScheduleItem getItem() {
+		return item;
 	}
 
 	@Override

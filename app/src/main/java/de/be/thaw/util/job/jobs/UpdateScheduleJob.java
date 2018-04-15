@@ -25,7 +25,7 @@ import de.be.thaw.R;
 import de.be.thaw.auth.Auth;
 import de.be.thaw.auth.Credential;
 import de.be.thaw.auth.exception.NoUserStoredException;
-import de.be.thaw.cache.ScheduleUtil;
+import de.be.thaw.storage.cache.ScheduleUtil;
 import de.be.thaw.connect.zpa.ZPAConnection;
 import de.be.thaw.model.ScheduleEvent;
 import de.be.thaw.model.schedule.ScheduleItem;

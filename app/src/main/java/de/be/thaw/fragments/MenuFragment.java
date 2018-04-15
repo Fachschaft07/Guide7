@@ -25,7 +25,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import de.be.thaw.R;
-import de.be.thaw.cache.MenuUtil;
+import de.be.thaw.storage.cache.MenuUtil;
 import de.be.thaw.connect.parser.canteen.MenuParser;
 import de.be.thaw.connect.studentenwerk.StudentenwerkConnection;
 import de.be.thaw.model.canteen.Meal;

@@ -5,14 +5,13 @@ import android.os.Build;
 import android.text.Html;
 import android.text.Spanned;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import de.be.thaw.cache.AppointmentUtil;
-import de.be.thaw.cache.BoardUtil;
-import de.be.thaw.cache.MenuUtil;
-import de.be.thaw.cache.PortraitUtil;
-import de.be.thaw.cache.ScheduleUtil;
+import de.be.thaw.storage.cache.AppointmentUtil;
+import de.be.thaw.storage.cache.BoardUtil;
+import de.be.thaw.storage.cache.MenuUtil;
+import de.be.thaw.storage.cache.PortraitUtil;
+import de.be.thaw.storage.cache.ScheduleUtil;
 
 /**
  * Created by Benjamin Eder on 14.02.2017.

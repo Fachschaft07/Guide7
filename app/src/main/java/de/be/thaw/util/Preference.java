@@ -16,7 +16,8 @@ public enum Preference {
 	SHOW_CANCELLED_EVENTS("showCancelledEvents", true),
 	NOTICE_BOARD_CHANGE_NOTIFICATION_ENABLED("noticeboardNotificationKey", true),
 	UPCOMING_APPOINTMENT_NOTIFICATION_ENABLED("upcomingAppointmentNotification", false),
-	CLEAR_CACHE("clearCacheKey", null);
+	CLEAR_CACHE("clearCacheKey", null),
+	CLEAR_CUSTOM("clearCustomEntriesKey", null);
 
 	/**
 	 * Key of the preference.
