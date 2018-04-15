@@ -10,11 +10,14 @@ import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobRequest;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import de.be.thaw.R;
+import de.be.thaw.model.schedule.custom.CustomScheduleItem;
+import de.be.thaw.storage.CustomEntryUtil;
 import de.be.thaw.storage.cache.ScheduleUtil;
 import de.be.thaw.model.schedule.ScheduleItem;
 import de.be.thaw.util.Preference;
@@ -48,6 +51,11 @@ public class StaticWeekPlanNotificationJob extends Job {
 		List<ScheduleItem> items = null;
 		try {
 			items = ScheduleUtil.retrieve(getContext());
+			List<CustomScheduleItem> list = CustomEntryUtil.retrieve(getContext());
+			if (items == null) {
+				items = new ArrayList<>();
+			}
+			items.addAll(list);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
