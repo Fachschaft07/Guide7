@@ -33,6 +33,8 @@
         </activity>
         <activity android:name=".EventDetailActivity">
         </activity>
+        <activity android:name=".CreateCustomEntryActivity">
+        </activity>
 
     </application>
 

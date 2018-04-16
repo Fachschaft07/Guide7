@@ -8,6 +8,7 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 
 import de.be.thaw.R;
+import de.be.thaw.storage.CustomEntryUtil;
 import de.be.thaw.util.ThawUtil;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
@@ -45,6 +46,29 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
 				builder.show();
 
+				return true;
+			}
+
+		});
+
+		button = findPreference(de.be.thaw.util.Preference.CLEAR_CUSTOM.getKey());
+		button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				CustomEntryUtil.clear(getContext());
+
+				AlertDialog.Builder builder = new AlertDialog.Builder(getContext()).setMessage(R.string.clearCustomEntriesSuccessMessage);
+				builder.setCancelable(false)
+						.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.dismiss();
+							}
+
+						});
+
+				builder.show();
 				return true;
 			}
 

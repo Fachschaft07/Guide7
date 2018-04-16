@@ -18,7 +18,7 @@ import java.util.Calendar;
 
 import de.be.thaw.MainActivity;
 import de.be.thaw.R;
-import de.be.thaw.cache.AppointmentUtil;
+import de.be.thaw.storage.cache.AppointmentUtil;
 import de.be.thaw.model.appointments.Appointment;
 import de.be.thaw.util.Preference;
 

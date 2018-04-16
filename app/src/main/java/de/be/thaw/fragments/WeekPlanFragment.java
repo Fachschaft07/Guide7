@@ -2,11 +2,13 @@ package de.be.thaw.fragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.RectF;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -26,12 +28,17 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import de.be.thaw.CreateCustomEntryActivity;
 import de.be.thaw.EventDetailActivity;
 import de.be.thaw.R;
 import de.be.thaw.auth.Auth;
 import de.be.thaw.auth.Credential;
 import de.be.thaw.auth.exception.NoUserStoredException;
-import de.be.thaw.cache.ScheduleUtil;
+import de.be.thaw.model.schedule.custom.CustomEntry;
+import de.be.thaw.model.schedule.custom.CustomScheduleItem;
+import de.be.thaw.model.schedule.custom.CustomScheduler;
+import de.be.thaw.storage.CustomEntryUtil;
+import de.be.thaw.storage.cache.ScheduleUtil;
 import de.be.thaw.connect.zpa.ZPAConnection;
 import de.be.thaw.connect.zpa.exception.ZPABadCredentialsException;
 import de.be.thaw.connect.zpa.exception.ZPALoginFailedException;
@@ -70,8 +77,7 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 	 * @return A new instance of fragment WeekPlanFragment.
 	 */
 	public static WeekPlanFragment newInstance() {
-		WeekPlanFragment fragment = new WeekPlanFragment();
-		return fragment;
+		return new WeekPlanFragment();
 	}
 
 	@Override
@@ -110,7 +116,26 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 
 	@Override
 	public void onAdd() {
-		// TODO Implement
+		Intent intent = new Intent(getActivity(), CreateCustomEntryActivity.class);
+
+		startActivityForResult(intent, 1);
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		if (requestCode != 1 || data == null) {
+			return;
+		}
+		CustomEntry ce = data.getParcelableExtra(CreateCustomEntryActivity.EXTRA_NAME);
+		List<CustomScheduleItem> list = CustomScheduler.createScheduleItems(ce);
+		try {
+			CustomEntryUtil.append(list, getContext());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		weekView.notifyDatasetChanged();
 	}
 
 	@Override
@@ -122,14 +147,14 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 	}
 
 	@Override
-	public void onSaveInstanceState(Bundle outState) {
+	public void onSaveInstanceState(@NonNull Bundle outState) {
 		super.onSaveInstanceState(outState);
 
 		outState.putSerializable(DATE_CACHE, weekView.getFirstVisibleDay());
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		View view = inflater.inflate(R.layout.fragment_week_plan, container, false);
 
@@ -180,6 +205,8 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 	private int getColorForItem(ScheduleItem item) {
 		if (item.isEventCancelled()) {
 			return getResources().getColor(R.color.eventColorCancelled);
+		} if (item instanceof CustomScheduleItem) {
+			return getResources().getColor(R.color.eventColorCustom);
 		} else {
 			// Default color
 			return getResources().getColor(R.color.colorPrimary);
@@ -191,7 +218,7 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 	 */
 	private void initialize(View view) {
 		// Get a reference for the week view in the layout.
-		weekView = (WeekView) view.findViewById(R.id.weekView);
+		weekView = view.findViewById(R.id.weekView);
 
 		// Initially go to start hour to hide earlier hours.
 		weekView.goToHour(START_HOUR);
@@ -212,6 +239,11 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 				List<ScheduleEvent> events = new ArrayList<>();
 
 				if (items != null) {
+					try {
+						items.addAll(CustomEntryUtil.retrieve(getContext()));
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 					for (ScheduleItem item : items) {
 						// Restrict to items of the given month.
 						if (item != null && item.getStart() != null && item.getStart().getMonth() == newMonth - 1) {
@@ -272,8 +304,27 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 
 			@Override
 			public void onEventLongPress(WeekViewEvent event, RectF eventRect) {
-				// Do nothing just now. Maybe someones gettin' a great idea about this.
-				// Snackbar.make(getActivity().findViewById(R.id.content_frame), event.getName(), Snackbar.LENGTH_SHORT).show();
+				final ScheduleEvent se = (ScheduleEvent) event;
+				if (se.getItem() instanceof CustomScheduleItem) {
+					AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+					builder.setItems(R.array.custom_entry_options, new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int which) {
+								try {
+									if (which == 0) {
+										CustomEntryUtil.removeSingleEntry(se.getItem().getUID(), getContext());
+
+									} else {
+										CustomEntryUtil.removeEntries(((CustomScheduleItem) se.getItem()).getParentUID(), getContext());
+									}
+
+								} catch (IOException e) {
+									e.printStackTrace();
+								}
+								weekView.notifyDatasetChanged();
+							}
+					});
+					builder.create().show();
+				}
 			}
 
 		});
@@ -303,6 +354,14 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 				e.printStackTrace();
 			}
 		}
+
+		try {
+			if (items != null) {
+				items.addAll(CustomEntryUtil.retrieve(getContext()));
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -328,7 +387,7 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 
 		private Exception error;
 
-		public LoadScheduleTask(Activity activity, AlertDialogManager alertDialogManager, WeekView weekView, LoadSnackbar snackbar) {
+		LoadScheduleTask(Activity activity, AlertDialogManager alertDialogManager, WeekView weekView, LoadSnackbar snackbar) {
 			this.activity = activity;
 			this.weekView = weekView;
 			this.alertDialogManager = alertDialogManager;
@@ -337,7 +396,7 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 
 		@Override
 		protected List<ScheduleItem> doInBackground(Integer... params) {
-			Credential credential = null;
+			Credential credential;
 			try {
 				credential = Auth.getInstance().getCurrentUser(getContext()).getCredential();
 			} catch (NoUserStoredException e) {
@@ -345,7 +404,7 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 				return null;
 			}
 
-			ZPAConnection connection = null;
+			ZPAConnection connection;
 			try {
 				connection = new ZPAConnection(credential.getUsername(), credential.getPassword());
 			} catch (Exception e) {
@@ -353,9 +412,10 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 				return null;
 			}
 
-			List<ScheduleItem> items = null;
+			List<ScheduleItem> items;
 			try {
 				items = connection.getRSSWeekplan();
+				items.addAll(CustomEntryUtil.retrieve(getContext()));
 			} catch (Exception e) {
 				error = e;
 				return null;
@@ -400,7 +460,13 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 			if (items != null) {
 				// Write Schedule to Cache
 				try {
-					ScheduleUtil.store(items, activity);
+					List<ScheduleItem> list = new ArrayList<>();
+					for (ScheduleItem item : items) {
+						if (!(item instanceof CustomScheduleItem)) {
+							list.add(item);
+						}
+					}
+					ScheduleUtil.store(list, activity);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

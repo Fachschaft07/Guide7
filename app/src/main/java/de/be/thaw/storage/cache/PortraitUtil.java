@@ -1,22 +1,17 @@
-package de.be.thaw.cache;
+package de.be.thaw.storage.cache;
 
 import android.content.Context;
 import android.util.Log;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 
-import de.be.thaw.model.noticeboard.BoardEntry;
 import de.be.thaw.model.noticeboard.Portrait;
 
 public class PortraitUtil {

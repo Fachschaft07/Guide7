@@ -47,7 +47,7 @@ import de.be.thaw.fragments.NoticeBoardFragment;
 import de.be.thaw.fragments.MainFragment;
 import de.be.thaw.fragments.RoomSearchFragment;
 import de.be.thaw.fragments.SettingsFragment;
-import de.be.thaw.fragments.WeekPlanFragment;
+import de.be.thaw.fragments.WeekPlanFragment;;
 import de.be.thaw.util.Preference;
 import de.be.thaw.util.ThawUtil;
 import de.be.thaw.util.job.jobs.StaticWeekPlanNotificationJob;
@@ -55,7 +55,9 @@ import de.be.thaw.util.job.jobs.UpcomingAppointmentNotificationJob;
 import de.be.thaw.util.job.jobs.UpdateNoticeBoardJob;
 import de.be.thaw.util.job.jobs.UpdateScheduleJob;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, SharedPreferences.OnSharedPreferenceChangeListener {
+public class MainActivity extends AppCompatActivity
+		implements NavigationView.OnNavigationItemSelectedListener,
+		SharedPreferences.OnSharedPreferenceChangeListener {
 
 	/**
 	 * Key used to store the currently selected item in the instance.
@@ -147,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		Preference p = Preference.of(key);
 
-		boolean activated = false;
+		boolean activated;
 		switch (p) {
 			case NOTICE_BOARD_CHANGE_NOTIFICATION_ENABLED:
 				activated = p.getBoolean(this);
@@ -197,10 +199,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 	 * Initialize Drawer.
 	 */
 	private void initializeDrawer() {
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		Toolbar toolbar = findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 
-		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+		DrawerLayout drawer = findViewById(R.id.drawer_layout);
 		ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 		toggle.syncState();
 	}
@@ -216,7 +218,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 		try {
 			final User user = Auth.getInstance().getCurrentUser(this);
 
-			final IconTextView drawerHeaderText = (IconTextView) navigationView.getHeaderView(0).findViewById(R.id.nav_header_text);
+			final IconTextView drawerHeaderText = navigationView.getHeaderView(0).findViewById(R.id.nav_header_text);
 
 			drawerHeaderText.post(new Runnable() {
 
@@ -228,12 +230,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 			});
 
 			// Modify drawer header to not overlap the status bar.
-			LinearLayout layout = (LinearLayout) navigationView.getHeaderView(0).findViewById(R.id.nav_header_layout);
+			LinearLayout layout = navigationView.getHeaderView(0).findViewById(R.id.nav_header_layout);
 			LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) layout.getLayoutParams();
 			layoutParams.setMargins(layoutParams.leftMargin, getStatusBarHeight(), layoutParams.rightMargin, layoutParams.bottomMargin);
 			layout.setLayoutParams(layoutParams);
 
-			IconButton signoutButton = (IconButton) navigationView.getHeaderView(0).findViewById(R.id.nav_header_signout);
+			IconButton signoutButton = navigationView.getHeaderView(0).findViewById(R.id.nav_header_signout);
 			signoutButton.setOnClickListener(new View.OnClickListener() {
 
 				@Override
@@ -316,7 +318,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 	@Override
 	public void onBackPressed() {
-		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+		DrawerLayout drawer = findViewById(R.id.drawer_layout);
 		if (drawer.isDrawerOpen(GravityCompat.START)) {
 			drawer.closeDrawer(GravityCompat.START);
 		} else {
@@ -356,7 +358,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 					}
 				}
 				break;
-
+			case R.id.action_add:
+				if (getCurrentFragment() instanceof MainFragment) {
+					((MainFragment) getCurrentFragment()).onAdd();
+				}
 			default:
 		}
 
@@ -423,7 +428,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 			}
 		}
 
-		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+		DrawerLayout drawer = findViewById(R.id.drawer_layout);
 		drawer.closeDrawer(GravityCompat.START);
 		return true;
 	}
