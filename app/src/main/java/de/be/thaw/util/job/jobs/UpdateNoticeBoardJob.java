@@ -128,6 +128,8 @@ public class UpdateNoticeBoardJob extends Job {
 						.setContentIntent(resultPendingIntent)
 						.setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE | Notification.DEFAULT_LIGHTS)
 						.setAutoCancel(true)
+						.setStyle(new NotificationCompat.BigTextStyle()
+								.bigText(text))
 						.setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
 		NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
