@@ -29,7 +29,7 @@ public class CertificateUtil {
 	public static boolean certificatesInitialized = false;
 
 	/**
-	 * Initialize Certificates needed for save connections.
+	 * Initialize Certificates needed for safe connections.
 	 *
 	 * @throws CertificateException
 	 * @throws IOException

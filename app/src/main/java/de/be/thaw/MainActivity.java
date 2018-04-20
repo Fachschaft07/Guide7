@@ -2,14 +2,14 @@ package de.be.thaw;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
-import android.support.v4.app.FragmentManager;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -20,13 +20,25 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
-
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import com.joanzapata.iconify.widget.IconButton;
 import com.joanzapata.iconify.widget.IconTextView;
+import de.be.thaw.auth.Auth;
+import de.be.thaw.auth.CertificateUtil;
+import de.be.thaw.auth.User;
+import de.be.thaw.auth.exception.AuthException;
+import de.be.thaw.auth.exception.NoUserStoredException;
+import de.be.thaw.exception.ExceptionHandler;
+import de.be.thaw.fragments.*;
+import de.be.thaw.util.Preference;
+import de.be.thaw.util.ThawUtil;
+import de.be.thaw.util.job.jobs.StaticWeekPlanNotificationJob;
+import de.be.thaw.util.job.jobs.UpcomingAppointmentNotificationJob;
+import de.be.thaw.util.job.jobs.UpdateNoticeBoardJob;
+import de.be.thaw.util.job.jobs.UpdateScheduleJob;
 
 import java.io.IOException;
 import java.security.KeyManagementException;
@@ -34,26 +46,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 
-import de.be.thaw.auth.Auth;
-import de.be.thaw.auth.CertificateUtil;
-import de.be.thaw.auth.User;
-import de.be.thaw.auth.exception.AuthException;
-import de.be.thaw.auth.exception.NoUserStoredException;
-import de.be.thaw.exception.ExceptionHandler;
-import de.be.thaw.fragments.AppointmentFragment;
-import de.be.thaw.fragments.InfoFragment;
-import de.be.thaw.fragments.MenuFragment;
-import de.be.thaw.fragments.NoticeBoardFragment;
-import de.be.thaw.fragments.MainFragment;
-import de.be.thaw.fragments.RoomSearchFragment;
-import de.be.thaw.fragments.SettingsFragment;
-import de.be.thaw.fragments.WeekPlanFragment;;
-import de.be.thaw.util.Preference;
-import de.be.thaw.util.ThawUtil;
-import de.be.thaw.util.job.jobs.StaticWeekPlanNotificationJob;
-import de.be.thaw.util.job.jobs.UpcomingAppointmentNotificationJob;
-import de.be.thaw.util.job.jobs.UpdateNoticeBoardJob;
-import de.be.thaw.util.job.jobs.UpdateScheduleJob;
+;
 
 public class MainActivity extends AppCompatActivity
 		implements NavigationView.OnNavigationItemSelectedListener,
@@ -111,11 +104,13 @@ public class MainActivity extends AppCompatActivity
 		}
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-			String name = getString(R.string.channelId);
-			int importance = NotificationManager.IMPORTANCE_DEFAULT;
-			NotificationChannel channel = new NotificationChannel(getString(R.string.channelId), name, importance);
+			NotificationChannel appointments = new NotificationChannel(getString(R.string.channelAppointments), getString(R.string.channelAppointments), NotificationManager.IMPORTANCE_DEFAULT);
+			NotificationChannel changes = new NotificationChannel(getString(R.string.channelChanges), getString(R.string.channelChanges), NotificationManager.IMPORTANCE_DEFAULT);
+			NotificationChannel timetable = new NotificationChannel(getString(R.string.channelStatic), getString(R.string.channelStatic), NotificationManager.IMPORTANCE_MIN);
 			NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-			notificationManager.createNotificationChannel(channel);
+				notificationManager.createNotificationChannel(appointments);
+				notificationManager.createNotificationChannel(changes);
+				notificationManager.createNotificationChannel(timetable);
 		}
 	}
 
