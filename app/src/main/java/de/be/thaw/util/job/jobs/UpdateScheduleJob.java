@@ -8,10 +8,19 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-
 import com.evernote.android.job.Job;
 import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobRequest;
+import de.be.thaw.MainActivity;
+import de.be.thaw.R;
+import de.be.thaw.auth.Auth;
+import de.be.thaw.auth.Credential;
+import de.be.thaw.auth.exception.NoUserStoredException;
+import de.be.thaw.connect.zpa.ZPAConnection;
+import de.be.thaw.model.ScheduleEvent;
+import de.be.thaw.model.schedule.ScheduleItem;
+import de.be.thaw.storage.cache.ScheduleUtil;
+import de.be.thaw.util.Preference;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,17 +28,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
-import de.be.thaw.MainActivity;
-import de.be.thaw.R;
-import de.be.thaw.auth.Auth;
-import de.be.thaw.auth.Credential;
-import de.be.thaw.auth.exception.NoUserStoredException;
-import de.be.thaw.storage.cache.ScheduleUtil;
-import de.be.thaw.connect.zpa.ZPAConnection;
-import de.be.thaw.model.ScheduleEvent;
-import de.be.thaw.model.schedule.ScheduleItem;
-import de.be.thaw.util.Preference;
 
 /**
  * Recurring Task which is checking for Notice board changes by updating and
@@ -144,7 +142,7 @@ public class UpdateScheduleJob extends Job {
 		}
 
 		NotificationCompat.Builder notificationBuilder =
-				new NotificationCompat.Builder(getContext(), getContext().getString(R.string.channelId))
+				new NotificationCompat.Builder(getContext(), getContext().getString(R.string.channelChanges))
 						.setSmallIcon(R.drawable.notification_icon)
 						.setContentTitle(title)
 						.setContentText(text)

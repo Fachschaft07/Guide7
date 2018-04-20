@@ -4,21 +4,19 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
-
 import com.evernote.android.job.Job;
 import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobRequest;
+import de.be.thaw.R;
+import de.be.thaw.model.schedule.ScheduleItem;
+import de.be.thaw.storage.cache.ScheduleUtil;
+import de.be.thaw.util.Preference;
+import de.be.thaw.util.TimeUtil;
 
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import de.be.thaw.R;
-import de.be.thaw.storage.cache.ScheduleUtil;
-import de.be.thaw.model.schedule.ScheduleItem;
-import de.be.thaw.util.Preference;
-import de.be.thaw.util.TimeUtil;
 
 /**
  * Job which is displaying a notification about the next event.
@@ -66,7 +64,7 @@ public class StaticWeekPlanNotificationJob extends Job {
 						eventCal.setTime(item.getStart());
 
 						long newDiff = eventCal.getTimeInMillis() - cal.getTimeInMillis();
-						if (newDiff > 0 && newDiff < difference) {
+						if (0 < newDiff && newDiff < difference) {
 							event = item;
 							difference = newDiff;
 						}
@@ -75,12 +73,12 @@ public class StaticWeekPlanNotificationJob extends Job {
 			}
 		}
 
-		// Issue notification
-		issueNotification(event);
+
 
 		// Reschedule job
 		runningJobId = -1;
 		if (event != null) {
+			issueNotification(event);
 			eventCal.setTime(event.getStart());
 
 			scheduleJob(eventCal.getTimeInMillis() - cal.getTimeInMillis() + TimeUnit.MINUTES.toMillis(BUFFER));
@@ -99,16 +97,24 @@ public class StaticWeekPlanNotificationJob extends Job {
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(item.getStart());
 
-			String start = TimeUtil.getTimeString(cal);
-			String room = item.getLocation();
+			String title = getContext().getResources().getString(R.string.staticEventNotificationTitle) + " (" + TimeUtil.getTimeString(cal) + " in " + item.getLocation()
+					+ ")";
+
+			Calendar to = Calendar.getInstance();
+			to.setTime(item.getStart());
+			to.add(Calendar.MINUTE, 90);
+			String text = item.getTitle() + "\n\t" +
+					TimeUtil.getTimeString(cal) + " - " + TimeUtil.getTimeString(to);
 
 			NotificationCompat.Builder notificationBuilder =
-					new NotificationCompat.Builder(getContext(), getContext().getString(R.string.channelId))
+					new NotificationCompat.Builder(getContext(), getContext().getString(R.string.channelStatic))
 							.setSmallIcon(R.drawable.notification_icon)
-							.setContentTitle(getContext().getResources().getString(R.string.staticEventNotificationTitle))
-							.setContentText(item.getTitle() + " - " + room + " - " + start)
+							.setContentTitle(title)
+							.setContentText(item.getTitle())
 							.setOngoing(true)
-							.setPriority(NotificationCompat.PRIORITY_LOW);
+							.setStyle(new NotificationCompat.BigTextStyle()
+									.bigText(text))
+							.setPriority(NotificationCompat.PRIORITY_MIN);
 
 			NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
 			notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
