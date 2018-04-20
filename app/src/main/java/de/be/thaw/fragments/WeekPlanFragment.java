@@ -232,18 +232,14 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 
 				try {
 					items = ScheduleUtil.retrieve(getContext());
+					items.addAll(CustomEntryUtil.retrieve(getContext()));
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 
 				List<ScheduleEvent> events = new ArrayList<>();
 
-				if (items != null) {
-					try {
-						items.addAll(CustomEntryUtil.retrieve(getContext()));
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
+				if (items != null && !items.isEmpty()) {
 					for (ScheduleItem item : items) {
 						// Restrict to items of the given month.
 						if (item != null && item.getStart() != null && item.getStart().getMonth() == newMonth - 1) {
@@ -339,28 +335,21 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 	 * Initialize schedule by loading cached events or load from server.
 	 */
 	private void initializeSchedule() {
-		List<ScheduleItem> items = null;
+		List<ScheduleItem> items;
 
 		try {
 			items = ScheduleUtil.retrieve(getContext());
 		} catch (IOException e) {
 			e.printStackTrace();
+			return;
 		}
 
-		if (items == null) {
+		if (items.isEmpty()) {
 			try {
 				refreshSchedule();
 			} catch (ExecutionException | InterruptedException e) {
 				e.printStackTrace();
 			}
-		}
-
-		try {
-			if (items != null) {
-				items.addAll(CustomEntryUtil.retrieve(getContext()));
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 
@@ -415,7 +404,6 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 			List<ScheduleItem> items;
 			try {
 				items = connection.getRSSWeekplan();
-				items.addAll(CustomEntryUtil.retrieve(getContext()));
 			} catch (Exception e) {
 				error = e;
 				return null;

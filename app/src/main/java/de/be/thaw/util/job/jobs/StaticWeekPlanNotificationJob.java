@@ -58,9 +58,6 @@ public class StaticWeekPlanNotificationJob extends Job {
 		try {
 			items = ScheduleUtil.retrieve(getContext());
 			List<CustomScheduleItem> list = CustomEntryUtil.retrieve(getContext());
-			if (items == null) {
-				items = new ArrayList<>();
-			}
 			items.addAll(list);
 		} catch (IOException e) {
 			e.printStackTrace();

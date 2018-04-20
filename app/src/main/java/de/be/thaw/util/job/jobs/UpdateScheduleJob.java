@@ -44,7 +44,7 @@ public class UpdateScheduleJob extends Job {
 	@Override
 	protected Result onRunJob(Params params) {
 		// Fetch new schedule items.
-		Credential credential = null;
+		Credential credential;
 		try {
 			credential = Auth.getInstance().getCurrentUser(getContext()).getCredential();
 		} catch (NoUserStoredException e) {
@@ -52,7 +52,7 @@ public class UpdateScheduleJob extends Job {
 			return Result.FAILURE;
 		}
 
-		List<ScheduleItem> items = null;
+		List<ScheduleItem> items;
 		try {
 			ZPAConnection connection = new ZPAConnection(credential.getUsername(), credential.getPassword());
 			items = connection.getRSSWeekplan();
@@ -62,7 +62,7 @@ public class UpdateScheduleJob extends Job {
 		}
 
 		// Get old items.
-		List<ScheduleItem> old = null;
+		List<ScheduleItem> old;
 		try {
 			old = ScheduleUtil.retrieve(getContext());
 		} catch (IOException e) {
@@ -70,7 +70,7 @@ public class UpdateScheduleJob extends Job {
 			return Result.FAILURE;
 		}
 
-		if (items != null && !items.isEmpty() && old != null && !old.isEmpty()) {
+		if (!items.isEmpty() && old != null && !old.isEmpty()) {
 			// Check for changed items.
 			Map<String, ScheduleItem> oldLookup = new HashMap<>();
 			for (ScheduleItem item : old) {
