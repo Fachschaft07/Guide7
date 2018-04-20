@@ -7,7 +7,6 @@
     <string name="welcome">Hallo</string>
     <string name="logout">Abmelden</string>
 	<string name="ok">OK</string>
-    <string name="channelId">GUIDE7_CHANNEL</string>
 
     <!-- Login -->
     <string name="passwordHint">Passwort</string>
@@ -123,5 +122,8 @@
     <string name="custom_entry_start_date">Start Zeit</string>
     <string name="custom_entry_duration">Dauer</string>
     <string name="custom_entry_until">Bis</string>
+    <string name="channelChanges">Änderungen</string>
+    <string name="channelStatic">Statischer Stundenplan</string>
+    <string name="channelAppointments">Termine</string>
 
 </resources>

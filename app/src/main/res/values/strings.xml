@@ -6,7 +6,9 @@
     <string name="welcome">Welcome</string>
     <string name="logout">Logout</string>
 	<string name="ok">OK</string>
-    <string name="channelId">GUIDE7_CHANNEL</string>
+    <string name="channelStatic">Static timetable</string>
+    <string name="channelChanges">Changed events</string>
+    <string name="channelAppointments">Upcoming Appointments</string>
 
     <!-- Login -->
     <string name="passwordHint">Password</string>
