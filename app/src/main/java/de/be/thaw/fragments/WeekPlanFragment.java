@@ -466,13 +466,7 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 			if (items != null) {
 				// Write Schedule to Cache
 				try {
-					List<ScheduleItem> list = new ArrayList<>();
-					for (ScheduleItem item : items) {
-						if (!(item instanceof CustomScheduleItem)) {
-							list.add(item);
-						}
-					}
-					ScheduleUtil.store(list, activity);
+					ScheduleUtil.store(items, activity);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
