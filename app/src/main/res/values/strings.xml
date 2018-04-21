@@ -125,5 +125,9 @@
     <string name="custom_entry_duration">Duration</string>
     <string name="custom_entry_until">Until</string>
 
-
+    <!-- schedule widget -->
+    <string name="schedule_widget_next">"Next: "</string>
+    <string name="schedule_widget_today">Today</string>
+    <string name="schedule_widget_tomorrow">Tomorrow</string>
+    <string name="schedule_widget_location">"Location: "</string>
 </resources>

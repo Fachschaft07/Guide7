@@ -2,6 +2,8 @@ package de.be.thaw.fragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -49,6 +51,7 @@ import de.be.thaw.ui.LoadSnackbar;
 import de.be.thaw.util.Preference;
 import de.be.thaw.util.ThawUtil;
 import de.be.thaw.util.TimeUtil;
+import de.be.thaw.widget.ScheduleWidgetProvider;
 
 public class WeekPlanFragment extends Fragment implements MainFragment {
 
@@ -112,6 +115,7 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 		}
 
 		weekView.notifyDatasetChanged(); // Causes Loader to reload!
+		updateWidget();
 	}
 
 	@Override
@@ -136,6 +140,7 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 			e.printStackTrace();
 		}
 		weekView.notifyDatasetChanged();
+		updateWidget();
 	}
 
 	@Override
@@ -317,6 +322,7 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 									e.printStackTrace();
 								}
 								weekView.notifyDatasetChanged();
+								updateWidget();
 							}
 					});
 					builder.create().show();
@@ -351,6 +357,18 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	/**
+	 * Notifying widgets of charged data set.
+	 */
+	private void updateWidget() {
+		Intent intent = new Intent(this.getContext(), ScheduleWidgetProvider.class);
+		intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+		int[] ids = AppWidgetManager.getInstance(getContext())
+				.getAppWidgetIds(new ComponentName(getActivity().getApplication(), ScheduleWidgetProvider.class));
+		intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+		getActivity().sendBroadcast(intent);
 	}
 
 	/**
@@ -462,6 +480,7 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 
 				// Week View Callback
 				weekView.notifyDatasetChanged();
+				updateWidget();
 			}
 		}
 	}

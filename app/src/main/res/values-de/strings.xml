@@ -126,4 +126,10 @@
     <string name="channelStatic">Statischer Stundenplan</string>
     <string name="channelAppointments">Termine</string>
 
+    <!-- schedule widget -->
+    <string name="schedule_widget_next">"Nächstes: "</string>
+    <string name="schedule_widget_today">Heute</string>
+    <string name="schedule_widget_tomorrow">Morgen</string>
+    <string name="schedule_widget_location">"Ort: "</string>
+
 </resources>
