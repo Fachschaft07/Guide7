@@ -1,5 +1,8 @@
 package de.be.thaw.widget;
 
+import android.app.Application;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
@@ -31,12 +34,24 @@ public class ScheduleWidgetService extends RemoteViewsService {
 	public RemoteViewsFactory onGetViewFactory(Intent intent) {
 		return new ScheduleRemoteViewsFactory(this.getApplicationContext());
 	}
+
+	/**
+	 * Notifying widgets of charged data set.
+	 */
+	public static void notifyDataChanged(Context context) {
+		Intent intent = new Intent(context, ScheduleWidgetProvider.class);
+		intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+		String s = context.getPackageName();
+		int[] ids = AppWidgetManager.getInstance(context)
+				.getAppWidgetIds(new ComponentName("de.be.thaw", "de.be.thaw.widget.ScheduleWidgetProvider"));
+		intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+		context.sendBroadcast(intent);
+	}
 }
 
 class ScheduleRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
 	private final Context context;
-	private static final int BUFFER = 120;
 
 	private List<ScheduleItem> nextEvents = new ArrayList<>();
 
