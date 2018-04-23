@@ -36,6 +36,15 @@
         <activity android:name=".CreateCustomEntryActivity">
         </activity>
 
+        <receiver android:name="de.be.thaw.widget.ScheduleWidgetProvider" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/schedule_widget_provider" />
+        </receiver>
+        <service android:name=".widget.ScheduleWidgetService"
+        android:permission="android.permission.BIND_REMOTEVIEWS" />
     </application>
 
 </manifest>

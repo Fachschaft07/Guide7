@@ -2,6 +2,8 @@ package de.be.thaw.fragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -49,6 +51,7 @@ import de.be.thaw.ui.LoadSnackbar;
 import de.be.thaw.util.Preference;
 import de.be.thaw.util.ThawUtil;
 import de.be.thaw.util.TimeUtil;
+import de.be.thaw.widget.ScheduleWidgetProvider;
 
 public class WeekPlanFragment extends Fragment implements MainFragment {
 
@@ -112,6 +115,7 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 		}
 
 		weekView.notifyDatasetChanged(); // Causes Loader to reload!
+		updateWidget();
 	}
 
 	@Override
@@ -136,6 +140,7 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 			e.printStackTrace();
 		}
 		weekView.notifyDatasetChanged();
+		updateWidget();
 	}
 
 	@Override
@@ -232,18 +237,14 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 
 				try {
 					items = ScheduleUtil.retrieve(getContext());
+					items.addAll(CustomEntryUtil.retrieve(getContext()));
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 
 				List<ScheduleEvent> events = new ArrayList<>();
 
-				if (items != null) {
-					try {
-						items.addAll(CustomEntryUtil.retrieve(getContext()));
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
+				if (items != null && !items.isEmpty()) {
 					for (ScheduleItem item : items) {
 						// Restrict to items of the given month.
 						if (item != null && item.getStart() != null && item.getStart().getMonth() == newMonth - 1) {
@@ -321,6 +322,7 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 									e.printStackTrace();
 								}
 								weekView.notifyDatasetChanged();
+								updateWidget();
 							}
 					});
 					builder.create().show();
@@ -339,29 +341,34 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 	 * Initialize schedule by loading cached events or load from server.
 	 */
 	private void initializeSchedule() {
-		List<ScheduleItem> items = null;
+		List<ScheduleItem> items;
 
 		try {
 			items = ScheduleUtil.retrieve(getContext());
 		} catch (IOException e) {
 			e.printStackTrace();
+			return;
 		}
 
-		if (items == null) {
+		if (items.isEmpty()) {
 			try {
 				refreshSchedule();
 			} catch (ExecutionException | InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
+	}
 
-		try {
-			if (items != null) {
-				items.addAll(CustomEntryUtil.retrieve(getContext()));
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	/**
+	 * Notifying widgets of charged data set.
+	 */
+	private void updateWidget() {
+		Intent intent = new Intent(this.getContext(), ScheduleWidgetProvider.class);
+		intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+		int[] ids = AppWidgetManager.getInstance(getContext())
+				.getAppWidgetIds(new ComponentName(getActivity().getApplication(), ScheduleWidgetProvider.class));
+		intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+		getActivity().sendBroadcast(intent);
 	}
 
 	/**
@@ -415,7 +422,6 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 			List<ScheduleItem> items;
 			try {
 				items = connection.getRSSWeekplan();
-				items.addAll(CustomEntryUtil.retrieve(getContext()));
 			} catch (Exception e) {
 				error = e;
 				return null;
@@ -460,13 +466,7 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 			if (items != null) {
 				// Write Schedule to Cache
 				try {
-					List<ScheduleItem> list = new ArrayList<>();
-					for (ScheduleItem item : items) {
-						if (!(item instanceof CustomScheduleItem)) {
-							list.add(item);
-						}
-					}
-					ScheduleUtil.store(list, activity);
+					ScheduleUtil.store(items, activity);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -474,6 +474,7 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 
 				// Week View Callback
 				weekView.notifyDatasetChanged();
+				updateWidget();
 			}
 		}
 	}

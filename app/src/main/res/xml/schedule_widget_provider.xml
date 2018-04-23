@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:minWidth="200dp"
+    android:minHeight="40dp"
+    android:updatePeriodMillis="8460000"
+    android:previewImage="@drawable/logo_banner"
+    android:initialLayout="@layout/widget_schedule"
+    android:resizeMode="horizontal|vertical">
+</appwidget-provider>

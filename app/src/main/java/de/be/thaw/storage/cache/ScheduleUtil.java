@@ -10,6 +10,7 @@ import java.io.FileFilter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import de.be.thaw.model.schedule.ScheduleItem;
@@ -52,6 +53,7 @@ public class ScheduleUtil {
 	 * @return
 	 */
 	public static List<ScheduleItem> retrieve(Context context) throws IOException {
+		List<ScheduleItem> itemList = new ArrayList<>();
 		if (context != null) {
 			File scheduleStorage = new File(context.getFilesDir(), SCHEDULE_FILE);
 
@@ -59,17 +61,14 @@ public class ScheduleUtil {
 				ObjectMapper mapper = new ObjectMapper();
 				ScheduleItem[] items = mapper.readValue(scheduleStorage, ScheduleItem[].class);
 
-				List<ScheduleItem> itemList = new ArrayList<>();
-				for (ScheduleItem item : items) {
-					itemList.add(item);
-				}
+				itemList = new ArrayList<>();
+				itemList.addAll(Arrays.asList(items));
 
 				Log.i(TAG, "Retrieved stored Schedule from file.");
-				return itemList;
 			}
 		}
 
-		return null;
+		return itemList;
 	}
 
 	/**
