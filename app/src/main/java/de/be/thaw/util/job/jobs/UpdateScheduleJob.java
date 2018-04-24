@@ -21,6 +21,7 @@ import de.be.thaw.model.ScheduleEvent;
 import de.be.thaw.model.schedule.ScheduleItem;
 import de.be.thaw.storage.cache.ScheduleUtil;
 import de.be.thaw.util.Preference;
+import de.be.thaw.widget.ScheduleWidgetService;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -105,6 +106,7 @@ public class UpdateScheduleJob extends Job {
 
 				// Issue notification that the schedule changed.
 				issueNotification(newItems, changedItems);
+				ScheduleWidgetService.notifyDataChanged(getContext());
 			}
 		}
 
