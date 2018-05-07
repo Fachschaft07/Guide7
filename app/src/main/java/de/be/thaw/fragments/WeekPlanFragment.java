@@ -329,7 +329,7 @@ public class WeekPlanFragment extends Fragment implements MainFragment {
 
 		});
 
-		loadSnackbar = new LoadSnackbar(Snackbar.make(getActivity().findViewById(R.id.content_frame), "Stundenplan wird heruntergeladen...", Snackbar.LENGTH_INDEFINITE));
+		loadSnackbar = new LoadSnackbar(Snackbar.make(getActivity().findViewById(R.id.content_frame), R.string.loadingMessage, Snackbar.LENGTH_INDEFINITE));
 
 		// Initialize Schedule.
 		initializeSchedule();
