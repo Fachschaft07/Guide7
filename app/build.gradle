@@ -6,8 +6,8 @@ android {
         applicationId "de.be.thaw"
         minSdkVersion 15
         targetSdkVersion 27
-        versionCode 27
-        versionName "Build 27"
+        versionCode 28
+        versionName "Build 28"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -31,24 +31,24 @@ android {
 }
 
 dependencies {
-	compile fileTree(include: ['*.jar'], dir: 'libs')
-	androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-		exclude group: 'com.android.support', module: 'support-annotations'
-	})
-	compile 'com.android.support:appcompat-v7:27.1.1'
-	compile 'com.android.support:design:27.1.1'
-	compile 'com.android.support:support-v4:27.1.1'
-	compile 'com.android.support:preference-v7:27.1.1'
-	compile 'com.android.support:preference-v14:27.1.1'
-	testCompile 'junit:junit:4.12'
-	compile 'com.github.alamkanak:android-week-view:1.2.6'
-	compile 'com.android.support.constraint:constraint-layout:1.1.0'
-	compile 'com.joanzapata.iconify:android-iconify-fontawesome:2.2.2'
-	compile 'com.evernote:android-job:1.2.0'
-	compile 'org.mnode.ical4j:ical4j:2.0.5'
-	compile 'org.jsoup:jsoup:1.10.3'
-	compile 'com.fasterxml.jackson.core:jackson-core:2.8.10'
-	compile 'com.fasterxml.jackson.core:jackson-databind:2.8.10'
-	compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.10'
-	compile 'com.mikhaellopez:circularimageview:3.0.2'
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:27.1.1'
+    compile 'com.android.support:design:27.1.1'
+    compile 'com.android.support:support-v4:27.1.1'
+    compile 'com.android.support:preference-v7:27.1.1'
+    compile 'com.android.support:preference-v14:27.1.1'
+    testCompile 'junit:junit:4.12'
+    compile 'com.github.alamkanak:android-week-view:1.2.6'
+    compile 'com.android.support.constraint:constraint-layout:1.1.0'
+    compile 'com.joanzapata.iconify:android-iconify-fontawesome:2.2.2'
+    compile 'com.evernote:android-job:1.2.0'
+    compile 'org.mnode.ical4j:ical4j:2.0.5'
+    compile 'org.jsoup:jsoup:1.10.3'
+    compile 'com.fasterxml.jackson.core:jackson-core:2.8.10'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.8.10'
+    compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.10'
+    compile 'com.mikhaellopez:circularimageview:3.0.2'
 }
