@@ -486,7 +486,7 @@ public class ZPAConnection {
 		Document zpa;
 		try {
 			zpa = zpaConnection.get();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			throw new CouldNotReceiveMiddlewaretokenException(e);
 		}
 

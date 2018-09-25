@@ -45,7 +45,8 @@
                 android:ems="10"
                 android:fontFamily="sans-serif"
                 android:hint="@string/usernameHint"
-                android:inputType="text"/>
+                android:inputType="text"
+                android:textColorLink="@color/colorPrimary" />
         </TableRow>
 
         <TableRow
@@ -60,7 +61,8 @@
                 android:ems="10"
                 android:fontFamily="sans-serif"
                 android:hint="@string/passwordHint"
-                android:inputType="textPassword"/>
+                android:inputType="textPassword"
+                android:textColorLink="@color/colorPrimary" />
         </TableRow>
 
         <TableRow
@@ -99,7 +101,8 @@
                 android:onClick="onLogin"
                 android:text="@string/loginButtonLabel"
                 android:textColor="@android:color/white"
-                android:textStyle="bold"/>
+                android:textSize="18sp"
+                android:textStyle="bold" />
         </TableRow>
 
     </TableLayout>

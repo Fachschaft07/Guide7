@@ -23,7 +23,7 @@ public class BoardUtil {
 	private static final String BOARD_FILE = "board_storage";
 
 	/**
-	 * Store Board Entties in cache.
+	 * Store Board entries in cache.
 	 * @param entries
 	 * @param context
 	 */
