@@ -1,6 +1,6 @@
 # Guide7
 
-![Guide7 Logo](https://github.com/Fachschaft07/Guide7/blob/master/res/images/guide7_logo.png)
+<img src="https://github.com/Fachschaft07/Guide7/blob/master/res/images/guide7_logo.png" width="200" height="200"/>
 
 App for comfortable access of the student services for department 07 (computer science) at the Munich University for Applied Sciences.
 
