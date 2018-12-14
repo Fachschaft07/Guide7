@@ -7,4 +7,7 @@ abstract class LocalCredentialsRepository<T extends Credentials> {
 
   /// Store credentials for local user.
   Future<void> storeLocalCredentials(T credentials);
+
+  /// Clear currently stored credentials.
+  Future<void> clearLocalCredentials();
 }

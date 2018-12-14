@@ -70,7 +70,10 @@ class _LoginFormState extends State<LoginForm> {
 
   /// Build button for submitting form data.
   Widget _buildSubmitButton() => Center(
-        child: RaisedButton(onPressed: () => _submitForm()),
+        child: RaisedButton(
+          onPressed: () => _submitForm(),
+          child: Text("Anmelden"),
+        ),
       );
 
   /// Submit the form and validate input fields.

@@ -27,4 +27,10 @@ class LocalUsernamePasswordCredentialsRepository implements LocalCredentialsRepo
     await _storage.write(key: _usernameKey, value: credentials.username);
     await _storage.write(key: _passwordKey, value: credentials.password);
   }
+
+  @override
+  Future<void> clearLocalCredentials() async {
+    await _storage.delete(key: _usernameKey);
+    await _storage.delete(key: _passwordKey);
+  }
 }

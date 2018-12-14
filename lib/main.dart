@@ -1,62 +1,36 @@
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:guide7/app-routes.dart';
+import 'package:guide7/ui/view/splash_screen/splash_screen_view.dart';
 
-void main() => runApp(MyApp());
+/// Entry point for the application.
+void main() => runApp(App());
 
-class MyApp extends StatelessWidget {
+class App extends StatelessWidget {
+  /// Router used to navigate within the application.
+  static Router router;
+
+  /// Create the application.
+  App() {
+    _setupRouter();
+  }
+
+  /// Setup the router used to navigate in the app.
+  void _setupRouter() {
+    App.router = Router();
+    AppRoutes.configureRoutes(App.router);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Guide7 Demo',
+      title: "Guide7",
       theme: ThemeData(
         primarySwatch: Colors.blue,
         fontFamily: 'NotoSerifTC',
       ),
-      home: MyHomePage(title: 'Guide7'),
+      onGenerateRoute: App.router.generator,
+      home: SplashScreenView(),
     );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-
-    double imageWidth;
-    if (MediaQuery.of(context).orientation == Orientation.portrait) {
-      imageWidth = size.width / 2;
-    } else {
-      imageWidth = size.width / 4;
-    }
-
-    return Scaffold(
-        body: Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image.asset(
-            "res/images/guide7_logo.png",
-            width: imageWidth,
-          ),
-          Container(
-            child: Text(
-              "Guide7",
-              style: TextStyle(fontFamily: 'Raleway'),
-              textScaleFactor: 4.0,
-            ),
-            padding: EdgeInsets.only(top: 20.0),
-          ),
-          Text("Eine App der Fachschaft 07")
-        ],
-      ),
-    ));
   }
 }

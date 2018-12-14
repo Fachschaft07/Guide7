@@ -7,14 +7,11 @@ class MockLocalCredentialsRepository implements LocalCredentialsRepository<Usern
   static UsernamePasswordCredentials _credentials;
 
   @override
-  Future<UsernamePasswordCredentials> loadLocalCredentials() {
-    return Future.value(_credentials);
-  }
+  Future<UsernamePasswordCredentials> loadLocalCredentials() async => _credentials;
 
   @override
-  Future<void> storeLocalCredentials(UsernamePasswordCredentials credentials) {
-    _credentials = credentials;
+  Future<void> storeLocalCredentials(UsernamePasswordCredentials credentials) async => _credentials = credentials;
 
-    return Future.value();
-  }
+  @override
+  Future<void> clearLocalCredentials() => _credentials = null;
 }
