@@ -3,7 +3,8 @@ import 'package:guide7/model/credentials/username_password_credentials.dart';
 
 /// Local credentials repository used for tests.
 class MockLocalCredentialsRepository implements LocalCredentialsRepository<UsernamePasswordCredentials> {
-  UsernamePasswordCredentials _credentials;
+  /// Locally cached credentials.
+  static UsernamePasswordCredentials _credentials;
 
   @override
   Future<UsernamePasswordCredentials> loadLocalCredentials() {
