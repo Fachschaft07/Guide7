@@ -1,8 +1,10 @@
 import 'package:guide7/connect/credential/local_credentials_repository.dart';
 import 'package:guide7/connect/impl/default_repository.dart';
 import 'package:guide7/connect/login/zpa/zpa_login_repository.dart';
+import 'package:guide7/connect/notice_board/notice_board_repository.dart';
 import 'package:guide7/connect/repository_interface.dart';
 import 'package:guide7/model/credentials/username_password_credentials.dart';
+import 'package:guide7/util/functional_interfaces.dart';
 
 /// Repository factory used to fetch repositories for various resources.
 /// Since it is used all over the application it is implemented as a singleton.
@@ -18,6 +20,9 @@ class Repository implements RepositoryI {
 
   /// Cached instance of the ZPA login repository instance.
   ZPALoginRepository _zpaLoginRepository;
+
+  /// Cached instance of the notice board repository.
+  NoticeBoardRepository _noticeBoardRepository;
 
   /// Retrieve the Repository instance.
   factory Repository() {
@@ -50,5 +55,14 @@ class Repository implements RepositoryI {
     }
 
     return _zpaLoginRepository;
+  }
+
+  @override
+  NoticeBoardRepository getNoticeBoardRepository() {
+    if (_noticeBoardRepository == null) {
+      _noticeBoardRepository = _delegate.getNoticeBoardRepository();
+    }
+
+    return _noticeBoardRepository;
   }
 }

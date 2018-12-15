@@ -19,5 +19,5 @@ class NoticeBoardEntry {
   final DateTime validTo;
 
   /// Create new notice board entry.
-  NoticeBoardEntry.name({@required this.author, @required this.title, @required this.content, @required this.validFrom, @required this.validTo});
+  NoticeBoardEntry({@required this.author, @required this.title, @required this.content, @required this.validFrom, @required this.validTo});
 }
