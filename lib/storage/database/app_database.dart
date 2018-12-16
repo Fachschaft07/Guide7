@@ -20,11 +20,20 @@ class AppDatabase {
   /// File name of the database.
   static const String _databaseFileName = "guide7.db";
 
+  /// Instance of the app database.
+  static const AppDatabase _instance = AppDatabase._internal();
+
   /// Underlying database.
   static Database _db;
 
   /// Lock used to avoid race conditions when fetching the database.
-  final _lock = new Lock();
+  static Lock _lock = Lock();
+
+  /// Factory constructor to provide this singleton.
+  factory AppDatabase() => _instance;
+
+  /// Internal constructor.
+  const AppDatabase._internal();
 
   /// Get the underlying data base.
   Future<Database> getDatabase() async {

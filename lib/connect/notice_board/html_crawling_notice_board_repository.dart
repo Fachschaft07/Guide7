@@ -1,5 +1,6 @@
 import 'package:guide7/connect/login/zpa/util/zpa_variables.dart';
 import 'package:guide7/connect/notice_board/parser/notice_board_html_parser.dart';
+import 'package:guide7/storage/notice_board/notice_board_storage.dart';
 import 'package:guide7/util/parser/parser.dart';
 import 'package:http/http.dart' as http;
 
@@ -32,7 +33,7 @@ class HTMLCrawlingNoticeBoardRepository implements NoticeBoardRepository {
         List<NoticeBoardEntry> entries = _noticeBoardParser.parse(httpResponse.body);
 
         // Cache values.
-        _storeEntries(entries);
+        await _storeEntries(entries);
 
         return entries;
       } catch (e) {
@@ -44,20 +45,22 @@ class HTMLCrawlingNoticeBoardRepository implements NoticeBoardRepository {
   }
 
   @override
-  Future<List<NoticeBoardEntry>> getCachedEntries() {
-    // TODO: implement getCachedEntries
-    return null;
+  Future<List<NoticeBoardEntry>> getCachedEntries() async {
+    var storage = NoticeBoardStorage();
+    return await storage.read();
   }
 
   @override
-  Future<bool> hasCachedEntries() {
-    // TODO: implement hasCachedEntries
-    return null;
+  Future<bool> hasCachedEntries() async {
+    var storage = NoticeBoardStorage();
+    return !(await storage.isEmpty());
   }
 
   /// Store entries in cache for later retrieval.
-  void _storeEntries(List<NoticeBoardEntry> entries) {
-    // TODO cache entries.
+  Future<void> _storeEntries(List<NoticeBoardEntry> entries) async {
+    var storage = NoticeBoardStorage();
+
+    await storage.write(entries);
   }
 
   /// Do the login to the ZPA services.

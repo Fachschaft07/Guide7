@@ -89,11 +89,11 @@ class _SplashScreenState extends State<SplashScreenView> {
 
   /// Navigate to login view.
   void _gotoLoginView() {
-    App.router.navigateTo(context, AppRoutes.login, transition: TransitionType.inFromBottom);
+    App.router.navigateTo(context, AppRoutes.login, transition: TransitionType.inFromBottom, replace: true);
   }
 
   /// Navigate to notice board.
   void _gotoNoticeBoard() {
-    App.router.navigateTo(context, AppRoutes.notice_board, transition: TransitionType.inFromBottom);
+    App.router.navigateTo(context, AppRoutes.notice_board, transition: TransitionType.inFromBottom, replace: true);
   }
 }

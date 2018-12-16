@@ -15,23 +15,27 @@ class Patch1 extends DatabasePatch {
 
   @override
   Future<void> upgrade(Database db, int currentVersion) async {
-    // Create table for notice board entries.
-    await db.execute("""
+    await db.transaction((transaction) async {
+      await transaction.execute("""
       CREATE TABLE NOTICE_BOARD_ENTRY (
-        ID INTEGER,
-        Author TEXT,
-        Content TEXT,
-        Valid_From DATE,
-        Valid_To DATE,
+        id INTEGER,
+        title TEXT,
+        author TEXT,
+        content TEXT,
+        valid_from DATE,
+        valid_to DATE,
         PRIMARY KEY (ID)
-      );
-    """);
+      )
+      """);
+    });
   }
 
   @override
   Future<void> downgrade(Database db, int currentVersion) async {
-    await db.execute("""
-      DROP TABLE NOTICE_BOARD_ENTRY;
-    """);
+    await db.transaction((transaction) async {
+      await transaction.execute("""
+      DROP TABLE NOTICE_BOARD_ENTRY
+      """);
+    });
   }
 }
