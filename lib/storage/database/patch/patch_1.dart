@@ -24,7 +24,7 @@ class Patch1 extends DatabasePatch {
         content TEXT,
         valid_from DATE,
         valid_to DATE,
-        PRIMARY KEY (ID)
+        PRIMARY KEY (id)
       )
       """);
     });
