@@ -21,6 +21,9 @@ class LoginForm extends StatefulWidget {
 
 /// State of the login form.
 class _LoginFormState extends State<LoginForm> {
+  /// Background color of the input field.
+  static const Color _inputFieldBackground = Color.fromRGBO(240, 240, 240, 1.0);
+
   /// Key of this form used to validate the form later.
   final _formKey = GlobalKey<FormState>();
 
@@ -46,33 +49,58 @@ class _LoginFormState extends State<LoginForm> {
 
   /// Build contents of the form (input fields, buttons, ...).
   List<Widget> _buildFormContents() => <Widget>[
-        TextFormField(
-          decoration: InputDecoration(hintText: "Benutzername", icon: Icon(Icons.person)),
-          validator: (value) {
-            if (value.isEmpty) {
-              return "Bitte geben Sie einen Benutzernamen an";
-            }
-          },
-          controller: _usernameController,
+        _wrapTextField(
+          child: TextFormField(
+              decoration: InputDecoration(
+                hintText: "Benutzername",
+                icon: Icon(Icons.person),
+                border: InputBorder.none,
+              ),
+              validator: (value) {
+                if (value.isEmpty) {
+                  return "Bitte geben Sie einen Benutzernamen an";
+                }
+              },
+              controller: _usernameController),
         ),
-        TextFormField(
-          decoration: InputDecoration(hintText: "Passwort", icon: Icon(Icons.lock)),
-          validator: (value) {
-            if (value.isEmpty) {
-              return "Bitte geben Sie ein Password an";
-            }
-          },
-          obscureText: true,
-          controller: _passwordController,
+        _wrapTextField(
+          child: TextFormField(
+            decoration: InputDecoration(
+              hintText: "Passwort",
+              icon: Icon(Icons.lock),
+              border: InputBorder.none,
+            ),
+            validator: (value) {
+              if (value.isEmpty) {
+                return "Bitte geben Sie ein Password an";
+              }
+            },
+            obscureText: true,
+            controller: _passwordController,
+          ),
         ),
         _buildSubmitButton()
       ];
 
+  /// Wrap text field in a container applying some styles.
+  Widget _wrapTextField({@required Widget child}) => Container(
+      decoration: BoxDecoration(color: _inputFieldBackground, borderRadius: BorderRadius.circular(10.0)),
+      padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+      margin: EdgeInsets.only(bottom: 10.0),
+      child: child);
+
   /// Build button for submitting form data.
   Widget _buildSubmitButton() => Center(
-        child: RaisedButton(
+        child: RaisedButton.icon(
           onPressed: () => _submitForm(),
-          child: Text("Anmelden"),
+          icon: Icon(Icons.keyboard_arrow_right),
+          label: Text(
+            "Anmelden",
+            style: TextStyle(fontFamily: "Roboto"),
+          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100000.0)),
+          textColor: Colors.white,
+          color: Colors.blue,
         ),
       );
 

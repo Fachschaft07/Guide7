@@ -8,6 +8,7 @@ import 'package:guide7/connect/login/zpa/response/zpa_login_response.dart';
 import 'package:guide7/connect/repository.dart';
 import 'package:guide7/main.dart';
 import 'package:guide7/model/credentials/username_password_credentials.dart';
+import 'package:guide7/ui/common/headline.dart';
 
 /// Splash screen of the application.
 /// It redirects to the correct starting view (Login if user already logged in).
@@ -42,11 +43,7 @@ class _SplashScreenState extends State<SplashScreenView> {
               width: imageWidth,
             ),
             Container(
-              child: Text(
-                "Guide7",
-                style: TextStyle(fontFamily: 'Raleway'),
-                textScaleFactor: 4.0,
-              ),
+              child: Headline("Guide7"),
               padding: EdgeInsets.only(top: 20.0),
             ),
             Text("Eine App der Fachschaft 07")

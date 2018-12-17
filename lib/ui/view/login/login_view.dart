@@ -6,6 +6,7 @@ import 'package:guide7/connect/login/zpa/response/zpa_login_response.dart';
 import 'package:guide7/connect/repository.dart';
 import 'package:guide7/main.dart';
 import 'package:guide7/model/credentials/username_password_credentials.dart';
+import 'package:guide7/ui/common/headline.dart';
 import 'package:guide7/ui/view/base_view.dart';
 import 'package:guide7/ui/view/login/form/login_form.dart';
 
@@ -20,21 +21,50 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Text("Anmeldung", textScaleFactor: 3.0),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-            child: LoginForm(
-              onLoginAttempt: _onLoginAttempt,
-              onSuccess: _onLoginSuccess,
+      body: SafeArea(
+        child: Column(
+          children: <Widget>[
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    _buildHeader(),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 25.0, horizontal: 40.0),
+                      child: LoginForm(
+                        onLoginAttempt: _onLoginAttempt,
+                        onSuccess: _onLoginSuccess,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-          )
-        ],
+          ],
+        ),
       ),
     );
   }
+
+  /// Build the login header.
+  Widget _buildHeader() => Padding(
+        padding: EdgeInsets.only(top: 50.0, left: 25.0, right: 25.0, bottom: 25.0),
+        child: Column(
+          children: <Widget>[
+            Headline("Anmeldung"),
+            Padding(
+              padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+              child: Text(
+                "Gib deine ZPA Anmeldedaten an um dich anzumelden.",
+                style: TextStyle(fontStyle: FontStyle.italic),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            Divider(),
+          ],
+        ),
+      );
 
   /// Attempt a login with the provided [username] and [password].
   Future<bool> _onLoginAttempt(String username, String password) async {
