@@ -91,6 +91,6 @@ class _SplashScreenState extends State<SplashScreenView> {
 
   /// Navigate to notice board.
   void _gotoNoticeBoard() {
-    App.router.navigateTo(context, AppRoutes.notice_board, transition: TransitionType.inFromBottom, replace: true);
+    App.router.navigateTo(context, AppRoutes.main, transition: TransitionType.inFromBottom, replace: true);
   }
 }

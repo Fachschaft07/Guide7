@@ -2,17 +2,14 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:guide7/app-routes.dart';
-import 'package:guide7/connect/login/zpa/response/zpa_login_response.dart';
 import 'package:guide7/connect/login/zpa/zpa_login_repository.dart';
 import 'package:guide7/connect/repository.dart';
 import 'package:guide7/main.dart';
 import 'package:guide7/model/notice_board/notice_board_entry.dart';
-import 'package:guide7/ui/common/headline.dart';
-import 'package:guide7/ui/view/base_view.dart';
 import 'package:guide7/ui/view/notice_board/entry/notice_board_entry_widget.dart';
 
 /// View showing the notice board.
-class NoticeBoardView extends StatefulWidget implements BaseView {
+class NoticeBoardView extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _NoticeBoardViewState();
 }
@@ -49,11 +46,7 @@ class _NoticeBoardViewState extends State<NoticeBoardView> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(child: _buildContent()),
-    );
-  }
+  Widget build(BuildContext context) => SafeArea(child: _buildContent());
 
   /// Build the notice board views content.
   Widget _buildContent() => FutureBuilder<List<NoticeBoardEntry>>(

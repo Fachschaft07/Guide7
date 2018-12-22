@@ -7,11 +7,10 @@ import 'package:guide7/connect/repository.dart';
 import 'package:guide7/main.dart';
 import 'package:guide7/model/credentials/username_password_credentials.dart';
 import 'package:guide7/ui/common/headline.dart';
-import 'package:guide7/ui/view/base_view.dart';
 import 'package:guide7/ui/view/login/form/login_form.dart';
 
 /// View showing the login dialog.
-class LoginView extends StatefulWidget implements BaseView {
+class LoginView extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _LoginViewState();
 }
@@ -85,6 +84,6 @@ class _LoginViewState extends State<LoginView> {
 
   /// What to do when the login succeeded.
   void _onLoginSuccess() {
-    App.router.navigateTo(context, AppRoutes.notice_board, transition: TransitionType.inFromBottom, replace: true);
+    App.router.navigateTo(context, AppRoutes.main, transition: TransitionType.inFromBottom, replace: true);
   }
 }
