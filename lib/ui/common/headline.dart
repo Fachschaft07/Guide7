@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 /// Headline widget.
@@ -11,7 +12,10 @@ class Headline extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Text(
         text,
-        style: TextStyle(fontFamily: "Raleway"),
-        textScaleFactor: 3.0,
+        style: TextStyle(
+          fontFamily: "Raleway",
+          color: Colors.black,
+          fontSize: 40.0,
+        ),
       );
 }
