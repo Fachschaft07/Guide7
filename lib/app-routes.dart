@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:guide7/ui/view/login/login_view.dart';
 import 'package:guide7/ui/view/notice_board/notice_board_view.dart';
 import 'package:guide7/ui/view/splash_screen/splash_screen_view.dart';
+import 'package:guide7/ui/view/view_holder.dart';
 
 /// Routes (for navigation) are defined here.
 class AppRoutes {
@@ -12,8 +13,8 @@ class AppRoutes {
   /// Route to the login view.
   static const String login = "/login";
 
-  /// Route to the notice board view.
-  static const String notice_board = "/notice_board";
+  /// Route to the main view holder handling further navigation.
+  static const String main = "/main";
 
   /// Configure all application routes.
   static void configureRoutes(Router router) {
@@ -23,6 +24,6 @@ class AppRoutes {
 
     router.define(AppRoutes.root, handler: Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) => SplashScreenView()));
     router.define(AppRoutes.login, handler: Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) => LoginView()));
-    router.define(AppRoutes.notice_board, handler: Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) => NoticeBoardView()));
+    router.define(AppRoutes.main, handler: Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) => ViewHolder()));
   }
 }
