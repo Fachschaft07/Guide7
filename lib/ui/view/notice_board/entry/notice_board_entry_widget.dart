@@ -38,11 +38,27 @@ class NoticeBoardEntryWidget extends StatelessWidget {
               ), // Divider between entries
         child: Column(
           children: <Widget>[
-            Text(
-              entry.title,
-              style: TextStyle(fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
-              textScaleFactor: 1.1,
+            Row(
+              children: <Widget>[
+                Expanded(
+                  child: Text(
+                    entry.title,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.left,
+                    textScaleFactor: 1.1,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 10.0),
+                  child: CircleAvatar(
+                    child: Text(
+                      _getAuthorInitials(entry.author),
+                      style: TextStyle(fontFamily: "Roboto"),
+                    ),
+                    radius: 25.0,
+                  ),
+                )
+              ],
             ),
             HtmlView(
               data: entry.content,
@@ -68,4 +84,16 @@ class NoticeBoardEntryWidget extends StatelessWidget {
           ],
         ),
       );
+
+  /// Get initials of the passed author.
+  String _getAuthorInitials(String authorName) {
+    List<String> nameParts = authorName.split(" ");
+
+    if (nameParts.length != 2) {
+      // Return just the first initial character.
+      return authorName.substring(0, 1);
+    }
+
+    return nameParts.map((part) => part.substring(0, 1)).join();
+  }
 }
