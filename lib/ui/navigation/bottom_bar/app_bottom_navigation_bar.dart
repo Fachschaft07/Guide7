@@ -79,9 +79,6 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
           ),
     );
 
-    // Add placeholder for floating action button.
-    items.add(_buildPlaceholder());
-
     return BottomAppBar(
       shape: widget.shape,
       color: widget.backgroundColor,
@@ -128,10 +125,4 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
       ),
     );
   }
-
-  /// Build placeholder for floating action button.
-  Widget _buildPlaceholder() => SizedBox(
-        height: widget.height,
-        width: 80.0,
-      );
 }

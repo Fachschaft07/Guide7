@@ -1,12 +1,8 @@
 import 'dart:typed_data';
 
-import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:guide7/app-routes.dart';
-import 'package:guide7/connect/login/zpa/zpa_login_repository.dart';
 import 'package:guide7/connect/repository.dart';
-import 'package:guide7/main.dart';
 import 'package:guide7/model/hm_people/hm_person.dart';
 import 'package:guide7/model/notice_board/notice_board_entry.dart';
 import 'package:guide7/ui/view/notice_board/entry/notice_board_entry_widget.dart';
@@ -30,16 +26,20 @@ class _NoticeBoardViewState extends State<NoticeBoardView> {
   }
 
   /// Refresh the view.
-  void _getEntries({bool fromCache = true}) {
+  Future<dynamic> _getEntries({bool fromCache = true}) {
     Future<List<NoticeBoardEntry>> entriesFuture = _reloadEntries(fromCache: fromCache);
     Future<List<HMPerson>> hmPeopleFuture = _getHMPeople();
 
+    Future future = Future.wait([
+      entriesFuture,
+      hmPeopleFuture,
+    ]);
+
     setState(() {
-      _future = Future.wait([
-        entriesFuture,
-        hmPeopleFuture,
-      ]);
+      _future = future;
     });
+
+    return future;
   }
 
   /// Reload notice board entries.
@@ -75,7 +75,7 @@ class _NoticeBoardViewState extends State<NoticeBoardView> {
         builder: (context, snapshot) {
           Widget sliverList;
 
-          if (snapshot.hasData && snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasData) {
             List<NoticeBoardEntry> entries = snapshot.data[0];
             List<HMPerson> hmPeople = snapshot.data[1];
 
@@ -92,7 +92,7 @@ class _NoticeBoardViewState extends State<NoticeBoardView> {
                 return null;
               },
             ));
-          } else if (snapshot.hasError && snapshot.connectionState == ConnectionState.done) {
+          } else if (snapshot.hasError) {
             sliverList = SliverToBoxAdapter(
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 40.0, horizontal: 30.0),
@@ -110,28 +110,23 @@ class _NoticeBoardViewState extends State<NoticeBoardView> {
             );
           }
 
-          return CustomScrollView(
-            slivers: <Widget>[
-              SliverAppBar(
-                title: Text(
-                  "Schwarzes Brett",
-                  style: TextStyle(color: Colors.black),
+          return RefreshIndicator(
+            onRefresh: () => _getEntries(fromCache: false),
+            child: CustomScrollView(
+              slivers: <Widget>[
+                SliverAppBar(
+                  title: Text(
+                    "Schwarzes Brett",
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  centerTitle: true,
+                  backgroundColor: Colors.white,
+                  snap: true,
+                  floating: true,
                 ),
-                centerTitle: true,
-                backgroundColor: Colors.white,
-                snap: true,
-                floating: true,
-              ),
-              SliverToBoxAdapter(
-                child: Row(
-                  children: <Widget>[
-                    RaisedButton.icon(onPressed: () => _getEntries(fromCache: false), icon: Icon(Icons.refresh), label: Text("Test Aktualisieren")),
-                    RaisedButton.icon(onPressed: () => _logout(), icon: Icon(Icons.lock_outline), label: Text("Test Abmelden"))
-                  ],
-                ),
-              ),
-              sliverList
-            ],
+                sliverList
+              ],
+            ),
           );
         },
       );
@@ -177,20 +172,5 @@ class _NoticeBoardViewState extends State<NoticeBoardView> {
     String lastName2 = authorNames[0].substring(0, authorNames[0].length - 1).toLowerCase();
 
     return firstName == firstName2 && lastName == lastName2;
-  }
-
-  void _logout() async {
-    // TODO Remove from notice board fragment -> belongs somewhere else
-
-    Repository repo = Repository();
-
-    ZPALoginRepository loginRepository = repo.getZPALoginRepository();
-
-    if (loginRepository.isLoggedIn()) {
-      await loginRepository.tryLogout(loginRepository.getLogin());
-      await repo.getLocalCredentialsRepository().clearLocalCredentials();
-    }
-
-    App.router.navigateTo(context, AppRoutes.login, transition: TransitionType.fadeIn);
   }
 }

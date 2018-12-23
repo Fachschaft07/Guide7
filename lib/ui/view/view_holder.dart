@@ -1,5 +1,12 @@
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:guide7/app-routes.dart';
+import 'package:guide7/connect/login/zpa/zpa_login_repository.dart';
+import 'package:guide7/connect/repository.dart';
+import 'package:guide7/main.dart';
+import 'package:guide7/ui/navigation/app_floating_action_button/app_floating_action_button.dart';
+import 'package:guide7/ui/navigation/app_floating_action_button/item/app_floating_action_button_item.dart';
 import 'package:guide7/ui/navigation/bottom_bar/app_bottom_navigation_bar.dart';
 import 'package:guide7/ui/navigation/bottom_bar/item/app_bottom_navigation_bar_item.dart';
 import 'package:guide7/ui/view/appointment/appointment_view.dart';
@@ -53,11 +60,15 @@ class _ViewHolderState extends State<ViewHolder> {
         onItemSelected: _onBottomNavigationItemChange,
         shape: CircularNotchedRectangle(),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: Icon(Icons.menu),
-        elevation: 2.0,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: AppFloatingActionButton(
+        items: [
+          AppFloatingActionButtonItem(
+            title: "Abmelden",
+            onPressed: () => _logout(),
+            iconData: Icons.exit_to_app,
+          ),
+        ],
       ),
     );
   }
@@ -69,5 +80,19 @@ class _ViewHolderState extends State<ViewHolder> {
       WeekPlanView(),
       AppointmentView(),
     ];
+  }
+
+  /// Logout from the app.
+  void _logout() async {
+    Repository repo = Repository();
+
+    ZPALoginRepository loginRepository = repo.getZPALoginRepository();
+
+    if (loginRepository.isLoggedIn()) {
+      await loginRepository.tryLogout(loginRepository.getLogin());
+      await repo.getLocalCredentialsRepository().clearLocalCredentials();
+    }
+
+    App.router.navigateTo(context, AppRoutes.login, transition: TransitionType.fadeIn);
   }
 }
