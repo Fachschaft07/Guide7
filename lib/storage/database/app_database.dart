@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:guide7/storage/database/patch/database_patch.dart';
 import 'package:guide7/storage/database/patch/patch_1.dart';
+import 'package:guide7/storage/database/patch/patch_2.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:synchronized/synchronized.dart';
@@ -10,12 +11,15 @@ import 'package:synchronized/synchronized.dart';
 class AppDatabase {
   /// Version of the database.
   /// NOTE: Increase whenever you add a new patch for the database. See [_patches].
-  static const int _databaseVersion = 1;
+  static const int _databaseVersion = 2;
 
   /// List of patches for the database.
   /// Make sure this list is ordered after patch versions (newer patches are at the end)!
   /// NOTE: Whenevery you add a new patch, make sure to increase the [_databaseVersion] in this class.
-  static const List<DatabasePatch> _patches = [Patch1()];
+  static const List<DatabasePatch> _patches = [
+    Patch1(),
+    Patch2(),
+  ];
 
   /// File name of the database.
   static const String _databaseFileName = "guide7.db";

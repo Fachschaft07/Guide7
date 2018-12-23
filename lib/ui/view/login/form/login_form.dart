@@ -56,6 +56,7 @@ class _LoginFormState extends State<LoginForm> {
                 icon: Icon(Icons.person),
                 border: InputBorder.none,
               ),
+              style: TextStyle(fontFamily: "Roboto", color: Colors.black87, fontSize: 16.0),
               validator: (value) {
                 if (value.isEmpty) {
                   return "Bitte geben Sie einen Benutzernamen an";
@@ -70,6 +71,7 @@ class _LoginFormState extends State<LoginForm> {
               icon: Icon(Icons.lock),
               border: InputBorder.none,
             ),
+            style: TextStyle(fontFamily: "Roboto", color: Colors.black87, fontSize: 16.0),
             validator: (value) {
               if (value.isEmpty) {
                 return "Bitte geben Sie ein Password an";
