@@ -1,5 +1,7 @@
 import 'package:guide7/connect/credential/local_credentials_repository.dart';
 import 'package:guide7/connect/credential/local_username_password_credential_repository.dart';
+import 'package:guide7/connect/hm_people/hm_people_repository.dart';
+import 'package:guide7/connect/hm_people/hm_people_repository_impl.dart';
 import 'package:guide7/connect/login/zpa/zpa_login_repository.dart';
 import 'package:guide7/connect/notice_board/html_crawling_notice_board_repository.dart';
 import 'package:guide7/connect/notice_board/notice_board_repository.dart';
@@ -16,4 +18,7 @@ class DefaultRepository implements RepositoryI {
 
   @override
   NoticeBoardRepository getNoticeBoardRepository() => HTMLCrawlingNoticeBoardRepository();
+
+  @override
+  HMPeopleRepository getHMPeopleRepository() => HMPeopleRepositoryImpl();
 }

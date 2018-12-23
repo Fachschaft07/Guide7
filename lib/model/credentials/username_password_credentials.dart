@@ -7,9 +7,11 @@ class UsernamePasswordCredentials implements Credentials {
   final String username;
 
   /// Password of the user.
-  /// TODO Keep this as character array for better security since strings are cached internally.
   final String password;
 
   /// Create new credentials.
-  UsernamePasswordCredentials({@required this.username, @required this.password});
+  UsernamePasswordCredentials({
+    @required this.username,
+    @required this.password,
+  });
 }

@@ -1,4 +1,5 @@
 import 'package:guide7/connect/credential/local_credentials_repository.dart';
+import 'package:guide7/connect/hm_people/hm_people_repository.dart';
 import 'package:guide7/connect/impl/default_repository.dart';
 import 'package:guide7/connect/login/zpa/zpa_login_repository.dart';
 import 'package:guide7/connect/notice_board/notice_board_repository.dart';
@@ -23,6 +24,9 @@ class Repository implements RepositoryI {
 
   /// Cached instance of the notice board repository.
   NoticeBoardRepository _noticeBoardRepository;
+
+  /// Cached instance of the hm people repository.
+  HMPeopleRepository _hmPeopleRepository;
 
   /// Retrieve the Repository instance.
   factory Repository() {
@@ -64,5 +68,14 @@ class Repository implements RepositoryI {
     }
 
     return _noticeBoardRepository;
+  }
+
+  @override
+  HMPeopleRepository getHMPeopleRepository() {
+    if (_hmPeopleRepository == null) {
+      _hmPeopleRepository = _delegate.getHMPeopleRepository();
+    }
+
+    return _hmPeopleRepository;
   }
 }

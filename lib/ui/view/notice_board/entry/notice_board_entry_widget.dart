@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:guide7/model/notice_board/notice_board_entry.dart';
@@ -16,8 +18,11 @@ class NoticeBoardEntryWidget extends StatelessWidget {
   /// Whether it is the last entry in the list.
   final bool isLast;
 
+  /// Avatar image of the author.
+  final Uint8List avatarImage;
+
   /// Create new entry widget.
-  NoticeBoardEntryWidget({@required this.entry, @required this.isLast});
+  NoticeBoardEntryWidget({@required this.entry, @required this.isLast, this.avatarImage});
 
   @override
   Widget build(BuildContext context) => Container(
@@ -50,13 +55,7 @@ class NoticeBoardEntryWidget extends StatelessWidget {
                 ),
                 Padding(
                   padding: EdgeInsets.only(left: 10.0),
-                  child: CircleAvatar(
-                    child: Text(
-                      _getAuthorInitials(entry.author),
-                      style: TextStyle(fontFamily: "Roboto"),
-                    ),
-                    radius: 25.0,
-                  ),
+                  child: _getCircleAvatar(),
                 )
               ],
             ),
@@ -95,5 +94,25 @@ class NoticeBoardEntryWidget extends StatelessWidget {
     }
 
     return nameParts.map((part) => part.substring(0, 1)).join();
+  }
+
+  /// Get circle avatar image or initials of the author.
+  Widget _getCircleAvatar() {
+    if (avatarImage == null) {
+      return CircleAvatar(
+        child: Text(
+          _getAuthorInitials(entry.author),
+          style: TextStyle(fontFamily: "Roboto"),
+        ),
+        radius: 25.0,
+        backgroundColor: CustomColors.slateGrey,
+        foregroundColor: Colors.white,
+      );
+    } else {
+      return CircleAvatar(
+        backgroundImage: MemoryImage(avatarImage),
+        radius: 25.0,
+      );
+    }
   }
 }

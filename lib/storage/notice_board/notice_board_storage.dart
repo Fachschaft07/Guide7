@@ -78,11 +78,12 @@ class NoticeBoardStorage implements Storage<List<NoticeBoardEntry>> {
   /// Convert notice board entries to values for an SQL statement.
   Map<String, dynamic> _convertEntryToMap(int id, NoticeBoardEntry entry) {
     return {
+      "id": id,
       "author": entry.author,
       "title": entry.title,
       "content": entry.content,
       "valid_from": _dateFormatter.format(entry.validFrom),
-      "valid_to": _dateFormatter.format(entry.validTo)
+      "valid_to": _dateFormatter.format(entry.validTo),
     };
   }
 
@@ -100,10 +101,11 @@ class NoticeBoardStorage implements Storage<List<NoticeBoardEntry>> {
   /// Convert table entry [map] to notice board entry.
   NoticeBoardEntry _convertMapToEntry(Map<String, dynamic> map) {
     return NoticeBoardEntry(
-        author: map["author"],
-        title: map["title"],
-        content: map["content"],
-        validFrom: _dateFormatter.parse(map["valid_from"]),
-        validTo: _dateFormatter.parse(map["valid_to"]));
+      author: map["author"],
+      title: map["title"],
+      content: map["content"],
+      validFrom: _dateFormatter.parse(map["valid_from"]),
+      validTo: _dateFormatter.parse(map["valid_to"]),
+    );
   }
 }
