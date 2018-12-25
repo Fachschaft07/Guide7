@@ -157,6 +157,7 @@ class _NoticeBoardViewState extends State<NoticeBoardView> {
               icon: Icon(Icons.search),
               border: InputBorder.none,
             ),
+            autofocus: true,
           ),
           decoration: BoxDecoration(color: Color.fromRGBO(240, 240, 240, 1.0), borderRadius: BorderRadius.circular(100000.0)),
           padding: EdgeInsets.symmetric(horizontal: 10.0),
