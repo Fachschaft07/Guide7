@@ -6,6 +6,7 @@ import 'package:guide7/connect/repository.dart';
 import 'package:guide7/model/hm_people/hm_person.dart';
 import 'package:guide7/model/notice_board/notice_board_entry.dart';
 import 'package:guide7/ui/view/notice_board/entry/notice_board_entry_widget.dart';
+import 'package:guide7/util/custom_colors.dart';
 
 /// View showing the notice board.
 class NoticeBoardView extends StatefulWidget {
@@ -17,6 +18,12 @@ class NoticeBoardView extends StatefulWidget {
 class _NoticeBoardViewState extends State<NoticeBoardView> {
   /// Future which will provide notice board entries once finished.
   Future _future;
+
+  /// Whether to show the search field.
+  bool _showSearchField = false;
+
+  /// Text controller for the search field.
+  TextEditingController _searchFieldController = TextEditingController();
 
   @override
   void initState() {
@@ -79,6 +86,10 @@ class _NoticeBoardViewState extends State<NoticeBoardView> {
             List<NoticeBoardEntry> entries = snapshot.data[0];
             List<HMPerson> hmPeople = snapshot.data[1];
 
+            if (_showSearchField) {
+              entries = _filterEntries(entries, _searchFieldController.text);
+            }
+
             sliverList = SliverList(delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
                 if (entries.length > index) {
@@ -113,22 +124,82 @@ class _NoticeBoardViewState extends State<NoticeBoardView> {
           return RefreshIndicator(
             onRefresh: () => _getEntries(fromCache: false),
             child: CustomScrollView(
-              slivers: <Widget>[
-                SliverAppBar(
-                  title: Text(
-                    "Schwarzes Brett",
-                    style: TextStyle(color: Colors.black),
-                  ),
-                  centerTitle: true,
-                  backgroundColor: Colors.white,
-                  snap: true,
-                  floating: true,
-                ),
-                sliverList
-              ],
+              slivers: <Widget>[_buildAppBar(), sliverList],
             ),
           );
         },
+      );
+
+  /// Build the notice board app bar.
+  Widget _buildAppBar() {
+    if (_showSearchField) {
+      return _buildSearchAppBar();
+    } else {
+      return _buildDefaultAppBar();
+    }
+  }
+
+  /// Build the search app bar.
+  Widget _buildSearchAppBar() => SliverAppBar(
+        title: Container(
+          child: TextField(
+            controller: _searchFieldController,
+            onChanged: (text) {
+              setState(() {});
+            },
+            style: TextStyle(
+              fontFamily: "Roboto",
+              color: Colors.black87,
+              fontSize: 16.0,
+            ),
+            decoration: InputDecoration(
+              hintText: "Suchen...",
+              icon: Icon(Icons.search),
+              border: InputBorder.none,
+            ),
+          ),
+          decoration: BoxDecoration(color: Color.fromRGBO(240, 240, 240, 1.0), borderRadius: BorderRadius.circular(100000.0)),
+          padding: EdgeInsets.symmetric(horizontal: 10.0),
+        ),
+        centerTitle: false,
+        backgroundColor: Colors.white,
+        snap: true,
+        floating: true,
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.close, color: CustomColors.slateGrey),
+            tooltip: "Suche beenden",
+            onPressed: () {
+              setState(() {
+                _showSearchField = false;
+                _searchFieldController.clear();
+              });
+            },
+          ),
+        ],
+      );
+
+  /// Build the default app bar for the notice board.
+  Widget _buildDefaultAppBar() => SliverAppBar(
+        title: Text(
+          "Schwarzes Brett",
+          style: TextStyle(color: Colors.black),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.white,
+        snap: true,
+        floating: true,
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.search, color: CustomColors.slateGrey),
+            tooltip: "Suche",
+            onPressed: () {
+              setState(() {
+                _showSearchField = true;
+              });
+            },
+          ),
+        ],
       );
 
   /// Get image of the author or null if not found.
@@ -172,5 +243,17 @@ class _NoticeBoardViewState extends State<NoticeBoardView> {
     String lastName2 = authorNames[0].substring(0, authorNames[0].length - 1).toLowerCase();
 
     return firstName == firstName2 && lastName == lastName2;
+  }
+
+  /// Filter the passed notice board [entries] by the passed [filterString].
+  List<NoticeBoardEntry> _filterEntries(List<NoticeBoardEntry> entries, String filterString) {
+    filterString = filterString.toLowerCase();
+
+    return entries
+        .where((entry) =>
+            entry.title.toLowerCase().contains(filterString) ||
+            entry.author.toLowerCase().contains(filterString) ||
+            entry.content.toLowerCase().contains(filterString))
+        .toList(growable: false);
   }
 }
