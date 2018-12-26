@@ -23,7 +23,7 @@ matrix:
             - libstdc++6
             - fonts-droid
       before_script:
-        - git clone https://github.com/flutter/flutter.git -b alpha --depth 1
+        - git clone https://github.com/flutter/flutter.git -b master --depth 1
       script:
         - ./flutter/bin/flutter test
 
@@ -60,7 +60,7 @@ matrix:
         - unzip -qq gradle-3.5-bin.zip
         - export GRADLE_HOME=$PWD/gradle-3.5
         - export PATH=$GRADLE_HOME/bin:$PATH
-        - git clone https://github.com/flutter/flutter.git -b alpha --depth 1
+        - git clone https://github.com/flutter/flutter.git -b master --depth 1
       script:
         - ./flutter/bin/flutter -v build apk
 
@@ -75,7 +75,7 @@ matrix:
         - brew install --HEAD libimobiledevice
         - brew install ideviceinstaller
         - brew install ios-deploy
-        - git clone https://github.com/flutter/flutter.git -b alpha --depth 1
+        - git clone https://github.com/flutter/flutter.git -b master --depth 1
       script:
         - ./flutter/bin/flutter -v build ios --no-codesign
 
