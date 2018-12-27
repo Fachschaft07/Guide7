@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/Fachschaft07/Guide7.svg?branch=develop)](https://travis-ci.org/Fachschaft07/Guide7)
+
 # Guide7
 
 <img src="https://github.com/Fachschaft07/Guide7/blob/master/res/images/guide7_logo.png" width="200" height="200"/>
