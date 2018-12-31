@@ -14,7 +14,7 @@ class NoticeBoardPayloadHandler implements PayloadHandler {
   @override
   Future<bool> handle(String payload, BuildContext context) async {
     if (payload == NoticeBoardPayloadHandler.payload) {
-      await App.router.navigateTo(context, AppRoutes.noticeBoard);
+      await App.router.navigateTo(context, AppRoutes.noticeBoard, clearStack: true, replace: true);
 
       return true;
     }
