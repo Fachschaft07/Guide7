@@ -17,11 +17,11 @@
          FlutterApplication and put your custom class here. -->
     <application
             tools:replace="android:label"
-            android:name="io.flutter.app.FlutterApplication"
+            android:name=".Application"
             android:label="guide7"
             android:icon="@mipmap/ic_launcher">
         <activity
-                android:name=".Application"
+                android:name=".MainActivity"
                 android:launchMode="singleTop"
                 android:theme="@style/LaunchTheme"
                 android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density"

@@ -1,21 +1,19 @@
 package com.example.guide7;
 
-import android.os.Bundle;
-import io.flutter.app.FlutterActivity;
+import io.flutter.app.FlutterApplication;
 import io.flutter.plugins.GeneratedPluginRegistrant;
 import io.flutter.plugin.common.PluginRegistry;
 import com.transistorsoft.flutter.backgroundfetch.BackgroundFetchPlugin;
 
-public class Application extends FlutterActivity implements PluginRegistry.PluginRegistrantCallback {
+public class Application extends FlutterApplication implements PluginRegistry.PluginRegistrantCallback {
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		GeneratedPluginRegistrant.registerWith(this);
+	public void onCreate() {
+		super.onCreate();
 		BackgroundFetchPlugin.setPluginRegistrant(this);
 	}
 
 	@Override
-	public void registerWith(PluginRegistry registry) {
-		GeneratedPluginRegistrant.registerWith(registry);
+	public void registerWith(PluginRegistry pluginRegistry) {
+		GeneratedPluginRegistrant.registerWith(pluginRegistry);
 	}
 }
