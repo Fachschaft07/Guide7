@@ -2,9 +2,9 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:guide7/app-routes.dart';
+import 'package:guide7/app.dart';
 import 'package:guide7/connect/login/zpa/zpa_login_repository.dart';
 import 'package:guide7/connect/repository.dart';
-import 'package:guide7/main.dart';
 import 'package:guide7/ui/navigation/app_floating_action_button/app_floating_action_button.dart';
 import 'package:guide7/ui/navigation/app_floating_action_button/item/app_floating_action_button_item.dart';
 import 'package:guide7/ui/navigation/bottom_bar/app_bottom_navigation_bar.dart';
@@ -12,6 +12,7 @@ import 'package:guide7/ui/navigation/bottom_bar/item/app_bottom_navigation_bar_i
 import 'package:guide7/ui/view/appointment/appointment_view.dart';
 import 'package:guide7/ui/view/notice_board/notice_board_view.dart';
 import 'package:guide7/ui/view/week_plan/week_plan_view.dart';
+import 'package:guide7/util/notification/notification_manager.dart';
 
 /// View which includes a bottom navigation bar and switches out the actual views for the app.
 class ViewHolder extends StatefulWidget {
@@ -67,6 +68,16 @@ class _ViewHolderState extends State<ViewHolder> {
             title: "Abmelden",
             onPressed: () => _logout(),
             iconData: Icons.exit_to_app,
+          ),
+          AppFloatingActionButtonItem(
+            // TODO Remove if no more needed
+            title: "Notification Test",
+            onPressed: () => NotificationManager().showNotification(
+                  title: "Test Title",
+                  content: "Test Content",
+                  payload: "test:payload",
+                ),
+            iconData: Icons.email,
           ),
         ],
       ),
