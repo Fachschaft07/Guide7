@@ -1,9 +1,10 @@
+import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
 
 /// Interface for all applications notification managers.
 abstract class NotificationManagerI {
   /// Initialize the notification manager.
-  Future<void> initialize();
+  Future<void> initialize(BuildContext context);
 
   /// Show a notification.
   /// [title] of the notification

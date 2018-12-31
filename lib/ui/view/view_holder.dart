@@ -12,10 +12,18 @@ import 'package:guide7/ui/navigation/bottom_bar/item/app_bottom_navigation_bar_i
 import 'package:guide7/ui/view/appointment/appointment_view.dart';
 import 'package:guide7/ui/view/notice_board/notice_board_view.dart';
 import 'package:guide7/ui/view/week_plan/week_plan_view.dart';
-import 'package:guide7/util/notification/notification_manager.dart';
 
 /// View which includes a bottom navigation bar and switches out the actual views for the app.
 class ViewHolder extends StatefulWidget {
+  /// Index of the initially selected view.
+  final int viewIndex;
+
+  /// Create view holder holding the apps views.
+  ViewHolder({
+    Key key,
+    @required this.viewIndex,
+  }) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => _ViewHolderState();
 }
@@ -27,6 +35,13 @@ class _ViewHolderState extends State<ViewHolder> {
 
   /// Index of the currently shown. page.
   int _currentViewIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _currentViewIndex = widget.viewIndex;
+  }
 
   /// What to do in case another item in the bottom navigation bar has been selected.
   void _onBottomNavigationItemChange(int index) {

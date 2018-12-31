@@ -53,6 +53,6 @@ class _AppState extends State<App> {
 
   /// Setup the applications notification manager to fire local notifications.
   void _setupNotificationManager() {
-    NotificationManager().initialize();
+    NotificationManager().initialize(context);
   }
 }

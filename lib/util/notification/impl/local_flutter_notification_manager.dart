@@ -1,5 +1,8 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:guide7/util/notification/notification_manager_interface.dart';
+import 'package:guide7/util/notification/payload_handler/payload_handler.dart';
+import 'package:guide7/util/notification/payload_handler/payload_handlers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Notification Manager abstraction for the local flutter notifications plugin.
@@ -17,16 +20,21 @@ class LocalFlutterNotificationManager implements NotificationManagerI {
   static const String _androidNotificationChannelDescription = "guide7";
 
   /// Instance of the local flutter notifications plugin.
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+  FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin;
+
+  /// Build context from when the notification manager has been initialized.
+  BuildContext _initializeContext;
 
   @override
-  Future<void> initialize() async {
+  Future<void> initialize(BuildContext context) async {
+    _initializeContext = context;
+
     var initializationSettingsAndroid = AndroidInitializationSettings("@mipmap/ic_launcher");
     var initializationSettingsIOS = IOSInitializationSettings();
     var initializationSettings = InitializationSettings(initializationSettingsAndroid, initializationSettingsIOS);
 
-    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-    flutterLocalNotificationsPlugin.initialize(
+    _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    _flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
       onSelectNotification: onSelectNotification,
     );
@@ -34,9 +42,15 @@ class LocalFlutterNotificationManager implements NotificationManagerI {
 
   /// What to do in case the notification has been clicked.
   Future onSelectNotification(String payload) async {
-    print("Notification with payload: '$payload' has been selected");
-
-    /// TODO Handle notification selection properly by opening the correct view (notice board, etc.).
+    for (PayloadHandler handler in PayloadHandlers.payloadHandlers) {
+      try {
+        if (await handler.handle(payload, _initializeContext)) {
+          break;
+        }
+      } catch (e) {
+        // Do nothing, just skip handler.
+      }
+    }
   }
 
   @override
@@ -61,7 +75,7 @@ class LocalFlutterNotificationManager implements NotificationManagerI {
 
     int notificationId = await _getNextId();
 
-    await flutterLocalNotificationsPlugin.show(
+    await _flutterLocalNotificationsPlugin.show(
       notificationId,
       title,
       content,

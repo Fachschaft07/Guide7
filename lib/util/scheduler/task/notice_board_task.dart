@@ -2,6 +2,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:guide7/connect/repository.dart';
 import 'package:guide7/model/notice_board/notice_board_entry.dart';
 import 'package:guide7/util/notification/notification_manager.dart';
+import 'package:guide7/util/notification/payload_handler/notice_board_payload_handler.dart';
 import 'package:guide7/util/scheduler/task/background_task.dart';
 
 /// Background task to refresh the notice board.
@@ -32,7 +33,7 @@ class NoticeBoardTask implements BackgroundTask {
       NotificationManager().showNotification(
         title: "Schwarzes Brett Update!",
         content: "Es gibt neue Einträge auf dem Schwarzen Brett.",
-        payload: "notice_board",
+        payload: NoticeBoardPayloadHandler.payload,
       );
     }
   }
