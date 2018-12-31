@@ -69,16 +69,6 @@ class _ViewHolderState extends State<ViewHolder> {
             onPressed: () => _logout(),
             iconData: Icons.exit_to_app,
           ),
-          AppFloatingActionButtonItem(
-            // TODO Remove if no more needed
-            title: "Notification Test",
-            onPressed: () => NotificationManager().showNotification(
-                  title: "Test Title",
-                  content: "Test Content",
-                  payload: "test:payload",
-                ),
-            iconData: Icons.email,
-          ),
         ],
       ),
     );
