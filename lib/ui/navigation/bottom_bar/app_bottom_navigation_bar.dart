@@ -56,6 +56,8 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
 
   @override
   void initState() {
+    super.initState();
+
     _selectedItemIndex = widget.initiallySelectedItemIndex;
   }
 

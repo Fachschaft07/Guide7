@@ -26,4 +26,18 @@ class NoticeBoardEntry {
     @required this.validFrom,
     @required this.validTo,
   });
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is NoticeBoardEntry &&
+          runtimeType == other.runtimeType &&
+          author == other.author &&
+          title == other.title &&
+          content == other.content &&
+          validFrom == other.validFrom &&
+          validTo == other.validTo;
+
+  @override
+  int get hashCode => author.hashCode ^ title.hashCode ^ content.hashCode ^ validFrom.hashCode ^ validTo.hashCode;
 }

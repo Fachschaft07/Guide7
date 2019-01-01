@@ -4,9 +4,9 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:guide7/app-routes.dart';
+import 'package:guide7/app.dart';
 import 'package:guide7/connect/login/zpa/response/zpa_login_response.dart';
 import 'package:guide7/connect/repository.dart';
-import 'package:guide7/main.dart';
 import 'package:guide7/model/credentials/username_password_credentials.dart';
 import 'package:guide7/ui/common/headline.dart';
 
@@ -20,7 +20,7 @@ class SplashScreenView extends StatefulWidget {
 /// State of the splash screen redirecting to the correct starting view.
 class _SplashScreenState extends State<SplashScreenView> {
   /// Duration the splash screen is shown.
-  static const Duration _duration = Duration(seconds: 3);
+  static const Duration _duration = Duration(seconds: 2);
 
   @override
   Widget build(BuildContext context) {

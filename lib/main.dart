@@ -1,36 +1,16 @@
-import 'package:fluro/fluro.dart';
+import 'package:background_fetch/background_fetch.dart';
 import 'package:flutter/material.dart';
-import 'package:guide7/app-routes.dart';
-import 'package:guide7/ui/view/splash_screen/splash_screen_view.dart';
+import 'package:guide7/app.dart';
+import 'package:guide7/util/scheduler/impl/background_fetch_scheduler.dart' show executeBackgroundTasks;
 
 /// Entry point for the application.
-void main() => runApp(App());
+void main() {
+  runApp(App());
 
-class App extends StatelessWidget {
-  /// Router used to navigate within the application.
-  static Router router;
+  _setupHeadlessTasks();
+}
 
-  /// Create the application.
-  App() {
-    _setupRouter();
-  }
-
-  /// Setup the router used to navigate in the app.
-  void _setupRouter() {
-    App.router = Router();
-    AppRoutes.configureRoutes(App.router);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: "Guide7",
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        fontFamily: 'NotoSerifTC',
-      ),
-      onGenerateRoute: App.router.generator,
-      home: SplashScreenView(),
-    );
-  }
+/// Setup background tasks running headless in the background (for android) even when the app is terminated.
+void _setupHeadlessTasks() {
+  BackgroundFetch.registerHeadlessTask(executeBackgroundTasks);
 }
