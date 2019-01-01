@@ -2,9 +2,9 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:guide7/app-routes.dart';
+import 'package:guide7/app.dart';
 import 'package:guide7/connect/login/zpa/zpa_login_repository.dart';
 import 'package:guide7/connect/repository.dart';
-import 'package:guide7/main.dart';
 import 'package:guide7/ui/navigation/app_floating_action_button/app_floating_action_button.dart';
 import 'package:guide7/ui/navigation/app_floating_action_button/item/app_floating_action_button_item.dart';
 import 'package:guide7/ui/navigation/bottom_bar/app_bottom_navigation_bar.dart';
@@ -15,6 +15,15 @@ import 'package:guide7/ui/view/week_plan/week_plan_view.dart';
 
 /// View which includes a bottom navigation bar and switches out the actual views for the app.
 class ViewHolder extends StatefulWidget {
+  /// Index of the initially selected view.
+  final int viewIndex;
+
+  /// Create view holder holding the apps views.
+  ViewHolder({
+    Key key,
+    @required this.viewIndex,
+  }) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => _ViewHolderState();
 }
@@ -22,10 +31,18 @@ class ViewHolder extends StatefulWidget {
 /// State of the app view holder.
 class _ViewHolderState extends State<ViewHolder> {
   /// Controller of the view holder used to exchange views.
-  PageController _controller = PageController();
+  PageController _controller;
 
   /// Index of the currently shown. page.
   int _currentViewIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _currentViewIndex = widget.viewIndex;
+    _controller = PageController(initialPage: widget.viewIndex);
+  }
 
   /// What to do in case another item in the bottom navigation bar has been selected.
   void _onBottomNavigationItemChange(int index) {

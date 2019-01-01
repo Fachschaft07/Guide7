@@ -5,7 +5,6 @@ import 'package:guide7/connect/login/zpa/zpa_login_repository.dart';
 import 'package:guide7/connect/notice_board/notice_board_repository.dart';
 import 'package:guide7/connect/repository_interface.dart';
 import 'package:guide7/model/credentials/username_password_credentials.dart';
-import 'package:guide7/util/functional_interfaces.dart';
 
 /// Repository factory used to fetch repositories for various resources.
 /// Since it is used all over the application it is implemented as a singleton.
