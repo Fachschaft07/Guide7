@@ -10,7 +10,8 @@ abstract class NotificationManagerI {
   /// [title] of the notification
   /// [content] of the notification
   /// [clickCallback] to execute in case the notification is clicked
-  Future<void> showNotification({
+  /// Returns the notification id.
+  Future<int> showNotification({
     @required String title,
     @required String content,
     String payload,

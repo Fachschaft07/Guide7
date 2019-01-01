@@ -20,7 +20,7 @@ class SplashScreenView extends StatefulWidget {
 /// State of the splash screen redirecting to the correct starting view.
 class _SplashScreenState extends State<SplashScreenView> {
   /// Duration the splash screen is shown.
-  static const Duration _duration = Duration(seconds: 3);
+  static const Duration _duration = Duration(seconds: 2);
 
   @override
   Widget build(BuildContext context) {

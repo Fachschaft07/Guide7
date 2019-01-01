@@ -30,12 +30,12 @@ class NotificationManager implements NotificationManagerI {
   }
 
   @override
-  Future<void> showNotification({
+  Future<int> showNotification({
     String title,
     String content,
     String payload,
   }) async {
-    _delegate.showNotification(
+    return _delegate.showNotification(
       title: title,
       content: content,
       payload: payload,

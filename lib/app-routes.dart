@@ -1,7 +1,6 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/widgets.dart';
 import 'package:guide7/ui/view/login/login_view.dart';
-import 'package:guide7/ui/view/notice_board/notice_board_view.dart';
 import 'package:guide7/ui/view/splash_screen/splash_screen_view.dart';
 import 'package:guide7/ui/view/view_holder.dart';
 

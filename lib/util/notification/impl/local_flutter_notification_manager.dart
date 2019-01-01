@@ -57,7 +57,7 @@ class LocalFlutterNotificationManager implements NotificationManagerI {
   }
 
   @override
-  Future<void> showNotification({
+  Future<int> showNotification({
     String title,
     String content,
     String payload,
@@ -85,6 +85,8 @@ class LocalFlutterNotificationManager implements NotificationManagerI {
       platformChannelSpecifics,
       payload: payload,
     );
+
+    return notificationId;
   }
 
   /// Get next notification id.
