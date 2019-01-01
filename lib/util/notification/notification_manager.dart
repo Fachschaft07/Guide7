@@ -1,4 +1,3 @@
-import 'package:flutter/widgets.dart';
 import 'package:guide7/util/notification/impl/local_flutter_notification_manager.dart';
 import 'package:guide7/util/notification/notification_manager_interface.dart';
 
@@ -22,9 +21,12 @@ class NotificationManager implements NotificationManagerI {
   /// Internal singleton constructor.
   NotificationManager._internal();
 
+  /// Set the notification manager implementation to use for further calls.
+  static setImplementation(NotificationManagerI implementation) => NotificationManager._delegate = implementation;
+
   @override
-  Future<void> initialize(BuildContext context) async {
-    _delegate.initialize(context);
+  Future<void> initialize() async {
+    _delegate.initialize();
   }
 
   @override

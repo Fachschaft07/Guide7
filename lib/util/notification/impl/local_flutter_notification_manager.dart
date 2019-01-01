@@ -1,4 +1,3 @@
-import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:guide7/util/notification/notification_manager_interface.dart';
 import 'package:guide7/util/notification/payload_handler/payload_handler.dart';
@@ -22,13 +21,17 @@ class LocalFlutterNotificationManager implements NotificationManagerI {
   /// Instance of the local flutter notifications plugin.
   FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin;
 
-  /// Build context from when the notification manager has been initialized.
-  BuildContext _initializeContext;
+  /// Get a notifications plugin instance.
+  Future<FlutterLocalNotificationsPlugin> getNotificationsPlugin() async {
+    if (_flutterLocalNotificationsPlugin == null) {
+      await initialize();
+    }
+
+    return _flutterLocalNotificationsPlugin;
+  }
 
   @override
-  Future<void> initialize(BuildContext context) async {
-    _initializeContext = context;
-
+  Future<void> initialize() async {
     var initializationSettingsAndroid = AndroidInitializationSettings("@mipmap/ic_launcher");
     var initializationSettingsIOS = IOSInitializationSettings();
     var initializationSettings = InitializationSettings(initializationSettingsAndroid, initializationSettingsIOS);
@@ -44,7 +47,7 @@ class LocalFlutterNotificationManager implements NotificationManagerI {
   Future onSelectNotification(String payload) async {
     for (PayloadHandler handler in PayloadHandlers.payloadHandlers) {
       try {
-        if (await handler.handle(payload, _initializeContext)) {
+        if (await handler.handle(payload)) {
           break;
         }
       } catch (e) {
@@ -63,8 +66,8 @@ class LocalFlutterNotificationManager implements NotificationManagerI {
       _androidNotificationChannelId,
       _androidNotificationChannelName,
       _androidNotificationChannelDescription,
-      importance: Importance.Default,
-      priority: Priority.Default,
+      importance: Importance.Max,
+      priority: Priority.High,
     );
     var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
 
@@ -75,7 +78,7 @@ class LocalFlutterNotificationManager implements NotificationManagerI {
 
     int notificationId = await _getNextId();
 
-    await _flutterLocalNotificationsPlugin.show(
+    await (await getNotificationsPlugin()).show(
       notificationId,
       title,
       content,

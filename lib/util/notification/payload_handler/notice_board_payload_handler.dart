@@ -1,4 +1,3 @@
-import 'package:flutter/widgets.dart';
 import 'package:guide7/app-routes.dart';
 import 'package:guide7/app.dart';
 import 'package:guide7/util/notification/payload_handler/payload_handler.dart';
@@ -12,9 +11,9 @@ class NoticeBoardPayloadHandler implements PayloadHandler {
   const NoticeBoardPayloadHandler();
 
   @override
-  Future<bool> handle(String payload, BuildContext context) async {
+  Future<bool> handle(String payload) async {
     if (payload == NoticeBoardPayloadHandler.payload) {
-      await App.router.navigateTo(context, AppRoutes.noticeBoard, clearStack: true, replace: true);
+      await App.router.navigateTo(null, AppRoutes.noticeBoard, clearStack: true, replace: true);
 
       return true;
     }

@@ -4,7 +4,7 @@ import 'package:meta/meta.dart';
 /// Interface for all applications notification managers.
 abstract class NotificationManagerI {
   /// Initialize the notification manager.
-  Future<void> initialize(BuildContext context);
+  Future<void> initialize();
 
   /// Show a notification.
   /// [title] of the notification

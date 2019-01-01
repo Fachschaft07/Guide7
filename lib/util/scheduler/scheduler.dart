@@ -25,8 +25,5 @@ class Scheduler implements SchedulerI {
   static setImplementation(SchedulerI implementation) => Scheduler._delegate = implementation;
 
   @override
-  Future<void> onAppTermination() async => _delegate.onAppTermination();
-
-  @override
   Future<void> onInit() async => _delegate.onInit();
 }

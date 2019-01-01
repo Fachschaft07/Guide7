@@ -36,12 +36,6 @@ class NoticeBoardTask implements BackgroundTask {
         payload: NoticeBoardPayloadHandler.payload,
       );
     }
-
-    NotificationManager().showNotification(
-      title: "TEST!",
-      content: "Einfach so",
-      payload: NoticeBoardPayloadHandler.payload,
-    );
   }
 
   /// Check if there are new entries in [fresh] compared to [cached].
