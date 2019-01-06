@@ -49,6 +49,12 @@ class AppLocalizations {
     "privacy_policy_statement": "Datenschutzerklärung",
     "or": "Oder",
     "skip_login": "Anmeldung überspringen",
+    "room_search": "Raumsuche",
+    "day": "Tag",
+    "from": "Von",
+    "to": "Bis",
+    "room_search_error": "Freie Räume konnten nicht geladen werden.",
+    "seat_count": "Sitzanzahl",
   };
 
   /// English localized values.
@@ -78,6 +84,12 @@ class AppLocalizations {
     "privacy_policy_statement": "Privacy policy statement",
     "or": "Or",
     "skip_login": "Skip the login",
+    "room_search": "Room search",
+    "day": "Day",
+    "from": "From",
+    "to": "To",
+    "room_search_error": "Free rooms could not be fetched.",
+    "seat_count": "Seat count",
   };
 
   /// Get localized value by [key].
@@ -132,4 +144,16 @@ class AppLocalizations {
   String get or => _get("or");
 
   String get skipLogin => _get("skip_login");
+
+  String get roomSearch => _get("room_search");
+
+  String get day => _get("day");
+
+  String get from => _get("from");
+
+  String get to => _get("to");
+
+  String get roomSearchError => _get("room_search_error");
+
+  String get seatCount => _get("seat_count");
 }

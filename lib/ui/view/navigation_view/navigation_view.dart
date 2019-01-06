@@ -36,6 +36,13 @@ class _NavigationViewState extends State<NavigationView> {
                     isFirst: true,
                   ),
                   NavigationViewItem(
+                    text: AppLocalizations.of(context).roomSearch,
+                    icon: Icons.location_searching,
+                    onSelected: () {
+                      App.router.navigateTo(context, AppRoutes.roomSearch, transition: TransitionType.native);
+                    },
+                  ),
+                  NavigationViewItem(
                     text: AppLocalizations.of(context).privacyPolicyStatement,
                     icon: Icons.fingerprint,
                     onSelected: () {

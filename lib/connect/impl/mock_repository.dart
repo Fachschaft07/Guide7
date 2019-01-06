@@ -1,5 +1,7 @@
 import 'package:guide7/connect/credential/local_credentials_repository.dart';
 import 'package:guide7/connect/credential/mock_local_credentials_repository.dart';
+import 'package:guide7/connect/free_rooms/free_rooms_repository.dart';
+import 'package:guide7/connect/free_rooms/mock_free_rooms_repository.dart';
 import 'package:guide7/connect/hm_people/hm_people_repository.dart';
 import 'package:guide7/connect/hm_people/mock_hm_people_repository.dart';
 import 'package:guide7/connect/login/zpa/mock_zpa_login_repository.dart';
@@ -22,4 +24,7 @@ class MockRepository implements RepositoryI {
 
   @override
   HMPeopleRepository getHMPeopleRepository() => MockHMPeopleRepository();
+
+  @override
+  FreeRoomsRepository getFreeRoomsRepository() => MockFreeRoomsRepository();
 }
