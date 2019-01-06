@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:guide7/localization/app_localizations.dart';
+import 'package:guide7/ui/navigation/app_floating_action_button/app_floating_action_button.dart';
 import 'package:guide7/ui/navigation/app_floating_action_button/item/app_floating_action_button_item.dart';
 import 'package:guide7/ui/navigation/bottom_bar/app_bottom_navigation_bar.dart';
 import 'package:guide7/ui/navigation/bottom_bar/item/app_bottom_navigation_bar_item.dart';
@@ -8,6 +9,7 @@ import 'package:guide7/ui/util/ui_util.dart';
 import 'package:guide7/ui/view/navigation_view/navigation_view.dart';
 import 'package:guide7/ui/view/notice_board/notice_board_view.dart';
 import 'package:guide7/ui/view/week_plan/week_plan_view.dart';
+import 'package:guide7/util/custom_colors.dart';
 
 /// View which includes a bottom navigation bar and switches out the actual views for the app.
 class ViewHolder extends StatefulWidget {
@@ -28,9 +30,6 @@ class ViewHolder extends StatefulWidget {
 class _ViewHolderState extends State<ViewHolder> {
   /// Controller of the view holder used to exchange views.
   PageController _controller;
-
-  /// List of floating action button items to show.
-  List<AppFloatingActionButtonItem> floatingActionButtonItems;
 
   /// Index of the currently shown. page.
   int _currentViewIndex = 0;
@@ -77,6 +76,7 @@ class _ViewHolderState extends State<ViewHolder> {
         physics: NeverScrollableScrollPhysics(),
       ),
       bottomNavigationBar: bottomNavigationBar,
+      floatingActionButton: _getFloatingActionButton(_currentViewIndex),
     );
   }
 
@@ -86,4 +86,21 @@ class _ViewHolderState extends State<ViewHolder> {
         WeekPlanView(),
         NavigationView(),
       ];
+
+  /// Get the floating action button for the passed view index.
+  Widget _getFloatingActionButton(int index) {
+    switch (index) {
+      case 1: // Week plan view
+        return FloatingActionButton(
+          onPressed: () {
+            print("Test add event");
+          },
+          child: Icon(Icons.add),
+          backgroundColor: CustomColors.slateGrey,
+        );
+
+      default:
+        return null;
+    }
+  }
 }

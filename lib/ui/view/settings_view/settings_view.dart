@@ -12,7 +12,7 @@ class SettingsView extends StatefulWidget {
 
 class _SettingsViewState extends State<SettingsView> {
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context) => UIUtil.getScaffold(
         body: SafeArea(
           child: CustomScrollView(
             slivers: <Widget>[
