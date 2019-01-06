@@ -43,6 +43,10 @@ class AppLocalizations {
     "end_search": "Suche beenden",
     "do_search": "Suchen...",
     "notice_board_entry_load_error": "Beim Laden der Einträge ist ein Fehler aufgetreten.",
+    "navigation_view_item_title": "Mehr...",
+    "navigation_view_title": "Navigation",
+    "settings": "Einstellungen",
+    "privacy_policy_statement": "Datenschutzerklärung",
   };
 
   /// English localized values.
@@ -66,6 +70,10 @@ class AppLocalizations {
     "end_search": "Exit search",
     "do_search": "Search...",
     "notice_board_entry_load_error": "An error occurred when trying to load notice board entries.",
+    "navigation_view_item_title": "More...",
+    "navigation_view_title": "Navigation",
+    "settings": "Settings",
+    "privacy_policy_statement": "Privacy policy statement",
   };
 
   /// Get localized value by [key].
@@ -108,4 +116,12 @@ class AppLocalizations {
   String get doSearch => _get("do_search");
 
   String get noticeBoardEntryLoadError => _get("notice_board_entry_load_error");
+
+  String get navigationViewItemTitle => _get("navigation_view_item_title");
+
+  String get navigationViewTitle => _get("navigation_view_title");
+
+  String get settings => _get("settings");
+
+  String get privacyPolicyStatement => _get("privacy_policy_statement");
 }

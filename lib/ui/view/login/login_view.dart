@@ -85,6 +85,6 @@ class _LoginViewState extends State<LoginView> {
 
   /// What to do when the login succeeded.
   void _onLoginSuccess() {
-    App.router.navigateTo(context, AppRoutes.main, transition: TransitionType.inFromBottom, replace: true);
+    App.router.navigateTo(context, AppRoutes.main, transition: TransitionType.native, replace: true);
   }
 }

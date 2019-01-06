@@ -1,16 +1,11 @@
-import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:guide7/app-routes.dart';
-import 'package:guide7/app.dart';
-import 'package:guide7/connect/login/zpa/zpa_login_repository.dart';
-import 'package:guide7/connect/repository.dart';
 import 'package:guide7/localization/app_localizations.dart';
-import 'package:guide7/ui/navigation/app_floating_action_button/app_floating_action_button.dart';
 import 'package:guide7/ui/navigation/app_floating_action_button/item/app_floating_action_button_item.dart';
 import 'package:guide7/ui/navigation/bottom_bar/app_bottom_navigation_bar.dart';
 import 'package:guide7/ui/navigation/bottom_bar/item/app_bottom_navigation_bar_item.dart';
-import 'package:guide7/ui/view/appointment/appointment_view.dart';
+import 'package:guide7/ui/util/ui_util.dart';
+import 'package:guide7/ui/view/navigation_view/navigation_view.dart';
 import 'package:guide7/ui/view/notice_board/notice_board_view.dart';
 import 'package:guide7/ui/view/week_plan/week_plan_view.dart';
 
@@ -34,6 +29,9 @@ class _ViewHolderState extends State<ViewHolder> {
   /// Controller of the view holder used to exchange views.
   PageController _controller;
 
+  /// List of floating action button items to show.
+  List<AppFloatingActionButtonItem> floatingActionButtonItems;
+
   /// Index of the currently shown. page.
   int _currentViewIndex = 0;
 
@@ -46,7 +44,7 @@ class _ViewHolderState extends State<ViewHolder> {
   }
 
   /// What to do in case another item in the bottom navigation bar has been selected.
-  void _onBottomNavigationItemChange(int index) {
+  void _selectPage(int index) {
     _controller.animateToPage(
       index,
       duration: Duration(milliseconds: 200),
@@ -61,56 +59,31 @@ class _ViewHolderState extends State<ViewHolder> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    final bottomNavigationBar = AppBottomNavigationBar(
+      items: [
+        AppBottomNavigationBarItem(iconData: Icons.announcement, title: AppLocalizations.of(context).noticeBoard),
+        AppBottomNavigationBarItem(iconData: Icons.timeline, title: AppLocalizations.of(context).weekPlan),
+        AppBottomNavigationBarItem(iconData: Icons.menu, title: AppLocalizations.of(context).navigationViewItemTitle),
+      ],
+      initiallySelectedItemIndex: _currentViewIndex,
+      onItemSelected: _selectPage,
+      shape: CircularNotchedRectangle(),
+    );
+
+    return UIUtil.getScaffold(
       body: PageView(
         controller: _controller,
-        children: _getNavigationBarViews(),
+        children: _getBottomNavigationBarViews(),
         physics: NeverScrollableScrollPhysics(),
       ),
-      backgroundColor: Colors.white,
-      bottomNavigationBar: AppBottomNavigationBar(
-        items: [
-          AppBottomNavigationBarItem(iconData: Icons.announcement, title: AppLocalizations.of(context).noticeBoard),
-          AppBottomNavigationBarItem(iconData: Icons.timeline, title: AppLocalizations.of(context).weekPlan),
-          AppBottomNavigationBarItem(iconData: Icons.timer, title: AppLocalizations.of(context).appointments),
-        ],
-        initiallySelectedItemIndex: _currentViewIndex,
-        onItemSelected: _onBottomNavigationItemChange,
-        shape: CircularNotchedRectangle(),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: AppFloatingActionButton(
-        items: [
-          AppFloatingActionButtonItem(
-            title: AppLocalizations.of(context).logOut,
-            onPressed: () => _logout(),
-            iconData: Icons.exit_to_app,
-          ),
-        ],
-      ),
+      bottomNavigationBar: bottomNavigationBar,
     );
   }
 
-  /// Get all available views in the navigation bar of the app.
-  List<Widget> _getNavigationBarViews() {
-    return <Widget>[
-      NoticeBoardView(),
-      WeekPlanView(),
-      AppointmentView(),
-    ];
-  }
-
-  /// Logout from the app.
-  void _logout() async {
-    Repository repo = Repository();
-
-    ZPALoginRepository loginRepository = repo.getZPALoginRepository();
-
-    if (loginRepository.isLoggedIn()) {
-      await loginRepository.tryLogout(loginRepository.getLogin());
-      await repo.getLocalCredentialsRepository().clearLocalCredentials();
-    }
-
-    App.router.navigateTo(context, AppRoutes.login, transition: TransitionType.fadeIn);
-  }
+  /// Get all views visible in the bottom navigation bar.
+  List<Widget> _getBottomNavigationBarViews() => [
+        NoticeBoardView(),
+        WeekPlanView(),
+        NavigationView(),
+      ];
 }

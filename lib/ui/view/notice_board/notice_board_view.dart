@@ -6,6 +6,7 @@ import 'package:guide7/connect/repository.dart';
 import 'package:guide7/localization/app_localizations.dart';
 import 'package:guide7/model/hm_people/hm_person.dart';
 import 'package:guide7/model/notice_board/notice_board_entry.dart';
+import 'package:guide7/ui/util/ui_util.dart';
 import 'package:guide7/ui/view/notice_board/entry/notice_board_entry_widget.dart';
 import 'package:guide7/util/custom_colors.dart';
 
@@ -125,7 +126,10 @@ class _NoticeBoardViewState extends State<NoticeBoardView> {
           return RefreshIndicator(
             onRefresh: () => _getEntries(fromCache: false),
             child: CustomScrollView(
-              slivers: <Widget>[_buildAppBar(), sliverList],
+              slivers: <Widget>[
+                _buildAppBar(),
+                sliverList,
+              ],
             ),
           );
         },
@@ -182,16 +186,9 @@ class _NoticeBoardViewState extends State<NoticeBoardView> {
       );
 
   /// Build the default app bar for the notice board.
-  Widget _buildDefaultAppBar() => SliverAppBar(
-        title: Text(
-          AppLocalizations.of(context).noticeBoard,
-          style: TextStyle(color: Colors.black),
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        snap: true,
-        floating: true,
-        actions: <Widget>[
+  Widget _buildDefaultAppBar() => UIUtil.getSliverAppBar(
+        title: AppLocalizations.of(context).noticeBoard,
+        actions: [
           IconButton(
             icon: Icon(Icons.search, color: CustomColors.slateGrey),
             tooltip: AppLocalizations.of(context).search,
