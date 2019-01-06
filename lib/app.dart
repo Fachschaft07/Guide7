@@ -20,9 +20,6 @@ class App extends StatefulWidget {
 
 /// State of the applications main widget.
 class _AppState extends State<App> {
-  /// Title of the application.
-  static const String _appTitle = "Guide7";
-
   @override
   void initState() {
     super.initState();
