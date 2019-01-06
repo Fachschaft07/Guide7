@@ -39,7 +39,7 @@ class LoginInfoStorage implements Storage<LoginInfo> {
   Future<LoginInfo> read() async {
     SharedPreferences prefs = await _getPrefs();
 
-    bool skippedLogin = await prefs.getBool("$baseKey.$skippedLoginKey");
+    bool skippedLogin = prefs.getBool("$baseKey.$skippedLoginKey");
 
     return LoginInfo(
       skippedLogin: skippedLogin,

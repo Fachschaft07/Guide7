@@ -1,4 +1,5 @@
 import 'package:guide7/connect/credential/local_credentials_repository.dart';
+import 'package:guide7/connect/free_rooms/free_rooms_repository.dart';
 import 'package:guide7/connect/hm_people/hm_people_repository.dart';
 import 'package:guide7/connect/impl/default_repository.dart';
 import 'package:guide7/connect/login/zpa/zpa_login_repository.dart';
@@ -26,6 +27,9 @@ class Repository implements RepositoryI {
 
   /// Cached instance of the hm people repository.
   HMPeopleRepository _hmPeopleRepository;
+
+  /// Cached instance of the free rooms repository.
+  FreeRoomsRepository _freeRoomsRepository;
 
   /// Retrieve the Repository instance.
   factory Repository() {
@@ -76,5 +80,14 @@ class Repository implements RepositoryI {
     }
 
     return _hmPeopleRepository;
+  }
+
+  @override
+  FreeRoomsRepository getFreeRoomsRepository() {
+    if (_freeRoomsRepository == null) {
+      _freeRoomsRepository = _delegate.getFreeRoomsRepository();
+    }
+
+    return _freeRoomsRepository;
   }
 }
