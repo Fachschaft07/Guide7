@@ -5,6 +5,7 @@ import 'package:guide7/app-routes.dart';
 import 'package:guide7/app.dart';
 import 'package:guide7/connect/login/zpa/zpa_login_repository.dart';
 import 'package:guide7/connect/repository.dart';
+import 'package:guide7/localization/app_localizations.dart';
 import 'package:guide7/ui/navigation/app_floating_action_button/app_floating_action_button.dart';
 import 'package:guide7/ui/navigation/app_floating_action_button/item/app_floating_action_button_item.dart';
 import 'package:guide7/ui/navigation/bottom_bar/app_bottom_navigation_bar.dart';
@@ -69,9 +70,9 @@ class _ViewHolderState extends State<ViewHolder> {
       backgroundColor: Colors.white,
       bottomNavigationBar: AppBottomNavigationBar(
         items: [
-          AppBottomNavigationBarItem(iconData: Icons.announcement, title: "Schwarzes Brett"),
-          AppBottomNavigationBarItem(iconData: Icons.timeline, title: "Wochenplan"),
-          AppBottomNavigationBarItem(iconData: Icons.timer, title: "Termine"),
+          AppBottomNavigationBarItem(iconData: Icons.announcement, title: AppLocalizations.of(context).noticeBoard),
+          AppBottomNavigationBarItem(iconData: Icons.timeline, title: AppLocalizations.of(context).weekPlan),
+          AppBottomNavigationBarItem(iconData: Icons.timer, title: AppLocalizations.of(context).appointments),
         ],
         initiallySelectedItemIndex: _currentViewIndex,
         onItemSelected: _onBottomNavigationItemChange,
@@ -81,7 +82,7 @@ class _ViewHolderState extends State<ViewHolder> {
       floatingActionButton: AppFloatingActionButton(
         items: [
           AppFloatingActionButtonItem(
-            title: "Abmelden",
+            title: AppLocalizations.of(context).logOut,
             onPressed: () => _logout(),
             iconData: Icons.exit_to_app,
           ),

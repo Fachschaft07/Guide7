@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:guide7/connect/repository.dart';
+import 'package:guide7/localization/app_localizations.dart';
 import 'package:guide7/model/hm_people/hm_person.dart';
 import 'package:guide7/model/notice_board/notice_board_entry.dart';
 import 'package:guide7/ui/view/notice_board/entry/notice_board_entry_widget.dart';
@@ -107,7 +108,7 @@ class _NoticeBoardViewState extends State<NoticeBoardView> {
             sliverList = SliverToBoxAdapter(
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 40.0, horizontal: 30.0),
-                child: Text("Beim Laden der Einträge ist ein Fehler aufgetreten."),
+                child: Text(AppLocalizations.of(context).noticeBoardEntryLoadError),
               ),
             );
           } else {
@@ -153,7 +154,7 @@ class _NoticeBoardViewState extends State<NoticeBoardView> {
               fontSize: 16.0,
             ),
             decoration: InputDecoration(
-              hintText: "Suchen...",
+              hintText: AppLocalizations.of(context).doSearch,
               icon: Icon(Icons.search),
               border: InputBorder.none,
             ),
@@ -169,7 +170,7 @@ class _NoticeBoardViewState extends State<NoticeBoardView> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.close, color: CustomColors.slateGrey),
-            tooltip: "Suche beenden",
+            tooltip: AppLocalizations.of(context).endSearch,
             onPressed: () {
               setState(() {
                 _showSearchField = false;
@@ -183,7 +184,7 @@ class _NoticeBoardViewState extends State<NoticeBoardView> {
   /// Build the default app bar for the notice board.
   Widget _buildDefaultAppBar() => SliverAppBar(
         title: Text(
-          "Schwarzes Brett",
+          AppLocalizations.of(context).noticeBoard,
           style: TextStyle(color: Colors.black),
         ),
         centerTitle: true,
@@ -193,7 +194,7 @@ class _NoticeBoardViewState extends State<NoticeBoardView> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.search, color: CustomColors.slateGrey),
-            tooltip: "Suche",
+            tooltip: AppLocalizations.of(context).search,
             onPressed: () {
               setState(() {
                 _showSearchField = true;

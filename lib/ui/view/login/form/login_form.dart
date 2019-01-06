@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:guide7/localization/app_localizations.dart';
 import 'package:guide7/util/functional_interfaces.dart';
 
 /// The login form provides text fields for entering the login data.
@@ -52,14 +53,14 @@ class _LoginFormState extends State<LoginForm> {
         _wrapTextField(
           child: TextFormField(
               decoration: InputDecoration(
-                hintText: "Benutzername",
+                hintText: AppLocalizations.of(context).username,
                 icon: Icon(Icons.person),
                 border: InputBorder.none,
               ),
               style: TextStyle(fontFamily: "Roboto", color: Colors.black87, fontSize: 16.0),
               validator: (value) {
                 if (value.isEmpty) {
-                  return "Bitte geben Sie einen Benutzernamen an";
+                  return AppLocalizations.of(context).usernameError;
                 }
               },
               controller: _usernameController),
@@ -67,29 +68,30 @@ class _LoginFormState extends State<LoginForm> {
         _wrapTextField(
           child: TextFormField(
             decoration: InputDecoration(
-              hintText: "Passwort",
+              hintText: AppLocalizations.of(context).password,
               icon: Icon(Icons.lock),
               border: InputBorder.none,
             ),
             style: TextStyle(fontFamily: "Roboto", color: Colors.black87, fontSize: 16.0),
             validator: (value) {
               if (value.isEmpty) {
-                return "Bitte geben Sie ein Password an";
+                return AppLocalizations.of(context).passwordError;
               }
             },
             obscureText: true,
             controller: _passwordController,
           ),
         ),
-        _buildSubmitButton()
+        _buildSubmitButton(),
       ];
 
   /// Wrap text field in a container applying some styles.
   Widget _wrapTextField({@required Widget child}) => Container(
-      decoration: BoxDecoration(color: _inputFieldBackground, borderRadius: BorderRadius.circular(10.0)),
-      padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-      margin: EdgeInsets.only(bottom: 10.0),
-      child: child);
+        decoration: BoxDecoration(color: _inputFieldBackground, borderRadius: BorderRadius.circular(10.0)),
+        padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+        margin: EdgeInsets.only(bottom: 10.0),
+        child: child,
+      );
 
   /// Build button for submitting form data.
   Widget _buildSubmitButton() => Center(
@@ -97,7 +99,7 @@ class _LoginFormState extends State<LoginForm> {
           onPressed: () => _submitForm(),
           icon: Icon(Icons.keyboard_arrow_right),
           label: Text(
-            "Anmelden",
+            AppLocalizations.of(context).doLogin,
             style: TextStyle(fontFamily: "Roboto"),
           ),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100000.0)),
@@ -113,7 +115,7 @@ class _LoginFormState extends State<LoginForm> {
       String password = _passwordController.text;
 
       // Show a snack bar until the credentials have been checked.
-      var snackBarController = Scaffold.of(context).showSnackBar(SnackBar(content: Text("Überprüfe Anmeldedaten...")));
+      var snackBarController = Scaffold.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context).checkLogin)));
 
       bool success = await _onLoginAttempt(username, password);
 
@@ -123,7 +125,7 @@ class _LoginFormState extends State<LoginForm> {
       if (success) {
         _onSuccess();
       } else {
-        Scaffold.of(context).showSnackBar(SnackBar(content: Text("Anmeldeversuch fehlgeschlagen. :(")));
+        Scaffold.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context).loginFailed)));
       }
     }
   }

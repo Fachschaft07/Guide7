@@ -5,6 +5,7 @@ import 'package:guide7/app-routes.dart';
 import 'package:guide7/app.dart';
 import 'package:guide7/connect/login/zpa/response/zpa_login_response.dart';
 import 'package:guide7/connect/repository.dart';
+import 'package:guide7/localization/app_localizations.dart';
 import 'package:guide7/model/credentials/username_password_credentials.dart';
 import 'package:guide7/ui/common/headline.dart';
 import 'package:guide7/ui/view/login/form/login_form.dart';
@@ -51,11 +52,11 @@ class _LoginViewState extends State<LoginView> {
         padding: EdgeInsets.only(top: 50.0, left: 25.0, right: 25.0, bottom: 25.0),
         child: Column(
           children: <Widget>[
-            Headline("Anmeldung"),
+            Headline(AppLocalizations.of(context).login),
             Padding(
               padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
               child: Text(
-                "Gib deine ZPA Anmeldedaten an um dich anzumelden.",
+                AppLocalizations.of(context).loginInfo,
                 style: TextStyle(fontStyle: FontStyle.italic),
                 textAlign: TextAlign.center,
               ),

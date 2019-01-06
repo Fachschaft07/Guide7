@@ -7,6 +7,7 @@ import 'package:guide7/app-routes.dart';
 import 'package:guide7/app.dart';
 import 'package:guide7/connect/login/zpa/response/zpa_login_response.dart';
 import 'package:guide7/connect/repository.dart';
+import 'package:guide7/localization/app_localizations.dart';
 import 'package:guide7/model/credentials/username_password_credentials.dart';
 import 'package:guide7/ui/common/headline.dart';
 
@@ -43,10 +44,10 @@ class _SplashScreenState extends State<SplashScreenView> {
               width: imageWidth,
             ),
             Container(
-              child: Headline("Guide7"),
+              child: Headline(AppLocalizations.of(context).title),
               padding: EdgeInsets.only(top: 20.0),
             ),
-            Text("Eine App der Fachschaft 07")
+            Text(AppLocalizations.of(context).splashSubtitle)
           ],
         ),
       ),

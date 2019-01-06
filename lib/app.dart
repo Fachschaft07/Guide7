@@ -1,7 +1,10 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:guide7/app-routes.dart';
+import 'package:guide7/localization/app_localizations.dart';
+import 'package:guide7/localization/app_localizations_delegate.dart';
 import 'package:guide7/ui/view/splash_screen/splash_screen_view.dart';
 import 'package:guide7/util/notification/notification_manager.dart';
 import 'package:guide7/util/scheduler/scheduler.dart';
@@ -31,7 +34,13 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) => MaterialApp(
-        title: _appTitle,
+        onGenerateTitle: (BuildContext context) => AppLocalizations.of(context).title,
+        localizationsDelegates: [
+          AppLocalizationsDelegate(),
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        supportedLocales: AppLocalizationsDelegate.supportedLocales,
         theme: ThemeData(
           primarySwatch: Colors.blue,
           fontFamily: 'NotoSerifTC',

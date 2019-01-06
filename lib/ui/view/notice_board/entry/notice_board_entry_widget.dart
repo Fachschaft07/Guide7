@@ -9,9 +9,6 @@ import 'package:intl/intl.dart';
 
 /// Widget displaying a notice board entry.
 class NoticeBoardEntryWidget extends StatelessWidget {
-  /// Date format to format the notice board entry dates.
-  static DateFormat _dateFormat = DateFormat("dd.MM.yy");
-
   /// Notice board entry to show.
   final NoticeBoardEntry entry;
 
@@ -25,64 +22,68 @@ class NoticeBoardEntryWidget extends StatelessWidget {
   NoticeBoardEntryWidget({@required this.entry, @required this.isLast, this.avatarImage});
 
   @override
-  Widget build(BuildContext context) => Container(
-        padding: EdgeInsets.only(
-          left: 30.0,
-          right: 30.0,
-          top: 20.0,
-          bottom: 20.0,
-        ),
-        decoration: isLast
-            ? null
-            : BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                    color: Theme.of(context).dividerColor,
-                  ),
+  Widget build(BuildContext context) {
+    DateFormat dateFormat = DateFormat.yMd(Localizations.localeOf(context).languageCode);
+
+    return Container(
+      padding: EdgeInsets.only(
+        left: 30.0,
+        right: 30.0,
+        top: 20.0,
+        bottom: 20.0,
+      ),
+      decoration: isLast
+          ? null
+          : BoxDecoration(
+              border: Border(
+                bottom: BorderSide(
+                  color: Theme.of(context).dividerColor,
                 ),
-              ), // Divider between entries
-        child: Column(
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: Text(
-                    entry.title,
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.left,
-                    textScaleFactor: 1.1,
-                  ),
+              ),
+            ), // Divider between entries
+      child: Column(
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: Text(
+                  entry.title,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.left,
+                  textScaleFactor: 1.1,
                 ),
-                Padding(
-                  padding: EdgeInsets.only(left: 10.0),
-                  child: _getCircleAvatar(),
-                )
-              ],
-            ),
-            HtmlView(
-              data: entry.content,
-              padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-            ),
-            Row(
-              children: <Widget>[
-                Icon(
-                  Icons.person,
-                  color: CustomColors.slateGrey,
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 10.0),
+                child: _getCircleAvatar(),
+              )
+            ],
+          ),
+          HtmlView(
+            data: entry.content,
+            padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+          ),
+          Row(
+            children: <Widget>[
+              Icon(
+                Icons.person,
+                color: CustomColors.slateGrey,
+              ),
+              Expanded(
+                child: Text(
+                  entry.author,
                 ),
-                Expanded(
-                  child: Text(
-                    entry.author,
-                  ),
-                ),
-                Icon(Icons.timelapse, color: CustomColors.slateGrey),
-                Expanded(
-                  child: Text("${_dateFormat.format(entry.validFrom)} bis ${_dateFormat.format(entry.validTo)}"),
-                )
-              ],
-            ),
-          ],
-        ),
-      );
+              ),
+              Icon(Icons.timelapse, color: CustomColors.slateGrey),
+              Expanded(
+                child: Text("${dateFormat.format(entry.validFrom)} - ${dateFormat.format(entry.validTo)}"),
+              )
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 
   /// Get initials of the passed author.
   String _getAuthorInitials(String authorName) {

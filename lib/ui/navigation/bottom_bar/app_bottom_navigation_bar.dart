@@ -40,7 +40,7 @@ class AppBottomNavigationBar extends StatefulWidget {
     this.iconSize = 25.0,
     this.backgroundColor = Colors.white,
     this.color = Colors.black54,
-    this.selectedColor = CustomColors.slateGrey,
+    this.selectedColor = CustomColors.lightCoral,
     this.shape,
     this.initiallySelectedItemIndex = 0,
   });
