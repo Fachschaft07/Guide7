@@ -9,6 +9,7 @@ import 'package:guide7/localization/app_localizations.dart';
 import 'package:guide7/ui/util/ui_util.dart';
 import 'package:guide7/ui/view/navigation_view/item/navigation_view_item.dart';
 import 'package:guide7/util/custom_colors.dart';
+import 'package:guide7/util/zpa.dart';
 
 /// View containing additional navigation options.
 class NavigationView extends StatefulWidget {
@@ -41,13 +42,7 @@ class _NavigationViewState extends State<NavigationView> {
                       App.router.navigateTo(context, AppRoutes.privacyPolicyStatement, transition: TransitionType.native);
                     },
                   ),
-                  NavigationViewItem(
-                    text: AppLocalizations.of(context).logOut,
-                    icon: Icons.exit_to_app,
-                    onSelected: () {
-                      _logout();
-                    },
-                  ),
+                  _getLoginLogoutItem(),
                 ],
               ),
             ),
@@ -82,5 +77,50 @@ class _NavigationViewState extends State<NavigationView> {
     }
 
     App.router.navigateTo(context, AppRoutes.login, transition: TransitionType.native, replace: true);
+  }
+
+  /// Go to login view.
+  void _login() {
+    App.router.navigateTo(context, AppRoutes.login, transition: TransitionType.native, replace: true);
+  }
+
+  /// Get the login or logout navigation item.
+  Widget _getLoginLogoutItem() {
+    return FutureBuilder(
+      future: ZPA.isLoggedIn(),
+      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+        if (snapshot.hasData) {
+          bool isLoggedIn = snapshot.data;
+
+          if (isLoggedIn) {
+            return NavigationViewItem(
+              text: AppLocalizations.of(context).logOut,
+              icon: Icons.lock,
+              onSelected: () {
+                _logout();
+              },
+            );
+          } else {
+            return NavigationViewItem(
+              text: AppLocalizations.of(context).doLogin,
+              icon: Icons.lock_open,
+              onSelected: () {
+                _login();
+              },
+            );
+          }
+        } else {
+          return Padding(
+            padding: EdgeInsets.symmetric(
+              vertical: 10.0,
+              horizontal: 20.0,
+            ),
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
+      },
+    );
   }
 }

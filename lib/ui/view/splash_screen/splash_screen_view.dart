@@ -9,6 +9,8 @@ import 'package:guide7/connect/login/zpa/response/zpa_login_response.dart';
 import 'package:guide7/connect/repository.dart';
 import 'package:guide7/localization/app_localizations.dart';
 import 'package:guide7/model/credentials/username_password_credentials.dart';
+import 'package:guide7/model/login_info/login_info.dart';
+import 'package:guide7/storage/login_info/login_info_storage.dart';
 import 'package:guide7/ui/common/headline.dart';
 
 /// Splash screen of the application.
@@ -68,10 +70,28 @@ class _SplashScreenState extends State<SplashScreenView> {
 
   /// Navigate to the starting view of the application.
   void _navigateToStartView() async {
-    if (await isLoggedIn()) {
+    LoginInfo loginInfo = await _getLoginInfo();
+    bool skippedLogin = false;
+
+    if (loginInfo != null) {
+      skippedLogin = loginInfo.skippedLogin;
+    }
+
+    if (skippedLogin || await isLoggedIn()) {
       _gotoNoticeBoard();
     } else {
       _gotoLoginView();
+    }
+  }
+
+  /// Get login info from the last login.
+  Future<LoginInfo> _getLoginInfo() async {
+    LoginInfoStorage storage = LoginInfoStorage();
+
+    if (await storage.isEmpty()) {
+      return null;
+    } else {
+      return await storage.read();
     }
   }
 

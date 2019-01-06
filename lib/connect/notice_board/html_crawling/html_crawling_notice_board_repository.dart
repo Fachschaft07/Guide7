@@ -1,32 +1,25 @@
-import 'package:guide7/connect/login/zpa/util/zpa_variables.dart';
+import 'package:guide7/connect/notice_board/html_crawling/request/notice_board_load_request.dart';
+import 'package:guide7/connect/notice_board/html_crawling/request/personal_notice_board_load_request.dart';
+import 'package:guide7/connect/notice_board/html_crawling/request/public_notice_board_load_request.dart';
 import 'package:guide7/connect/notice_board/parser/notice_board_html_parser.dart';
 import 'package:guide7/storage/notice_board/notice_board_storage.dart';
 import 'package:guide7/util/parser/parser.dart';
+import 'package:guide7/util/zpa.dart';
 import 'package:http/http.dart' as http;
 
-import 'package:guide7/connect/login/zpa/response/zpa_login_response.dart';
 import 'package:guide7/connect/notice_board/notice_board_repository.dart';
-import 'package:guide7/connect/repository.dart';
 import 'package:guide7/model/notice_board/notice_board_entry.dart';
 
 /// Notice board repository fetching entries from ZPA services.
 class HTMLCrawlingNoticeBoardRepository implements NoticeBoardRepository {
-  /// Resource where to find the notice board entries.
-  static const String _resource = "student/notice_board/";
-
   /// Parser converting HTML to notice board entries.
   static const Parser<String, List<NoticeBoardEntry>> _noticeBoardParser = NoticeBoardHtmlParser();
 
   @override
   Future<List<NoticeBoardEntry>> loadEntries() async {
-    ZPALoginResponse loginResponse;
-    try {
-      loginResponse = await _zpaLogin();
-    } catch (e) {
-      throw Exception("Could not fetch notice board entries as the ZPA login failed.");
-    }
+    NoticeBoardLoadRequest loadRequest = await _hasCredentials() ? PersonalNoticeBoardLoadRequest() : PublicNoticeBoardLoadRequest();
 
-    http.Response httpResponse = await http.get("${ZPAVariables.url}/$_resource", headers: {"cookie": loginResponse.cookie});
+    http.Response httpResponse = await loadRequest.doRequest();
 
     if (httpResponse.statusCode == 200) {
       try {
@@ -63,16 +56,8 @@ class HTMLCrawlingNoticeBoardRepository implements NoticeBoardRepository {
     await storage.write(entries);
   }
 
-  /// Do the login to the ZPA services.
-  Future<ZPALoginResponse> _zpaLogin() async {
-    Repository repo = Repository();
-
-    ZPALoginResponse loginResponse = await repo.getZPALoginRepository().tryLogin(await repo.getLocalCredentialsRepository().loadLocalCredentials());
-
-    if (loginResponse == null) {
-      throw Exception("Login to ZPA failed.");
-    }
-
-    return loginResponse;
+  /// Check if credentials are available.
+  Future<bool> _hasCredentials() async {
+    return await ZPA.isLoggedIn();
   }
 }

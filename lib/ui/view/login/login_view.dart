@@ -7,6 +7,8 @@ import 'package:guide7/connect/login/zpa/response/zpa_login_response.dart';
 import 'package:guide7/connect/repository.dart';
 import 'package:guide7/localization/app_localizations.dart';
 import 'package:guide7/model/credentials/username_password_credentials.dart';
+import 'package:guide7/model/login_info/login_info.dart';
+import 'package:guide7/storage/login_info/login_info_storage.dart';
 import 'package:guide7/ui/common/headline.dart';
 import 'package:guide7/ui/common/line_separator.dart';
 import 'package:guide7/ui/view/login/form/login_form.dart';
@@ -37,7 +39,9 @@ class _LoginViewState extends State<LoginView> {
                     ),
                     child: LoginForm(
                       onLoginAttempt: _onLoginAttempt,
-                      onSuccess: _onLoginSuccess,
+                      onSuccess: () {
+                        _onLoginSuccess(false);
+                      },
                     ),
                   ),
                   LineSeparator(
@@ -51,7 +55,7 @@ class _LoginViewState extends State<LoginView> {
                     ),
                     child: FlatButton.icon(
                       onPressed: () {
-                        _onLoginSuccess();
+                        _onLoginSuccess(true);
                       },
                       icon: Icon(
                         Icons.arrow_right,
@@ -107,7 +111,12 @@ class _LoginViewState extends State<LoginView> {
   }
 
   /// What to do when the login succeeded.
-  void _onLoginSuccess() {
+  Future<void> _onLoginSuccess(bool skipped) async {
+    LoginInfoStorage loginInfoStorage = LoginInfoStorage();
+    await loginInfoStorage.write(LoginInfo(
+      skippedLogin: skipped,
+    ));
+
     App.router.navigateTo(context, AppRoutes.main, transition: TransitionType.native, replace: true);
   }
 }
