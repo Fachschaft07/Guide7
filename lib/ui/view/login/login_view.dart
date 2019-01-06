@@ -8,7 +8,9 @@ import 'package:guide7/connect/repository.dart';
 import 'package:guide7/localization/app_localizations.dart';
 import 'package:guide7/model/credentials/username_password_credentials.dart';
 import 'package:guide7/ui/common/headline.dart';
+import 'package:guide7/ui/common/line_separator.dart';
 import 'package:guide7/ui/view/login/form/login_form.dart';
+import 'package:guide7/util/custom_colors.dart';
 
 /// View showing the login dialog.
 class LoginView extends StatefulWidget {
@@ -22,23 +24,46 @@ class _LoginViewState extends State<LoginView> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    _buildHeader(),
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 25.0, horizontal: 40.0),
-                      child: LoginForm(
-                        onLoginAttempt: _onLoginAttempt,
-                        onSuccess: _onLoginSuccess,
+        child: CustomScrollView(
+          slivers: <Widget>[
+            SliverToBoxAdapter(
+              child: Column(
+                children: <Widget>[
+                  _buildHeader(),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      vertical: 25.0,
+                      horizontal: 40.0,
+                    ),
+                    child: LoginForm(
+                      onLoginAttempt: _onLoginAttempt,
+                      onSuccess: _onLoginSuccess,
+                    ),
+                  ),
+                  LineSeparator(
+                    title: AppLocalizations.of(context).or,
+                    padding: 30.0,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      vertical: 20.0,
+                      horizontal: 40.0,
+                    ),
+                    child: FlatButton.icon(
+                      onPressed: () {
+                        _onLoginSuccess();
+                      },
+                      icon: Icon(
+                        Icons.arrow_right,
+                        color: CustomColors.slateGrey,
+                      ),
+                      label: Text(
+                        AppLocalizations.of(context).skipLogin,
+                        style: TextStyle(color: CustomColors.slateGrey),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -57,11 +82,9 @@ class _LoginViewState extends State<LoginView> {
               padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
               child: Text(
                 AppLocalizations.of(context).loginInfo,
-                style: TextStyle(fontStyle: FontStyle.italic),
                 textAlign: TextAlign.center,
               ),
             ),
-            Divider(),
           ],
         ),
       );

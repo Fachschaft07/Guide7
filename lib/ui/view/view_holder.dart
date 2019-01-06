@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:guide7/localization/app_localizations.dart';
-import 'package:guide7/ui/navigation/app_floating_action_button/app_floating_action_button.dart';
-import 'package:guide7/ui/navigation/app_floating_action_button/item/app_floating_action_button_item.dart';
 import 'package:guide7/ui/navigation/bottom_bar/app_bottom_navigation_bar.dart';
 import 'package:guide7/ui/navigation/bottom_bar/item/app_bottom_navigation_bar_item.dart';
 import 'package:guide7/ui/util/ui_util.dart';

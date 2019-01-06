@@ -47,6 +47,8 @@ class AppLocalizations {
     "navigation_view_title": "Navigation",
     "settings": "Einstellungen",
     "privacy_policy_statement": "Datenschutzerklärung",
+    "or": "Oder",
+    "skip_login": "Anmeldung überspringen",
   };
 
   /// English localized values.
@@ -74,6 +76,8 @@ class AppLocalizations {
     "navigation_view_title": "Navigation",
     "settings": "Settings",
     "privacy_policy_statement": "Privacy policy statement",
+    "or": "Or",
+    "skip_login": "Skip the login",
   };
 
   /// Get localized value by [key].
@@ -124,4 +128,8 @@ class AppLocalizations {
   String get settings => _get("settings");
 
   String get privacyPolicyStatement => _get("privacy_policy_statement");
+
+  String get or => _get("or");
+
+  String get skipLogin => _get("skip_login");
 }
