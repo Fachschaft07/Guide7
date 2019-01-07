@@ -174,7 +174,10 @@ class _RoomSearchViewState extends State<RoomSearchView> {
                 color: CustomColors.lightCoral,
               ),
               Padding(
-                child: Text(room.roomNumber),
+                child: Text(
+                  room.roomNumber,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
                 padding: EdgeInsets.only(left: 10.0),
               ),
             ],

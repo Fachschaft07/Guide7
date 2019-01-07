@@ -1,3 +1,5 @@
+import 'package:guide7/connect/appointment/appointment_repository.dart';
+import 'package:guide7/connect/appointment/mock_appointment_repository.dart';
 import 'package:guide7/connect/credential/local_credentials_repository.dart';
 import 'package:guide7/connect/credential/mock_local_credentials_repository.dart';
 import 'package:guide7/connect/free_rooms/free_rooms_repository.dart';
@@ -27,4 +29,7 @@ class MockRepository implements RepositoryI {
 
   @override
   FreeRoomsRepository getFreeRoomsRepository() => MockFreeRoomsRepository();
+
+  @override
+  AppointmentRepository getAppointmentRepository() => MockAppointmentRepository();
 }

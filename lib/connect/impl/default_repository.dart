@@ -1,3 +1,5 @@
+import 'package:guide7/connect/appointment/appointment_repository.dart';
+import 'package:guide7/connect/appointment/hm_appointment_repository.dart';
 import 'package:guide7/connect/credential/local_credentials_repository.dart';
 import 'package:guide7/connect/credential/local_username_password_credential_repository.dart';
 import 'package:guide7/connect/free_rooms/free_rooms_repository.dart';
@@ -26,4 +28,7 @@ class DefaultRepository implements RepositoryI {
 
   @override
   FreeRoomsRepository getFreeRoomsRepository() => ZPAFreeRoomsRepository();
+
+  @override
+  AppointmentRepository getAppointmentRepository() => HMAppointmentRepository();
 }
