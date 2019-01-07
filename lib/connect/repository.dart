@@ -1,3 +1,4 @@
+import 'package:guide7/connect/appointment/appointment_repository.dart';
 import 'package:guide7/connect/credential/local_credentials_repository.dart';
 import 'package:guide7/connect/free_rooms/free_rooms_repository.dart';
 import 'package:guide7/connect/hm_people/hm_people_repository.dart';
@@ -30,6 +31,9 @@ class Repository implements RepositoryI {
 
   /// Cached instance of the free rooms repository.
   FreeRoomsRepository _freeRoomsRepository;
+
+  /// Cached instance of the appointment repository.
+  AppointmentRepository _appointmentRepository;
 
   /// Retrieve the Repository instance.
   factory Repository() {
@@ -89,5 +93,14 @@ class Repository implements RepositoryI {
     }
 
     return _freeRoomsRepository;
+  }
+
+  @override
+  AppointmentRepository getAppointmentRepository() {
+    if (_appointmentRepository == null) {
+      _appointmentRepository = _delegate.getAppointmentRepository();
+    }
+
+    return _appointmentRepository;
   }
 }
