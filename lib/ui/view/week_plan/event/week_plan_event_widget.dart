@@ -16,6 +16,11 @@ class WeekPlanEventWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     DateFormat dateFormat = DateFormat.yMd(Localizations.localeOf(context).languageCode);
 
-    return Text("${dateFormat.format(event.start)} - ${dateFormat.format(event.end)}");
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+      child: Text(
+        "${dateFormat.format(event.start)} - ${dateFormat.format(event.end)}",
+      ),
+    );
   }
 }

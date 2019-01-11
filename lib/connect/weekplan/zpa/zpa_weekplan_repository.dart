@@ -40,7 +40,7 @@ class ZPAWeekPlanRepository implements WeekPlanRepository {
 
     Map<String, dynamic> map = json.decode(rawJson);
 
-    int errorCode = int.parse(map["error_code"]);
+    int errorCode = map["error_code"] != null ? map["error_code"] : -1;
 
     if (errorCode != 0) {
       throw Exception("Received bad error code $errorCode from ZPA");

@@ -7,6 +7,9 @@ class UIUtil {
     @required String title,
     List<Widget> actions,
     Widget leading,
+    bool snap = true,
+    bool pinned = false,
+    bool floating = true,
   }) =>
       SliverAppBar(
         title: Text(
@@ -15,10 +18,11 @@ class UIUtil {
         ),
         centerTitle: true,
         backgroundColor: Colors.white,
-        snap: true,
-        floating: true,
+        snap: snap,
+        floating: floating,
         actions: actions,
         leading: leading,
+        pinned: pinned,
       );
 
   /// Get the application default scaffold.

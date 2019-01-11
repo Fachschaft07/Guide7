@@ -109,7 +109,10 @@ class _NoticeBoardViewState extends State<NoticeBoardView> {
             sliverList = SliverToBoxAdapter(
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 40.0, horizontal: 30.0),
-                child: Text(AppLocalizations.of(context).noticeBoardEntryLoadError),
+                child: Text(
+                  AppLocalizations.of(context).noticeBoardEntryLoadError,
+                  style: TextStyle(fontFamily: "NotoSerifTC"),
+                ),
               ),
             );
           } else {

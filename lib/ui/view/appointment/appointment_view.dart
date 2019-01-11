@@ -62,7 +62,10 @@ class _AppointmentViewState extends State<AppointmentView> {
           sliverList = SliverToBoxAdapter(
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 40.0, horizontal: 30.0),
-              child: Text(AppLocalizations.of(context).appointmentLoadError),
+              child: Text(
+                AppLocalizations.of(context).appointmentLoadError,
+                style: TextStyle(fontFamily: "NotoSerifTC"),
+              ),
             ),
           );
         } else {
