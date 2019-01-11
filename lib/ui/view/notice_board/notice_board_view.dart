@@ -153,13 +153,15 @@ class _NoticeBoardViewState extends State<NoticeBoardView> {
               setState(() {});
             },
             style: TextStyle(
-              fontFamily: "Roboto",
               color: Colors.black87,
               fontSize: 16.0,
             ),
             decoration: InputDecoration(
               hintText: AppLocalizations.of(context).doSearch,
-              icon: Icon(Icons.search),
+              icon: Icon(
+                Icons.search,
+                color: CustomColors.slateGrey,
+              ),
               border: InputBorder.none,
             ),
             autofocus: true,

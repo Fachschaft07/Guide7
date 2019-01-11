@@ -8,8 +8,7 @@ class NoticeBoardEntry {
   /// Title of the notice board entry.
   final String title;
 
-  /// Content of the notice board entry.
-  /// May contain HTML.
+  /// Content of the notice board entry in Markdown.
   final String content;
 
   /// From which date the entry is valid.
