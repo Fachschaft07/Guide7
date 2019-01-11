@@ -16,8 +16,5 @@ class ZPAWeekPlanEvent extends WeekPlanEvent {
         );
 
   @override
-  String get description => "Description";
-
-  @override
-  String get title => "Title";
+  String get title => slot.toString();
 }
