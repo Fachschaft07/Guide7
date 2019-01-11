@@ -138,7 +138,10 @@ class _RoomSearchViewState extends State<RoomSearchView> {
           sliverList = SliverToBoxAdapter(
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 40.0, horizontal: 30.0),
-              child: Text(AppLocalizations.of(context).roomSearchError),
+              child: Text(
+                AppLocalizations.of(context).roomSearchError,
+                style: TextStyle(fontFamily: "NotoSerifTC"),
+              ),
             ),
           );
         } else {

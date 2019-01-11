@@ -49,7 +49,10 @@ class _SplashScreenState extends State<SplashScreenView> {
               child: Headline(AppLocalizations.of(context).title),
               padding: EdgeInsets.only(top: 20.0),
             ),
-            Text(AppLocalizations.of(context).splashSubtitle)
+            Text(
+              AppLocalizations.of(context).splashSubtitle,
+              style: TextStyle(fontFamily: "NotoSerifTC"),
+            )
           ],
         ),
       ),

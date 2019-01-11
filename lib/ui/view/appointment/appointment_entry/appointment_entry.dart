@@ -47,6 +47,7 @@ class AppointmentEntry extends StatelessWidget {
                 padding: EdgeInsets.only(left: 10.0),
                 child: Text(
                   "${dateFormat.format(appointment.start)} ${AppLocalizations.of(context).to.toLowerCase()} ${dateFormat.format(appointment.end)}",
+                  style: TextStyle(fontFamily: "Raleway"),
                 ),
               ),
             ),
@@ -57,6 +58,7 @@ class AppointmentEntry extends StatelessWidget {
         appointment.summary,
         style: TextStyle(
           fontWeight: FontWeight.bold,
+          fontFamily: "NotoSerifTC",
         ),
       ),
     ];

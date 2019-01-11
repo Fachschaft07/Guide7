@@ -109,7 +109,10 @@ class _NoticeBoardViewState extends State<NoticeBoardView> {
             sliverList = SliverToBoxAdapter(
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 40.0, horizontal: 30.0),
-                child: Text(AppLocalizations.of(context).noticeBoardEntryLoadError),
+                child: Text(
+                  AppLocalizations.of(context).noticeBoardEntryLoadError,
+                  style: TextStyle(fontFamily: "NotoSerifTC"),
+                ),
               ),
             );
           } else {
@@ -153,13 +156,15 @@ class _NoticeBoardViewState extends State<NoticeBoardView> {
               setState(() {});
             },
             style: TextStyle(
-              fontFamily: "Roboto",
               color: Colors.black87,
               fontSize: 16.0,
             ),
             decoration: InputDecoration(
               hintText: AppLocalizations.of(context).doSearch,
-              icon: Icon(Icons.search),
+              icon: Icon(
+                Icons.search,
+                color: CustomColors.slateGrey,
+              ),
               border: InputBorder.none,
             ),
             autofocus: true,

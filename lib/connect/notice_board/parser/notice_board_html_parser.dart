@@ -2,6 +2,7 @@ import 'package:guide7/util/parser/parser.dart';
 import 'package:html/dom.dart';
 import 'package:html/parser.dart' as htmlParser;
 import 'package:intl/intl.dart' show DateFormat;
+import 'package:html2md/html2md.dart' as html2md;
 
 import 'package:guide7/model/notice_board/notice_board_entry.dart';
 
@@ -52,7 +53,7 @@ class NoticeBoardHtmlParser implements Parser<String, List<NoticeBoardEntry>> {
 
     String author = entryItems[0].text;
     String title = entryItems[1].text;
-    String content = entryItems[2].innerHtml;
+    String content = html2md.convert(entryItems[2].innerHtml);
     DateTime validFrom = _parseDate(entryItems[3].text);
     DateTime validTo = _parseDate(entryItems[4].text);
 

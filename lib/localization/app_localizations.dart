@@ -56,6 +56,8 @@ class AppLocalizations {
     "room_search_error": "Freie Räume konnten nicht geladen werden.",
     "seat_count": "Sitzanzahl",
     "appointment_load_error": "Die Termine konnten nicht geladen werden.",
+    "weekplan_load_error": "Die Wochenplan Einträge konnten nicht geladen werden.",
+    "refresh": "Aktualisieren",
   };
 
   /// English localized values.
@@ -91,7 +93,9 @@ class AppLocalizations {
     "to": "To",
     "room_search_error": "Free rooms could not be fetched.",
     "seat_count": "Seat count",
-    "appointment_load_error": "Appointments could not be loaded",
+    "appointment_load_error": "Appointments could not be loaded.",
+    "weekplan_load_error": "Week plan entries could not be loaded.",
+    "refresh": "Refresh",
   };
 
   /// Get localized value by [key].
@@ -160,4 +164,8 @@ class AppLocalizations {
   String get seatCount => _get("seat_count");
 
   String get appointmentLoadError => _get("appointment_load_error");
+
+  String get weekPlanLoadError => _get("weekplan_load_error");
+
+  String get refresh => _get("refresh");
 }

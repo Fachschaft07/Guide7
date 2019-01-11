@@ -10,6 +10,8 @@ import 'package:guide7/connect/login/zpa/zpa_login_repository.dart';
 import 'package:guide7/connect/notice_board/html_crawling/html_crawling_notice_board_repository.dart';
 import 'package:guide7/connect/notice_board/notice_board_repository.dart';
 import 'package:guide7/connect/repository_interface.dart';
+import 'package:guide7/connect/weekplan/weekplan_repository.dart';
+import 'package:guide7/connect/weekplan/weekplan_repository_impl.dart';
 import 'package:guide7/model/credentials/username_password_credentials.dart';
 
 /// Default repository implementation of the app.
@@ -31,4 +33,7 @@ class DefaultRepository implements RepositoryI {
 
   @override
   AppointmentRepository getAppointmentRepository() => HMAppointmentRepository();
+
+  @override
+  WeekPlanRepository getWeekPlanRepository() => WeekPlanRepositoryImpl();
 }

@@ -3,9 +3,9 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:guide7/model/notice_board/notice_board_entry.dart';
-import 'package:flutter_html_view/flutter_html_view.dart';
 import 'package:guide7/util/custom_colors.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 /// Widget displaying a notice board entry.
 class NoticeBoardEntryWidget extends StatelessWidget {
@@ -19,7 +19,11 @@ class NoticeBoardEntryWidget extends StatelessWidget {
   final Uint8List avatarImage;
 
   /// Create new entry widget.
-  NoticeBoardEntryWidget({@required this.entry, @required this.isLast, this.avatarImage});
+  NoticeBoardEntryWidget({
+    @required this.entry,
+    @required this.isLast,
+    this.avatarImage,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -48,9 +52,12 @@ class NoticeBoardEntryWidget extends StatelessWidget {
               Expanded(
                 child: Text(
                   entry.title,
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontFamily: "Raleway",
+                  ),
                   textAlign: TextAlign.left,
-                  textScaleFactor: 1.1,
+                  textScaleFactor: 1.2,
                 ),
               ),
               Padding(
@@ -59,30 +66,49 @@ class NoticeBoardEntryWidget extends StatelessWidget {
               )
             ],
           ),
-          HtmlView(
-            data: entry.content,
+          Container(
             padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+            child: MarkdownBody(
+              data: entry.content,
+              styleSheet: _getMarkdownStylesheet(context),
+            ),
           ),
           Row(
             children: <Widget>[
-              Icon(
-                Icons.person,
-                color: CustomColors.slateGrey,
+              Padding(
+                padding: EdgeInsets.only(right: 5),
+                child: Icon(
+                  Icons.person,
+                  color: CustomColors.slateGrey,
+                ),
               ),
               Expanded(
                 child: Text(
                   entry.author,
+                  style: TextStyle(fontFamily: "Raleway"),
                 ),
               ),
-              Icon(Icons.timelapse, color: CustomColors.slateGrey),
+              Padding(
+                padding: EdgeInsets.only(right: 5),
+                child: Icon(Icons.timelapse, color: CustomColors.slateGrey),
+              ),
               Expanded(
-                child: Text("${dateFormat.format(entry.validFrom)} - ${dateFormat.format(entry.validTo)}"),
+                child: Text(
+                  "${dateFormat.format(entry.validFrom)} - ${dateFormat.format(entry.validTo)}",
+                  style: TextStyle(fontFamily: "Raleway"),
+                ),
               )
             ],
           ),
         ],
       ),
     );
+  }
+
+  MarkdownStyleSheet _getMarkdownStylesheet(BuildContext context) {
+    ThemeData themeData = Theme.of(context);
+
+    return MarkdownStyleSheet.fromTheme(themeData).copyWith(p: themeData.textTheme.body1.copyWith(fontFamily: "NotoSerifTC"));
   }
 
   /// Get initials of the passed author.

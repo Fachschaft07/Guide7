@@ -87,6 +87,9 @@ class _LoginViewState extends State<LoginView> {
               child: Text(
                 AppLocalizations.of(context).loginInfo,
                 textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontFamily: "NotoSerifTC",
+                ),
               ),
             ),
           ],
