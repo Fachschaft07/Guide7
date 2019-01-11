@@ -13,6 +13,9 @@ class RegularSlotParser implements Parser<Map<String, dynamic>, RegularSlot> {
   /// Parser used to parse the plan change of the slot (if any).
   static const PlanChangeParser _planChangeParser = PlanChangeParser();
 
+  /// Constant constructor.
+  const RegularSlotParser();
+
   @override
   RegularSlot parse(Map<String, dynamic> json) {
     ZPAWeekPlanSlot slot = _weekPlanSlotParser.parse(json);
