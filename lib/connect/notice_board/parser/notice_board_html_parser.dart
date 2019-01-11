@@ -61,6 +61,6 @@ class NoticeBoardHtmlParser implements Parser<String, List<NoticeBoardEntry>> {
 
   /// Parse a date for a notice board entry.
   DateTime _parseDate(String toParse) {
-    return _dateFormat.parse(toParse);
+    return _dateFormat.parse(toParse.trim());
   }
 }

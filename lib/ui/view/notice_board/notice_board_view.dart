@@ -236,7 +236,11 @@ class _NoticeBoardViewState extends State<NoticeBoardView> {
     String lastName = nameParts.last.toLowerCase();
 
     // Compare first and last name.
-    List<String> authorNames = authorName.split(" ");
+    List<String> authorNames = authorName.trim().split(" ");
+
+    if (authorNames.length != 2) {
+      return false;
+    }
 
     String firstName2 = authorNames[1].substring(0, authorNames[1].length - 1).toLowerCase();
     String lastName2 = authorNames[0].substring(0, authorNames[0].length - 1).toLowerCase();

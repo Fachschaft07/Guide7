@@ -1,8 +1,10 @@
 import 'dart:convert';
 
 import 'package:guide7/connect/appointment/appointment_repository.dart';
+import 'package:guide7/connect/appointment/parser/appointment_ical_parser.dart';
 import 'package:guide7/model/appointment/appointment.dart';
 import 'package:guide7/storage/appointment/appointment_storage.dart';
+import 'package:guide7/util/parser/parser.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/dom.dart';
 import 'package:html/parser.dart' as htmlParser;
@@ -11,6 +13,9 @@ import 'package:html/parser.dart' as htmlParser;
 class HMAppointmentRepository implements AppointmentRepository {
   /// Where to find the iCalendar resource URL.
   static const String _resource = "https://www.hm.edu/studierende/mein_studium/verlauf/termine.de.html";
+
+  /// Parser parsing iCalendar formatted strings to appointments.
+  static const Parser<String, List<Appointment>> _iCalParser = AppointmentICalParser();
 
   @override
   Future<List<Appointment>> loadAppointments({bool fromServer}) async {
@@ -33,66 +38,7 @@ class HMAppointmentRepository implements AppointmentRepository {
   Future<List<Appointment>> _parseAppointmentsFromServer() async {
     String iCal = await _fetchAppointmentsICalendar();
 
-    List<Map<String, String>> events = _parseICalendarEvents(iCal);
-
-    List<Appointment> appointments = List<Appointment>();
-
-    for (Map<String, String> event in events) {
-      String uid = event["UID"];
-      String summary = event["SUMMARY"];
-      String description = event["DESCRIPTION"];
-      String location = event["LOCATION"];
-
-      DateTime startDate = DateTime.parse(event["DTSTART;VALUE=DATE"]);
-      DateTime endDate = DateTime.parse(event["DTSTART;VALUE=DATE"]);
-
-      appointments.add(Appointment(
-        uid: uid,
-        start: startDate,
-        end: endDate,
-        summary: summary,
-        description: description,
-        location: location,
-      ));
-    }
-
-    return appointments;
-  }
-
-  /// Parse all iCalendar events.
-  List<Map<String, String>> _parseICalendarEvents(String iCalendar) {
-    List<Map<String, String>> result = List<Map<String, String>>();
-    Map<String, String> currentMap;
-
-    String lastKey;
-    for (final line in LineSplitter.split(iCalendar)) {
-      int keyValueSplit = line.indexOf(":");
-
-      bool continuesLastLineValue = keyValueSplit == -1;
-
-      String key = continuesLastLineValue ? lastKey : line.substring(0, keyValueSplit);
-      String value = continuesLastLineValue ? line.trim() : line.substring(keyValueSplit + 1);
-
-      if (key == "BEGIN" && value == "VEVENT") {
-        // Begin of event
-        currentMap = Map<String, String>();
-      } else if (key == "END" && value == "VEVENT") {
-        // End of event
-        result.add(currentMap);
-        currentMap = null;
-      } else if (currentMap != null) {
-        if (continuesLastLineValue) {
-          // Add value to last value.
-          currentMap[lastKey] = currentMap[lastKey] + value;
-        } else {
-          currentMap[key] = value; // Add attribute to event
-        }
-      }
-
-      lastKey = key;
-    }
-
-    return result;
+    return _iCalParser.parse(iCal);
   }
 
   /// Fetch iCalendar holding all appointments.
