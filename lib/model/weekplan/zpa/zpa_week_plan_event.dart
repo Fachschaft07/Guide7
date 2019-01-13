@@ -14,7 +14,4 @@ class ZPAWeekPlanEvent extends WeekPlanEvent {
           start: slot.start,
           end: slot.end,
         );
-
-  @override
-  String get title => slot.toString();
 }

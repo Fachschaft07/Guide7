@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:guide7/localization/app_localizations.dart';
+import 'package:guide7/util/custom_colors.dart';
 import 'package:guide7/util/functional_interfaces.dart';
 
 /// The login form provides text fields for entering the login data.
@@ -54,7 +55,10 @@ class _LoginFormState extends State<LoginForm> {
           child: TextFormField(
               decoration: InputDecoration(
                 hintText: AppLocalizations.of(context).username,
-                icon: Icon(Icons.person),
+                icon: Icon(
+                  Icons.person,
+                  color: CustomColors.slateGrey,
+                ),
                 border: InputBorder.none,
               ),
               style: TextStyle(fontFamily: "Roboto", color: Colors.black87, fontSize: 16.0),
@@ -69,7 +73,10 @@ class _LoginFormState extends State<LoginForm> {
           child: TextFormField(
             decoration: InputDecoration(
               hintText: AppLocalizations.of(context).password,
-              icon: Icon(Icons.lock),
+              icon: Icon(
+                Icons.lock,
+                color: CustomColors.slateGrey,
+              ),
               border: InputBorder.none,
             ),
             style: TextStyle(fontFamily: "Roboto", color: Colors.black87, fontSize: 16.0),
