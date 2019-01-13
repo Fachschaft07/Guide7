@@ -14,9 +14,6 @@ abstract class WeekPlanEvent {
     @required this.end,
   });
 
-  /// Get title of the event.
-  String get title;
-
   /// Get duration of the event.
   Duration get duration => end.difference(start);
 }
