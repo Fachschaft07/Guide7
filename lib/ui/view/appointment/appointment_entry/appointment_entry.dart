@@ -46,7 +46,7 @@ class AppointmentEntry extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.only(left: 10.0),
                 child: Text(
-                  "${dateFormat.format(appointment.start)} ${AppLocalizations.of(context).to.toLowerCase()} ${dateFormat.format(appointment.end)}",
+                  _getAppointmentDurationString(appointment, context, dateFormat),
                   style: TextStyle(fontFamily: "Raleway"),
                 ),
               ),
@@ -82,5 +82,14 @@ class AppointmentEntry extends StatelessWidget {
     }
 
     return children;
+  }
+
+  /// Get the appointment duration display value.
+  String _getAppointmentDurationString(Appointment appointment, BuildContext context, DateFormat dateFormat) {
+    if (appointment.start.compareTo(appointment.end) == 0) {
+      return "${dateFormat.format(appointment.start)}";
+    } else {
+      return "${dateFormat.format(appointment.start)} ${AppLocalizations.of(context).to.toLowerCase()} ${dateFormat.format(appointment.end)}";
+    }
   }
 }
