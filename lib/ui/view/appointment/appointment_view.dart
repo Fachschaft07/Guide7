@@ -111,8 +111,10 @@ class _AppointmentViewState extends State<AppointmentView> {
 
   /// Transform the passed appointments list.
   void _transformAppointments(List<Appointment> appointments) {
+    DateTime now = DateTime.now();
+
     // Show only appointments that are not already useless.
-    appointments.removeWhere((appointment) => appointment.end.isBefore(DateTime.now()));
+    appointments.removeWhere((appointment) => appointment.end.isBefore(now));
 
     // Sort by start date!
     appointments.sort((appointment1, appointment2) => appointment1.start.compareTo(appointment2.start));

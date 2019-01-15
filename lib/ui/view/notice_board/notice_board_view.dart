@@ -88,6 +88,8 @@ class _NoticeBoardViewState extends State<NoticeBoardView> {
             List<NoticeBoardEntry> entries = snapshot.data[0];
             List<HMPerson> hmPeople = snapshot.data[1];
 
+            _transformEntries(entries);
+
             if (_showSearchField) {
               entries = _filterEntries(entries, _searchFieldController.text);
             }
@@ -263,5 +265,15 @@ class _NoticeBoardViewState extends State<NoticeBoardView> {
             entry.author.toLowerCase().contains(filterString) ||
             entry.content.toLowerCase().contains(filterString))
         .toList(growable: false);
+  }
+
+  /// Transform displayed entries.
+  void _transformEntries(List<NoticeBoardEntry> entries) {
+    DateTime now = DateTime.now();
+
+    // Remove no more valid entries.
+    entries.removeWhere((entry) => entry.validTo.isBefore(now));
+
+    entries.sort((entry1, entry2) => entry2.validFrom.compareTo(entry1.validFrom));
   }
 }
