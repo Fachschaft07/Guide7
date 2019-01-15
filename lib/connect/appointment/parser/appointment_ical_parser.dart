@@ -21,7 +21,7 @@ class AppointmentICalParser implements Parser<String, List<Appointment>> {
       String location = event["LOCATION"];
 
       DateTime startDate = DateTime.parse(event["DTSTART;VALUE=DATE"]);
-      DateTime endDate = DateTime.parse(event["DTSTART;VALUE=DATE"]);
+      DateTime endDate = DateTime.parse(event["DTEND;VALUE=DATE"]);
 
       appointments.add(Appointment(
         uid: uid,
