@@ -85,7 +85,7 @@ class _NoticeBoardViewState extends State<NoticeBoardView> {
           Widget sliverList;
 
           if (snapshot.hasData) {
-            List<NoticeBoardEntry> entries = snapshot.data[0];
+            List<NoticeBoardEntry> entries = List.of(snapshot.data[0], growable: true);
             List<HMPerson> hmPeople = snapshot.data[1];
 
             _transformEntries(entries);
