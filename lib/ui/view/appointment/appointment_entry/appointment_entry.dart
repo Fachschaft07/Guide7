@@ -86,8 +86,6 @@ class AppointmentEntry extends StatelessWidget {
 
   /// Get the appointment duration display value.
   String _getAppointmentDurationString(Appointment appointment, BuildContext context, DateFormat dateFormat) {
-    print("${appointment.start} | ${appointment.end}");
-
     int dayDiff = appointment.end.difference(appointment.start).inDays;
     if (dayDiff >= 0 && dayDiff <= 1) {
       return "${dateFormat.format(appointment.start)}";
