@@ -4,12 +4,13 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:guide7/model/notice_board/notice_board_entry.dart';
+import 'package:guide7/ui/common/progress/numbered_circle_progress_indicator.dart';
 import 'package:guide7/util/custom_colors.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
 /// Widget displaying a notice board entry.
-class NoticeBoardEntryWidget extends StatefulWidget {
+class NoticeBoardEntryWidget extends StatelessWidget {
   /// Notice board entry to show.
   final NoticeBoardEntry entry;
 
@@ -26,57 +27,8 @@ class NoticeBoardEntryWidget extends StatefulWidget {
     this.avatarImage,
   });
 
-  @override
-  State<StatefulWidget> createState() => _NoticeBoardEntryWidgetState();
-}
-
-/// State of the notice board entry widget.
-class _NoticeBoardEntryWidgetState extends State<NoticeBoardEntryWidget> with SingleTickerProviderStateMixin {
   /// Duration of the entry validity progress animation.
   static const Duration _validityProgressAnimationDuration = Duration(seconds: 3);
-
-  /// Animation controller to control the entry validity progress.
-  AnimationController _validityProgressAnimationController;
-
-  /// Current state of the entry validity progress animation.
-  Animation<double> _validityProgressAnimation;
-
-  /// Current state of the entry validity progress color animation.
-  Animation<Color> _validityProgressColorAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _initValidityProgressAnimation();
-  }
-
-  /// Initialize the entries validity progress animation.
-  void _initValidityProgressAnimation() {
-    _validityProgressAnimationController = AnimationController(duration: _validityProgressAnimationDuration, vsync: this);
-    _validityProgressAnimation = Tween<double>(begin: 0.0, end: _getEntryProgress(widget.entry))
-        .chain(
-          CurveTween(
-            curve: Curves.easeOut,
-          ),
-        )
-        .animate(_validityProgressAnimationController);
-
-    _validityProgressColorAnimation = ColorTween(begin: Colors.black12, end: CustomColors.lightCoral).animate(_validityProgressAnimation);
-
-    _validityProgressAnimation.addListener(() {
-      setState(() {});
-    });
-
-    _validityProgressAnimationController.forward(); // Start animation.
-  }
-
-  @override
-  void dispose() {
-    _validityProgressAnimationController.dispose();
-
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +41,7 @@ class _NoticeBoardEntryWidgetState extends State<NoticeBoardEntryWidget> with Si
         top: 20.0,
         bottom: 20.0,
       ),
-      decoration: widget.isLast
+      decoration: isLast
           ? null
           : BoxDecoration(
               border: Border(
@@ -104,7 +56,7 @@ class _NoticeBoardEntryWidgetState extends State<NoticeBoardEntryWidget> with Si
             children: <Widget>[
               Expanded(
                 child: Text(
-                  widget.entry.title,
+                  entry.title,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontFamily: "Raleway",
@@ -122,7 +74,7 @@ class _NoticeBoardEntryWidgetState extends State<NoticeBoardEntryWidget> with Si
           Container(
             padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
             child: MarkdownBody(
-              data: widget.entry.content,
+              data: entry.content,
               styleSheet: _getMarkdownStylesheet(context),
             ),
           ),
@@ -138,7 +90,7 @@ class _NoticeBoardEntryWidgetState extends State<NoticeBoardEntryWidget> with Si
               Expanded(
                 flex: 2,
                 child: Text(
-                  widget.entry.author,
+                  entry.author,
                   style: TextStyle(fontFamily: "Raleway"),
                 ),
               ),
@@ -147,7 +99,7 @@ class _NoticeBoardEntryWidgetState extends State<NoticeBoardEntryWidget> with Si
                 child: Padding(
                   padding: EdgeInsets.only(left: 5.0),
                   child: Text(
-                    "${dateFormat.format(widget.entry.validFrom)} - ${dateFormat.format(widget.entry.validTo)}",
+                    "${dateFormat.format(entry.validFrom)} - ${dateFormat.format(entry.validTo)}",
                     style: TextStyle(fontFamily: "Raleway"),
                     textAlign: TextAlign.right,
                   ),
@@ -155,29 +107,14 @@ class _NoticeBoardEntryWidgetState extends State<NoticeBoardEntryWidget> with Si
               ),
               Padding(
                 padding: EdgeInsets.only(left: 5),
-                child: SizedBox(
-                  height: 50.0,
-                  width: 50.0,
-                  child: Stack(
-                    fit: StackFit.loose,
-                    children: <Widget>[
-                      Center(
-                        child: CircularProgressIndicator(
-                          value: _validityProgressAnimation.value,
-                          strokeWidth: 2.0,
-                          valueColor: _validityProgressColorAnimation,
-                        ),
-                      ),
-                      Center(
-                        child: Text(
-                          "${(_validityProgressAnimation.value * 100).round()}%",
-                          style: TextStyle(
-                            color: _validityProgressColorAnimation.value,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                child: NumberedCircularProgressIndicator(
+                  progress: _getEntryProgress(entry),
+                  size: 50.0,
+                  strokeWidth: 2.0,
+                  begin: Colors.black12,
+                  end: CustomColors.lightCoral,
+                  curve: Curves.easeOut,
+                  duration: _validityProgressAnimationDuration,
                 ),
               ),
             ],
@@ -218,10 +155,10 @@ class _NoticeBoardEntryWidgetState extends State<NoticeBoardEntryWidget> with Si
 
   /// Get circle avatar image or initials of the author.
   Widget _getCircleAvatar() {
-    if (widget.avatarImage == null) {
+    if (avatarImage == null) {
       return CircleAvatar(
         child: Text(
-          _getAuthorInitials(widget.entry.author),
+          _getAuthorInitials(entry.author),
           style: TextStyle(fontFamily: "Roboto"),
         ),
         radius: 25.0,
@@ -230,7 +167,7 @@ class _NoticeBoardEntryWidgetState extends State<NoticeBoardEntryWidget> with Si
       );
     } else {
       return CircleAvatar(
-        backgroundImage: MemoryImage(widget.avatarImage),
+        backgroundImage: MemoryImage(avatarImage),
         radius: 25.0,
       );
     }
