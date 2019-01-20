@@ -14,9 +14,6 @@ import 'package:intl/intl.dart';
 
 /// Repository providing week plan events from the ZPA services.
 class ZPAWeekPlanRepository implements WeekPlanRepository {
-  /// How many calendar weeks to cache.
-  static const int _cacheCalendarWeekCount = 5;
-
   /// Where to find the web service.
   static const String _resource = "/student/ws_get_week_plan";
 
@@ -34,29 +31,30 @@ class ZPAWeekPlanRepository implements WeekPlanRepository {
     bool fromServer,
     DateTime date,
   }) async {
-    if (fromServer) {
-      return await _loadEvents(date);
+    ZPAWeekPlanStorage storage = ZPAWeekPlanStorage();
+
+    int calendarWeek = DateUtil.getWeekOfYear(DateTime.utc(date.year, date.month, date.day));
+
+    bool hasEventsCached = await storage.hasEventsForCalendarWeek(calendarWeek);
+
+    List<WeekPlanEvent> events;
+    if (!fromServer && hasEventsCached) {
+      events = await storage.readEvents(calendarWeek);
     } else {
-      ZPAWeekPlanStorage storage = ZPAWeekPlanStorage();
+      // Retrieve from server.
+      events = await _loadEvents(date);
 
-
-      printWeekOfYear(DateTime.utc(2017, 1, 1));
-// --> week 52 in year 2016
-
-      printWeekOfYear(DateTime.utc(2019, 12, 31));
-// --> week 1 in year 2020
-
+      // Store events.
+      await storage.writeEvents(events, calendarWeek);
     }
-  }
 
-  void printWeekOfYear(DateTime date) {
-    print('week ${DateUtil.getWeekOfYear(date)} in year ${DateUtil.getWeekYear(date)}');
+    return events;
   }
 
   @override
   Future<void> clearCache() async {
-    // TODO: implement clearCache
-    return null;
+    ZPAWeekPlanStorage storage = ZPAWeekPlanStorage();
+    await storage.clear();
   }
 
   /// Load events for the passed [date] from ZPA services.

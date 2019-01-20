@@ -14,6 +14,9 @@ class ZPAWeekPlanStorage implements Storage<List<ZPAWeekPlanEvent>> {
   /// General event table name.
   static const String _eventTableName = "ZPA_WEEKPLAN_EVENT";
 
+  /// Table where to store what calendar weeks are cached.
+  static const String _calendarWeekCacheTableName = "${_eventTableName}_CALENDAR_WEEK";
+
   /// Table name where rooms for each event are stored.
   static const String _roomTableName = "${_eventTableName}_ROOM";
 
@@ -50,6 +53,7 @@ class ZPAWeekPlanStorage implements Storage<List<ZPAWeekPlanEvent>> {
 
     await database.transaction((transaction) async {
       await transaction.delete(_eventTableName);
+      await transaction.delete(_calendarWeekCacheTableName);
       await transaction.delete(_roomTableName);
       await transaction.delete(_descriptionTableName);
       await transaction.delete(_teacherTableName);
@@ -78,6 +82,25 @@ class ZPAWeekPlanStorage implements Storage<List<ZPAWeekPlanEvent>> {
     return (value as int) == 0;
   }
 
+  /// Check if there are any events cached for the passed [calendarWeek].
+  Future<bool> hasEventsForCalendarWeek(int calendarWeek) async {
+    var database = await AppDatabase().getDatabase();
+
+    List<Map<String, dynamic>> result = await database.rawQuery("""
+    SELECT COUNT(*) FROM $_calendarWeekCacheTableName
+    WHERE calendarWeek = $calendarWeek
+    """);
+
+    assert(result.length == 1);
+    assert(result[0].values.length == 1);
+
+    var value = result[0].values.first;
+
+    assert(value is int);
+
+    return (value as int) != 0;
+  }
+
   @override
   Future<List<ZPAWeekPlanEvent>> read() async {
     throw Exception("Can only read per calendar week. This operation is not supported.");
@@ -88,12 +111,17 @@ class ZPAWeekPlanStorage implements Storage<List<ZPAWeekPlanEvent>> {
     throw Exception("Can only write per calendar week. This operation is not supported.");
   }
 
-  /// Write passed [€vents] for the passed [calendarWeek].
+  /// Write passed [events] for the passed [calendarWeek].
   Future<void> writeEvents(List<ZPAWeekPlanEvent> events, int calendarWeek) async {
     var database = await AppDatabase().getDatabase();
 
     await database.transaction((transaction) async {
       Batch batch = transaction.batch();
+
+      // Add the calendar week to the cached calendar weeks table.
+      batch.insert(_calendarWeekCacheTableName, {
+        "calendarWeek": calendarWeek,
+      });
 
       for (int i = 0; i < events.length; i++) {
         ZPAWeekPlanEvent event = events[i];
@@ -237,7 +265,7 @@ class ZPAWeekPlanStorage implements Storage<List<ZPAWeekPlanEvent>> {
         batch.insert(_groupTableName, {
           "calendarWeek": calendarWeek,
           "id": id,
-          "group": group,
+          "groupName": group,
         });
       }
     }
@@ -322,7 +350,7 @@ class ZPAWeekPlanStorage implements Storage<List<ZPAWeekPlanEvent>> {
         batch.insert(_groupTableName, {
           "calendarWeek": calendarWeek,
           "id": id,
-          "group": group,
+          "groupName": group,
         });
       }
     }
@@ -344,7 +372,7 @@ class ZPAWeekPlanStorage implements Storage<List<ZPAWeekPlanEvent>> {
         batch.insert(_groupTableName, {
           "calendarWeek": calendarWeek,
           "id": id,
-          "group": group,
+          "groupName": group,
         });
       }
     }
@@ -377,11 +405,11 @@ class ZPAWeekPlanStorage implements Storage<List<ZPAWeekPlanEvent>> {
       DateTime start = DateTime.fromMillisecondsSinceEpoch(dataSet["startDate"]);
       DateTime end = DateTime.fromMillisecondsSinceEpoch(dataSet["endDate"]);
 
-      List<String> rooms = roomsLookup[id]?.map((entry) => entry["room"])?.toList(growable: false);
-      List<String> teachers = teacherLookup[id]?.map((entry) => entry["teacher"])?.toList(growable: false);
-      List<String> descriptions = descriptionLookup[id]?.map((entry) => entry["description"])?.toList(growable: false);
-      List<String> modules = moduleLookup[id]?.map((entry) => entry["module"])?.toList(growable: false);
-      List<String> groups = groupLookup[id]?.map((entry) => entry["group"])?.toList(growable: false);
+      List<String> rooms = roomsLookup[id]?.map((entry) => entry["room"] as String)?.toList(growable: false);
+      List<String> teachers = teacherLookup[id]?.map((entry) => entry["teacher"] as String)?.toList(growable: false);
+      List<String> descriptions = descriptionLookup[id]?.map((entry) => entry["description"] as String)?.toList(growable: false);
+      List<String> modules = moduleLookup[id]?.map((entry) => entry["module"] as String)?.toList(growable: false);
+      List<String> groups = groupLookup[id]?.map((entry) => entry["groupName"] as String)?.toList(growable: false);
 
       if (type == "regular") {
         // Get plan change.

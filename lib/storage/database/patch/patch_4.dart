@@ -6,6 +6,9 @@ class Patch4 extends DatabasePatch {
   /// General event table name.
   static const String _eventTableName = "ZPA_WEEKPLAN_EVENT";
 
+  /// Table where to store what calendar weeks are cached.
+  static const String _calendarWeekCacheTableName = "${_eventTableName}_CALENDAR_WEEK";
+
   /// Table name where rooms for each event are stored.
   static const String _roomTableName = "${_eventTableName}_ROOM";
 
@@ -39,6 +42,14 @@ class Patch4 extends DatabasePatch {
   @override
   Future<void> upgrade(Database db, int currentVersion) async {
     await db.transaction((transaction) async {
+      // Table where all calendar weeks are written which have been cached.
+      await transaction.execute("""
+      CREATE TABLE $_calendarWeekCacheTableName (
+        calendarWeek INTEGER,
+        PRIMARY KEY (calendarWeek)
+      )
+      """);
+
       // General event table
       await transaction.execute("""
       CREATE TABLE $_eventTableName (
@@ -96,8 +107,8 @@ class Patch4 extends DatabasePatch {
       CREATE TABLE $_groupTableName (
         calendarWeek INTEGER,
         id INTEGER,
-        group TEXT,
-        PRIMARY KEY (calendarWeek, id, group)
+        groupName TEXT,
+        PRIMARY KEY (calendarWeek, id, groupName)
       )
       """);
 
@@ -130,6 +141,10 @@ class Patch4 extends DatabasePatch {
   @override
   Future<void> downgrade(Database db, int currentVersion) async {
     await db.transaction((transaction) async {
+      await transaction.execute("""
+      DROP TABLE $_calendarWeekCacheTableName
+      """);
+
       await transaction.execute("""
       DROP TABLE $_eventTableName
       """);
