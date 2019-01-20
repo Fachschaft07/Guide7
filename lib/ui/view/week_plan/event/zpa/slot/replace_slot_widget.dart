@@ -29,43 +29,36 @@ class ReplaceSlotWidget extends StatelessWidget {
     List<Widget> children = List<Widget>();
 
     // Append description.
-    children.add(Text(
-      slot.description,
-      style: TextStyle(fontFamily: "NotoSerifTC"),
+    children.add(Row(
+      children: <Widget>[
+        Expanded(
+          child: Text(
+            slot.description,
+            style: TextStyle(fontFamily: "NotoSerifTC"),
+          ),
+        )
+      ],
     ));
 
-    // Append rooms.
-    children.add(Container(
-      padding: EdgeInsets.only(top: 5),
-      child: Row(
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(right: 5),
-            child: Icon(
-              Icons.room,
-              color: CustomColors.lightCoral,
-            ),
-          ),
-          Text(slot.rooms.join(", ")),
-        ],
-      ),
-    ));
-
-    // Append teachers.
-    children.add(Container(
-      padding: EdgeInsets.only(top: 5),
-      child: Row(
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(right: 5),
-            child: Icon(
-              Icons.person,
-              color: CustomColors.slateGrey,
-            ),
-          ),
-          Text(slot.teachers.join(", ")),
-        ],
-      ),
+    // Append rooms and teachers.
+    children.add(Row(
+      mainAxisSize: MainAxisSize.max,
+      children: <Widget>[
+        Icon(
+          Icons.room,
+          color: CustomColors.lightCoral,
+        ),
+        Expanded(
+          child: Text(slot.rooms.join(", ")),
+        ),
+        Icon(
+          Icons.person,
+          color: CustomColors.slateGrey,
+        ),
+        Expanded(
+          child: Text(slot.teachers.join(", ")),
+        ),
+      ],
     ));
 
     return children;

@@ -15,12 +15,9 @@ class RegularSlotWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 10.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: _buildChildren(context),
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: _buildChildren(context),
     );
   }
 
@@ -28,46 +25,54 @@ class RegularSlotWidget extends StatelessWidget {
   List<Widget> _buildChildren(BuildContext context) {
     List<Widget> children = List<Widget>();
 
-    // Append descriptions.
-    for (final description in slot.descriptions) {
-      children.add(Text(
-        description,
-        style: TextStyle(fontFamily: "NotoSerifTC"),
+    // Append modules.
+    for (final module in slot.modules) {
+      children.add(Row(
+        children: <Widget>[
+          Expanded(
+            child: Text(
+              module,
+              style: TextStyle(
+                fontFamily: "NotoSerifTC",
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
       ));
     }
 
-    // Append rooms.
-    children.add(Container(
-      padding: EdgeInsets.only(top: 5),
-      child: Row(
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(right: 5),
-            child: Icon(
-              Icons.room,
-              color: CustomColors.lightCoral,
-            ),
+    // Append descriptions.
+    for (final description in slot.descriptions) {
+      children.add(Row(children: <Widget>[
+        Expanded(
+          child: Text(
+            description,
+            style: TextStyle(fontFamily: "NotoSerifTC"),
           ),
-          Text(slot.rooms.join(", ")),
-        ],
-      ),
-    ));
+        ),
+      ]));
+    }
 
-    // Append teachers.
-    children.add(Container(
-      padding: EdgeInsets.only(top: 5),
-      child: Row(
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(right: 5),
-            child: Icon(
-              Icons.person,
-              color: CustomColors.slateGrey,
-            ),
-          ),
-          Text(slot.teachers.join(", ")),
-        ],
-      ),
+    // Append rooms and teachers.
+    children.add(Row(
+      mainAxisSize: MainAxisSize.max,
+      children: <Widget>[
+        Icon(
+          Icons.room,
+          color: CustomColors.lightCoral,
+        ),
+        Expanded(
+          child: Text(slot.rooms.join(", ")),
+        ),
+        Icon(
+          Icons.person,
+          color: CustomColors.slateGrey,
+        ),
+        Expanded(
+          child: Text(slot.teachers.join(", ")),
+        ),
+      ],
     ));
 
     return children;

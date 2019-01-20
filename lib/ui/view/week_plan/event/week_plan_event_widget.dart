@@ -44,8 +44,9 @@ class WeekPlanEventWidget extends StatelessWidget {
             ],
           ),
           Row(
+            mainAxisSize: MainAxisSize.max,
             children: <Widget>[
-              _getEventDisplayWidget(context),
+              Expanded(child: _getEventDisplayWidget(context)),
             ],
           ),
         ],
