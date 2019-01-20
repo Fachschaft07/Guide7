@@ -5,6 +5,9 @@ import 'package:flutter/widgets.dart';
 
 /// Class containing localizations for the app (translations).
 class AppLocalizations {
+  /// Version of the application.
+  static const String _appVersion = "0.1.0";
+
   /// Create app localizations.
   AppLocalizations(this.locale);
 
@@ -58,6 +61,7 @@ class AppLocalizations {
     "appointment_load_error": "Die Termine konnten nicht geladen werden.",
     "weekplan_load_error": "Die Wochenplan Einträge konnten nicht geladen werden.",
     "refresh": "Aktualisieren",
+    "version": "Version",
   };
 
   /// English localized values.
@@ -96,10 +100,13 @@ class AppLocalizations {
     "appointment_load_error": "Appointments could not be loaded.",
     "weekplan_load_error": "Week plan entries could not be loaded.",
     "refresh": "Refresh",
+    "version": "Version",
   };
 
   /// Get localized value by [key].
   String _get(String key) => _localizations[locale.languageCode][key];
+
+  String get appVersion => _appVersion;
 
   String get title => _get("title");
 
@@ -168,4 +175,6 @@ class AppLocalizations {
   String get weekPlanLoadError => _get("weekplan_load_error");
 
   String get refresh => _get("refresh");
+
+  String get version => _get("version");
 }

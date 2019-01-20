@@ -5,6 +5,7 @@ import 'package:guide7/ui/view/login/login_view.dart';
 import 'package:guide7/ui/view/privacy_policy_statement/privacy_policy_statement_view.dart';
 import 'package:guide7/ui/view/room_search/room_search_view.dart';
 import 'package:guide7/ui/view/settings_view/settings_view.dart';
+import 'package:guide7/ui/view/settings_view/test_bench/test_bench_view.dart';
 import 'package:guide7/ui/view/splash_screen/splash_screen_view.dart';
 import 'package:guide7/ui/view/view_holder.dart';
 
@@ -37,6 +38,9 @@ class AppRoutes {
   /// Route to the room search view.
   static const String roomSearch = "/room-search";
 
+  /// Route to the test bench view.
+  static const String testBench = "/test-bench";
+
   /// Configure all application routes.
   static void configureRoutes(Router router) {
     router.notFoundHandler = new Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
@@ -53,5 +57,6 @@ class AppRoutes {
     router.define(AppRoutes.privacyPolicyStatement,
         handler: Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) => PrivacyPolicyStatementView()));
     router.define(AppRoutes.roomSearch, handler: Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) => RoomSearchView()));
+    router.define(AppRoutes.testBench, handler: Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) => TestBenchView()));
   }
 }

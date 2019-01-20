@@ -23,7 +23,7 @@ class SplashScreenView extends StatefulWidget {
 /// State of the splash screen redirecting to the correct starting view.
 class _SplashScreenState extends State<SplashScreenView> {
   /// Duration the splash screen is shown.
-  static const Duration _duration = Duration(seconds: 2);
+  static const Duration _minDuration = Duration(milliseconds: 600);
 
   @override
   Widget build(BuildContext context) {
@@ -67,12 +67,23 @@ class _SplashScreenState extends State<SplashScreenView> {
   }
 
   /// Start the splash screen timer.
-  Future<Timer> _startTimer() async {
-    return Timer(_SplashScreenState._duration, _navigateToStartView);
+  Future<void> _startTimer() async {
+    Future<void> minDurationFuture = Future.delayed(_SplashScreenState._minDuration);
+    Future<Function> nextViewAction = _fetchNextView();
+
+    /// Wait for both actions, then navigate to start view.
+    Future.wait([
+      minDurationFuture,
+      nextViewAction,
+    ]).then((values) {
+      Function navigateToStartView = values[1] as Function;
+
+      navigateToStartView();
+    });
   }
 
-  /// Navigate to the starting view of the application.
-  void _navigateToStartView() async {
+  /// Fetch next view to navigate after the splash screen.
+  Future<Function> _fetchNextView() async {
     LoginInfo loginInfo = await _getLoginInfo();
     bool skippedLogin = false;
 
@@ -81,9 +92,9 @@ class _SplashScreenState extends State<SplashScreenView> {
     }
 
     if (skippedLogin || await isLoggedIn()) {
-      _gotoNoticeBoard();
+      return _gotoNoticeBoard;
     } else {
-      _gotoLoginView();
+      return _gotoLoginView;
     }
   }
 
