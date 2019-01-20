@@ -34,6 +34,12 @@ class ZPAWeekPlanRepository implements WeekPlanRepository {
     return await _loadEvents(date);
   }
 
+  @override
+  Future<void> clearCache() async {
+    // TODO: implement clearCache
+    return null;
+  }
+
   /// Load events for the passed [date] from ZPA services.
   Future<List<WeekPlanEvent>> _loadEvents(DateTime date) async {
     String rawJson = await _fetchRawWeekPlanEvents(date);

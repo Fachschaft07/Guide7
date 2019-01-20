@@ -22,6 +22,23 @@ class _WeekPlanViewState extends State<WeekPlanView> {
   /// Background color of the date badge.
   static const Color _dateBackgroundColor = Color(0xFFF9F9F9);
 
+  /// Controller to load week plan event page wise.
+  PagewiseLoadController _pageLoadController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    DateTime now = DateTime.now();
+
+    _pageLoadController = PagewiseLoadController(
+      pageSize: 7,
+      pageFuture: (int pageIndex) {
+        return _fetchWeekEvents(now.add(Duration(days: 7 * pageIndex)));
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) => SafeArea(
         child: Column(
@@ -59,92 +76,95 @@ class _WeekPlanViewState extends State<WeekPlanView> {
     }
     double eventColumnWidth = size.width - fixedColumnWidth;
 
-    return PagewiseListView(
-      pageSize: 7,
-      padding: EdgeInsets.all(15.0),
-      itemBuilder: (BuildContext context, dayInfo, int index) {
-        return StickyHeaderBuilder(
-            overlapHeaders: true,
-            builder: (BuildContext context, double stuckAmount) {
-              stuckAmount = 1.0 - stuckAmount.clamp(0.0, 1.0);
+    return RefreshIndicator(
+      onRefresh: () async {
+        await _clearCachedEntries();
+        await _pageLoadController.reset();
+      },
+      child: PagewiseListView(
+        padding: EdgeInsets.all(15.0),
+        pageLoadController: _pageLoadController,
+        itemBuilder: (BuildContext context, dayInfo, int index) {
+          return StickyHeaderBuilder(
+              overlapHeaders: true,
+              builder: (BuildContext context, double stuckAmount) {
+                stuckAmount = 1.0 - stuckAmount.clamp(0.0, 1.0);
 
-              return Container(
-                width: fixedColumnWidth,
-                height: fixedColumnWidth,
-                decoration: BoxDecoration(color: _dateBackgroundColor, borderRadius: BorderRadius.circular(10.0)),
-                margin: EdgeInsets.only(bottom: 5),
-                child: Container(
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          AutoSizeText(
-                            weekDayFormat.format(dayInfo.date).toUpperCase(),
-                            style: TextStyle(color: Colors.black54),
-                          ),
-                          AutoSizeText(
-                            dayFormat.format(dayInfo.date),
-                            minFontSize: 25.0,
-                          ),
-                        ],
-                      ),
-                      RotatedBox(
-                        quarterTurns: 3,
-                        child: AutoSizeText(
-                          monthFormat.format(dayInfo.date),
-                          style: TextStyle(color: CustomColors.slateGrey),
-                          minFontSize: 16.0,
+                return Container(
+                  width: fixedColumnWidth,
+                  height: fixedColumnWidth,
+                  decoration: BoxDecoration(color: _dateBackgroundColor, borderRadius: BorderRadius.circular(10.0)),
+                  margin: EdgeInsets.only(bottom: 5),
+                  child: Container(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            AutoSizeText(
+                              weekDayFormat.format(dayInfo.date).toUpperCase(),
+                              style: TextStyle(color: Colors.black54),
+                            ),
+                            AutoSizeText(
+                              dayFormat.format(dayInfo.date),
+                              minFontSize: 25.0,
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-            content: Container(
-              margin: EdgeInsets.only(left: fixedColumnWidth),
-              width: eventColumnWidth,
-              constraints: BoxConstraints(minHeight: 150),
-              child: dayInfo.events.isEmpty
-                  ? Center(
-                      child: Column(
-                        children: <Widget>[
-                          Icon(
-                            Icons.thumb_up,
-                            color: CustomColors.slateGrey,
+                        RotatedBox(
+                          quarterTurns: 3,
+                          child: AutoSizeText(
+                            monthFormat.format(dayInfo.date),
+                            style: TextStyle(color: CustomColors.slateGrey),
+                            minFontSize: 16.0,
                           ),
-                          Text(
-                            "Keine Einträge",
-                            style: TextStyle(
-                              fontFamily: "NotoSerifTC",
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+              content: Container(
+                margin: EdgeInsets.only(left: fixedColumnWidth),
+                width: eventColumnWidth,
+                constraints: BoxConstraints(minHeight: 150),
+                child: dayInfo.events.isEmpty
+                    ? Center(
+                        child: Column(
+                          children: <Widget>[
+                            Icon(
+                              Icons.thumb_up,
                               color: CustomColors.slateGrey,
                             ),
-                          ),
-                        ],
-                      ),
-                    )
-                  : Container(
-                      padding: EdgeInsets.only(bottom: 20.0),
-                      child: Column(
-                        children: List.generate(dayInfo.events.length, (index) {
-                          return Container(
-                            child: WeekPlanEventWidget(
-                              event: dayInfo.events[index],
+                            Text(
+                              "Keine Einträge",
+                              style: TextStyle(
+                                fontFamily: "NotoSerifTC",
+                                color: CustomColors.slateGrey,
+                              ),
                             ),
-                          );
-                        }),
+                          ],
+                        ),
+                      )
+                    : Container(
+                        padding: EdgeInsets.only(bottom: 20.0),
+                        child: Column(
+                          children: List.generate(dayInfo.events.length, (index) {
+                            return Container(
+                              child: WeekPlanEventWidget(
+                                event: dayInfo.events[index],
+                              ),
+                            );
+                          }),
+                        ),
                       ),
-                    ),
-            ));
-      },
-      pageFuture: (int pageIndex) {
-        return _fetchWeekEvents(now.add(Duration(days: 7 * pageIndex)));
-      },
+              ));
+        },
+      ),
     );
   }
 
@@ -181,6 +201,12 @@ class _WeekPlanViewState extends State<WeekPlanView> {
     }
 
     return result;
+  }
+
+  /// Clear all cached week plan entries.
+  Future<void> _clearCachedEntries() async {
+    Repository repo = Repository();
+    await repo.getWeekPlanRepository().clearCache();
   }
 }
 

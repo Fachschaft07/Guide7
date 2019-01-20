@@ -13,7 +13,7 @@ import 'package:guide7/model/credentials/username_password_credentials.dart';
 /// Since it is used all over the application it is implemented as a singleton.
 class Repository implements RepositoryI {
   /// Repository instance.
-  static final Repository _instance = Repository._internal();
+  static Repository _instance = Repository._internal();
 
   /// Delegated repository implementation to use.
   static RepositoryI _delegate;
@@ -52,7 +52,11 @@ class Repository implements RepositoryI {
   Repository._internal();
 
   /// Set the repository implementation to use for further repository calls.
-  static setRepositoryImplementation(RepositoryI implementation) => Repository._delegate = implementation;
+  static setRepositoryImplementation(RepositoryI implementation) {
+    Repository._delegate = implementation;
+
+    _instance = Repository._internal();
+  }
 
   @override
   LocalCredentialsRepository<UsernamePasswordCredentials> getLocalCredentialsRepository() {

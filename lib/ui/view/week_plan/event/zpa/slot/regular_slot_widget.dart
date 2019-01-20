@@ -15,8 +15,12 @@ class RegularSlotWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: _buildChildren(context),
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 10.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: _buildChildren(context),
+      ),
     );
   }
 
@@ -45,6 +49,23 @@ class RegularSlotWidget extends StatelessWidget {
             ),
           ),
           Text(slot.rooms.join(", ")),
+        ],
+      ),
+    ));
+
+    // Append teachers.
+    children.add(Container(
+      padding: EdgeInsets.only(top: 5),
+      child: Row(
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(right: 5),
+            child: Icon(
+              Icons.person,
+              color: CustomColors.slateGrey,
+            ),
+          ),
+          Text(slot.teachers.join(", ")),
         ],
       ),
     ));

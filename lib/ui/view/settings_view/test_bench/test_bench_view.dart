@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:guide7/connect/impl/mock_repository.dart';
+import 'package:guide7/connect/repository.dart';
 import 'package:guide7/ui/util/ui_util.dart';
 import 'package:guide7/ui/view/settings_view/settings_item/settings_item.dart';
 import 'package:guide7/util/custom_colors.dart';
@@ -46,6 +48,15 @@ class _TestBenchViewState extends State<TestBenchView> {
       description: "Run all background tasks defined in file 'tasks.dart'",
       onTap: () {
         _runBackgroundTasks();
+      },
+    ));
+
+    items.add(SettingsItem(
+      title: "Use mock repositories",
+      icon: Icons.wifi_lock,
+      description: "Mock repositories will be used until the next app launch",
+      onTap: () {
+        Repository.setRepositoryImplementation(MockRepository());
       },
     ));
 

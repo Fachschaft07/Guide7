@@ -24,4 +24,11 @@ class WeekPlanRepositoryImpl implements WeekPlanRepository {
 
     return result;
   }
+
+  @override
+  Future<void> clearCache() async {
+    for (WeekPlanRepository repository in _weekPlanRepositories) {
+      await repository.clearCache();
+    }
+  }
 }

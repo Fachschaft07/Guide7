@@ -7,4 +7,7 @@ abstract class WeekPlanRepository {
     bool fromServer,
     DateTime date,
   });
+
+  /// Clear cached week plan events.
+  Future<void> clearCache();
 }
