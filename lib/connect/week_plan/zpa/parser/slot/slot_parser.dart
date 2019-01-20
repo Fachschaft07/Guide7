@@ -1,7 +1,7 @@
-import 'package:guide7/connect/weekplan/zpa/parser/slot/types/extra_slot_parser.dart';
-import 'package:guide7/connect/weekplan/zpa/parser/slot/types/regular_slot_parser.dart';
-import 'package:guide7/connect/weekplan/zpa/parser/slot/types/replace_slot_parser.dart';
-import 'package:guide7/connect/weekplan/zpa/parser/slot/types/single_slot_parser.dart';
+import 'package:guide7/connect/week_plan/zpa/parser/slot/types/extra_slot_parser.dart';
+import 'package:guide7/connect/week_plan/zpa/parser/slot/types/regular_slot_parser.dart';
+import 'package:guide7/connect/week_plan/zpa/parser/slot/types/replace_slot_parser.dart';
+import 'package:guide7/connect/week_plan/zpa/parser/slot/types/single_slot_parser.dart';
 import 'package:guide7/model/weekplan/zpa/slot/zpa_week_plan_slot.dart';
 import 'package:guide7/util/parser/parser.dart';
 

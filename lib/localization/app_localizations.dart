@@ -62,6 +62,7 @@ class AppLocalizations {
     "weekplan_load_error": "Die Wochenplan Einträge konnten nicht geladen werden.",
     "refresh": "Aktualisieren",
     "version": "Version",
+    "no_entries": "Keine Einträge",
   };
 
   /// English localized values.
@@ -101,6 +102,7 @@ class AppLocalizations {
     "weekplan_load_error": "Week plan entries could not be loaded.",
     "refresh": "Refresh",
     "version": "Version",
+    "no_entries": "No entries",
   };
 
   /// Get localized value by [key].
@@ -177,4 +179,6 @@ class AppLocalizations {
   String get refresh => _get("refresh");
 
   String get version => _get("version");
+
+  String get noEntries => _get("no_entries");
 }

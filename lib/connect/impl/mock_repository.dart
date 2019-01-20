@@ -11,8 +11,8 @@ import 'package:guide7/connect/login/zpa/zpa_login_repository.dart';
 import 'package:guide7/connect/notice_board/mock_notice_board_repository.dart';
 import 'package:guide7/connect/notice_board/notice_board_repository.dart';
 import 'package:guide7/connect/repository_interface.dart';
-import 'package:guide7/connect/weekplan/weekplan_repository.dart';
-import 'package:guide7/connect/weekplan/zpa/mock_weekplan_repository.dart';
+import 'package:guide7/connect/week_plan/week_plan_repository.dart';
+import 'package:guide7/connect/week_plan/zpa/mock_week_plan_repository.dart';
 import 'package:guide7/model/credentials/username_password_credentials.dart';
 
 /// Repository implementation used for tests.

@@ -4,7 +4,7 @@ import 'package:guide7/connect/free_rooms/free_rooms_repository.dart';
 import 'package:guide7/connect/hm_people/hm_people_repository.dart';
 import 'package:guide7/connect/login/zpa/zpa_login_repository.dart';
 import 'package:guide7/connect/notice_board/notice_board_repository.dart';
-import 'package:guide7/connect/weekplan/weekplan_repository.dart';
+import 'package:guide7/connect/week_plan/week_plan_repository.dart';
 import 'package:guide7/model/credentials/username_password_credentials.dart';
 
 /// Repository interface.

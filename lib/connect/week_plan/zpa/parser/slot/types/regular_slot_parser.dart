@@ -1,5 +1,5 @@
-import 'package:guide7/connect/weekplan/zpa/parser/change/plan_change_parser.dart';
-import 'package:guide7/connect/weekplan/zpa/parser/slot/week_plan_slot_parser.dart';
+import 'package:guide7/connect/week_plan/zpa/parser/change/plan_change_parser.dart';
+import 'package:guide7/connect/week_plan/zpa/parser/slot/week_plan_slot_parser.dart';
 import 'package:guide7/model/weekplan/zpa/slot/change/plan_change.dart';
 import 'package:guide7/model/weekplan/zpa/slot/types/regular_slot.dart';
 import 'package:guide7/model/weekplan/zpa/slot/zpa_week_plan_slot.dart';

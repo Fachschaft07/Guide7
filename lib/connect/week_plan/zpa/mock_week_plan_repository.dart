@@ -1,4 +1,4 @@
-import 'package:guide7/connect/weekplan/weekplan_repository.dart';
+import 'package:guide7/connect/week_plan/week_plan_repository.dart';
 import 'package:guide7/model/weekplan/week_plan_event.dart';
 import 'package:guide7/model/weekplan/zpa/slot/change/plan_change.dart';
 import 'package:guide7/model/weekplan/zpa/slot/types/extra_slot.dart';

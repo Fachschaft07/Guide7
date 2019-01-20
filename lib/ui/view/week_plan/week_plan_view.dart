@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:guide7/connect/repository.dart';
-import 'package:guide7/connect/weekplan/weekplan_repository.dart';
+import 'package:guide7/connect/week_plan/week_plan_repository.dart';
 import 'package:guide7/localization/app_localizations.dart';
 import 'package:guide7/model/weekplan/week_plan_event.dart';
 import 'package:guide7/ui/view/week_plan/event/week_plan_event_widget.dart';
@@ -37,6 +37,13 @@ class _WeekPlanViewState extends State<WeekPlanView> {
         return _fetchWeekEvents(now.add(Duration(days: 7 * pageIndex)));
       },
     );
+  }
+
+  @override
+  void dispose() {
+    _pageLoadController.dispose();
+
+    super.dispose();
   }
 
   @override
@@ -84,87 +91,100 @@ class _WeekPlanViewState extends State<WeekPlanView> {
       child: PagewiseListView(
         padding: EdgeInsets.all(15.0),
         pageLoadController: _pageLoadController,
-        itemBuilder: (BuildContext context, dayInfo, int index) {
-          return StickyHeaderBuilder(
-              overlapHeaders: true,
-              builder: (BuildContext context, double stuckAmount) {
-                stuckAmount = 1.0 - stuckAmount.clamp(0.0, 1.0);
+        itemBuilder: (BuildContext context, value, int index) {
+          _DayInfo dayInfo = value as _DayInfo;
 
-                return Container(
-                  width: fixedColumnWidth,
-                  height: fixedColumnWidth,
-                  decoration: BoxDecoration(color: _dateBackgroundColor, borderRadius: BorderRadius.circular(10.0)),
-                  margin: EdgeInsets.only(bottom: 5),
-                  child: Container(
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            AutoSizeText(
-                              weekDayFormat.format(dayInfo.date).toUpperCase(),
-                              style: TextStyle(color: Colors.black54),
-                            ),
-                            AutoSizeText(
-                              dayFormat.format(dayInfo.date),
-                              minFontSize: 25.0,
-                            ),
-                          ],
-                        ),
-                        RotatedBox(
-                          quarterTurns: 3,
-                          child: AutoSizeText(
-                            monthFormat.format(dayInfo.date),
-                            style: TextStyle(color: CustomColors.slateGrey),
-                            minFontSize: 16.0,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-              content: Container(
-                margin: EdgeInsets.only(left: fixedColumnWidth),
-                width: eventColumnWidth,
-                constraints: BoxConstraints(minHeight: 150),
-                child: dayInfo.events.isEmpty
-                    ? Center(
-                        child: Column(
-                          children: <Widget>[
-                            Icon(
-                              Icons.thumb_up,
-                              color: CustomColors.slateGrey,
-                            ),
-                            Text(
-                              "Keine Einträge",
-                              style: TextStyle(
-                                fontFamily: "NotoSerifTC",
-                                color: CustomColors.slateGrey,
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                    : Container(
-                        padding: EdgeInsets.only(bottom: 20.0),
-                        child: Column(
-                          children: List.generate(dayInfo.events.length, (index) {
-                            return Container(
-                              child: WeekPlanEventWidget(
-                                event: dayInfo.events[index],
-                              ),
-                            );
-                          }),
-                        ),
-                      ),
-              ));
+          return StickyHeaderBuilder(
+            overlapHeaders: true,
+            builder: (BuildContext context, double stuckAmount) {
+              stuckAmount = 1.0 - stuckAmount.clamp(0.0, 1.0);
+
+              return _buildDateHeader(fixedColumnWidth, weekDayFormat, dayFormat, monthFormat, dayInfo.date);
+            },
+            content: _buildEventsContainer(dayInfo.events, eventColumnWidth, fixedColumnWidth),
+          );
         },
       ),
+    );
+  }
+
+  /// Build the fixed date header widget.
+  Widget _buildDateHeader(double size, DateFormat weekDayFormat, DateFormat dayFormat, DateFormat monthFormat, DateTime date) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(color: _dateBackgroundColor, borderRadius: BorderRadius.circular(10.0)),
+      margin: EdgeInsets.only(bottom: 5),
+      child: Container(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                AutoSizeText(
+                  weekDayFormat.format(date).toUpperCase(),
+                  style: TextStyle(color: Colors.black54),
+                ),
+                AutoSizeText(
+                  dayFormat.format(date),
+                  minFontSize: 25.0,
+                ),
+              ],
+            ),
+            RotatedBox(
+              quarterTurns: 3,
+              child: AutoSizeText(
+                monthFormat.format(date),
+                style: TextStyle(color: CustomColors.slateGrey),
+                minFontSize: 16.0,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Build container for events.
+  Widget _buildEventsContainer(List<WeekPlanEvent> events, double width, double xOffset) {
+    return Container(
+      margin: EdgeInsets.only(left: xOffset),
+      width: width,
+      constraints: BoxConstraints(minHeight: 150),
+      child: events.isEmpty
+          ? Center(
+              child: Column(
+                children: <Widget>[
+                  Icon(
+                    Icons.thumb_up,
+                    color: CustomColors.slateGrey,
+                  ),
+                  Text(
+                    AppLocalizations.of(context).noEntries,
+                    style: TextStyle(
+                      fontFamily: "NotoSerifTC",
+                      color: CustomColors.slateGrey,
+                    ),
+                  ),
+                ],
+              ),
+            )
+          : Container(
+              padding: EdgeInsets.only(bottom: 20.0),
+              child: Column(
+                children: List.generate(events.length, (index) {
+                  return Container(
+                    child: WeekPlanEventWidget(
+                      event: events[index],
+                    ),
+                  );
+                }),
+              ),
+            ),
     );
   }
 

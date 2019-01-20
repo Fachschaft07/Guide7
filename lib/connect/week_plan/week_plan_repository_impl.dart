@@ -1,5 +1,5 @@
-import 'package:guide7/connect/weekplan/weekplan_repository.dart';
-import 'package:guide7/connect/weekplan/zpa/zpa_weekplan_repository.dart';
+import 'package:guide7/connect/week_plan/week_plan_repository.dart';
+import 'package:guide7/connect/week_plan/zpa/zpa_week_plan_repository.dart';
 import 'package:guide7/model/weekplan/week_plan_event.dart';
 
 /// Repository providing all week plan events available.

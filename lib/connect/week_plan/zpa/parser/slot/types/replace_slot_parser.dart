@@ -1,4 +1,4 @@
-import 'package:guide7/connect/weekplan/zpa/parser/slot/types/single_slot_parser.dart';
+import 'package:guide7/connect/week_plan/zpa/parser/slot/types/single_slot_parser.dart';
 import 'package:guide7/model/weekplan/zpa/slot/types/replace_slot.dart';
 import 'package:guide7/model/weekplan/zpa/slot/types/single_slot.dart';
 import 'package:guide7/util/parser/parser.dart';
