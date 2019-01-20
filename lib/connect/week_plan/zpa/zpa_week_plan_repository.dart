@@ -7,11 +7,16 @@ import 'package:guide7/connect/week_plan/week_plan_repository.dart';
 import 'package:guide7/connect/week_plan/zpa/parser/slot/slot_parser.dart';
 import 'package:guide7/model/weekplan/week_plan_event.dart';
 import 'package:guide7/model/weekplan/zpa/zpa_week_plan_event.dart';
+import 'package:guide7/storage/week_plan/zpa/zpa_week_plan_storage.dart';
+import 'package:guide7/util/date_util.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
 /// Repository providing week plan events from the ZPA services.
 class ZPAWeekPlanRepository implements WeekPlanRepository {
+  /// How many calendar weeks to cache.
+  static const int _cacheCalendarWeekCount = 5;
+
   /// Where to find the web service.
   static const String _resource = "/student/ws_get_week_plan";
 
@@ -29,9 +34,23 @@ class ZPAWeekPlanRepository implements WeekPlanRepository {
     bool fromServer,
     DateTime date,
   }) async {
-    // TODO Implement caching.
+    if (fromServer) {
+      return await _loadEvents(date);
+    } else {
+      ZPAWeekPlanStorage storage = ZPAWeekPlanStorage();
 
-    return await _loadEvents(date);
+
+      printWeekOfYear(DateTime.utc(2017, 1, 1));
+// --> week 52 in year 2016
+
+      printWeekOfYear(DateTime.utc(2019, 12, 31));
+// --> week 1 in year 2020
+
+    }
+  }
+
+  void printWeekOfYear(DateTime date) {
+    print('week ${DateUtil.getWeekOfYear(date)} in year ${DateUtil.getWeekYear(date)}');
   }
 
   @override

@@ -68,8 +68,6 @@ class _WeekPlanViewState extends State<WeekPlanView> {
 
   /// Build the views content.
   Widget _buildContent() {
-    DateTime now = DateTime.now();
-
     DateFormat weekDayFormat = DateFormat.E(Localizations.localeOf(context).languageCode);
     DateFormat dayFormat = DateFormat.d(Localizations.localeOf(context).languageCode);
     DateFormat monthFormat = DateFormat.MMM(Localizations.localeOf(context).languageCode);
@@ -197,7 +195,7 @@ class _WeekPlanViewState extends State<WeekPlanView> {
     WeekPlanRepository weekPlanRepository = repo.getWeekPlanRepository();
 
     List<WeekPlanEvent> events = await weekPlanRepository.getEvents(
-      fromServer: true,
+      fromServer: false,
       date: monday,
     );
 
