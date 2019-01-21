@@ -22,6 +22,9 @@ class _WeekPlanViewState extends State<WeekPlanView> {
   /// Background color of the date badge.
   static const Color _dateBackgroundColor = Color(0xFFF9F9F9);
 
+  /// Background color of the current date badge.
+  static const Color _dateBackgroundHighlightColor = Color(0xFFDDF3FF);
+
   /// Controller to load week plan event page wise.
   PagewiseLoadController _pageLoadController;
 
@@ -108,10 +111,13 @@ class _WeekPlanViewState extends State<WeekPlanView> {
 
   /// Build the fixed date header widget.
   Widget _buildDateHeader(double size, DateFormat weekDayFormat, DateFormat dayFormat, DateFormat monthFormat, DateTime date) {
+    DateTime now = DateTime.now();
+    bool isSameDay = date.year == now.year && date.month == now.month && date.day == now.day;
+
     return Container(
       width: size,
       height: size,
-      decoration: BoxDecoration(color: _dateBackgroundColor, borderRadius: BorderRadius.circular(10.0)),
+      decoration: BoxDecoration(color: isSameDay ? _dateBackgroundHighlightColor : _dateBackgroundColor, borderRadius: BorderRadius.circular(10.0)),
       margin: EdgeInsets.only(bottom: 5),
       child: Container(
         child: Row(
