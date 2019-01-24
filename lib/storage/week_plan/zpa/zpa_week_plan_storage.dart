@@ -118,6 +118,9 @@ class ZPAWeekPlanStorage implements Storage<List<ZPAWeekPlanEvent>> {
     await database.transaction((transaction) async {
       Batch batch = transaction.batch();
 
+      /// First and foremost clear events for the passed calendar week.
+      _clearEvents(calendarWeek, batch);
+
       // Add the calendar week to the cached calendar weeks table.
       batch.insert(_calendarWeekCacheTableName, {
         "calendarWeek": calendarWeek,
@@ -135,6 +138,21 @@ class ZPAWeekPlanStorage implements Storage<List<ZPAWeekPlanEvent>> {
 
       return await batch.commit(noResult: true);
     });
+  }
+
+  /// Clear events for the passed calendar week.
+  void _clearEvents(int calendarWeek, Batch batch) {
+    String where = "calendarWeek = $calendarWeek";
+
+    batch.delete(_eventTableName, where: where);
+    batch.delete(_calendarWeekCacheTableName, where: where);
+    batch.delete(_roomTableName, where: where);
+    batch.delete(_descriptionTableName, where: where);
+    batch.delete(_teacherTableName, where: where);
+    batch.delete(_groupTableName, where: where);
+    batch.delete(_moduleTableName, where: where);
+    batch.delete(_planChangeTableName, where: where);
+    batch.delete(_planChangeAlternateRoomTableName, where: where);
   }
 
   /// Read events for the passed [calendarWeek].

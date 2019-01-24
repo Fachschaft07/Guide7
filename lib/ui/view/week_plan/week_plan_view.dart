@@ -67,6 +67,15 @@ class _WeekPlanViewState extends State<WeekPlanView> {
         centerTitle: true,
         elevation: 0,
         backgroundColor: Colors.white,
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.refresh, color: CustomColors.slateGrey),
+            tooltip: AppLocalizations.of(context).refresh,
+            onPressed: () {
+              _onRefresh();
+            },
+          ),
+        ],
       );
 
   /// Build the views content.
@@ -84,28 +93,22 @@ class _WeekPlanViewState extends State<WeekPlanView> {
     }
     double eventColumnWidth = size.width - fixedColumnWidth;
 
-    return RefreshIndicator(
-      onRefresh: () async {
-        await _clearCachedEntries();
-        await _pageLoadController.reset();
+    return PagewiseListView(
+      padding: EdgeInsets.all(15.0),
+      pageLoadController: _pageLoadController,
+      itemBuilder: (BuildContext context, value, int index) {
+        _DayInfo dayInfo = value as _DayInfo;
+
+        return StickyHeaderBuilder(
+          overlapHeaders: true,
+          builder: (BuildContext context, double stuckAmount) {
+            stuckAmount = 1.0 - stuckAmount.clamp(0.0, 1.0);
+
+            return _buildDateHeader(fixedColumnWidth, weekDayFormat, dayFormat, monthFormat, dayInfo.date);
+          },
+          content: _buildEventsContainer(dayInfo.events, eventColumnWidth, fixedColumnWidth),
+        );
       },
-      child: PagewiseListView(
-        padding: EdgeInsets.all(15.0),
-        pageLoadController: _pageLoadController,
-        itemBuilder: (BuildContext context, value, int index) {
-          _DayInfo dayInfo = value as _DayInfo;
-
-          return StickyHeaderBuilder(
-            overlapHeaders: true,
-            builder: (BuildContext context, double stuckAmount) {
-              stuckAmount = 1.0 - stuckAmount.clamp(0.0, 1.0);
-
-              return _buildDateHeader(fixedColumnWidth, weekDayFormat, dayFormat, monthFormat, dayInfo.date);
-            },
-            content: _buildEventsContainer(dayInfo.events, eventColumnWidth, fixedColumnWidth),
-          );
-        },
-      ),
     );
   }
 
@@ -231,6 +234,12 @@ class _WeekPlanViewState extends State<WeekPlanView> {
   Future<void> _clearCachedEntries() async {
     Repository repo = Repository();
     await repo.getWeekPlanRepository().clearCache();
+  }
+
+  /// What to do on refreshing the week plan entries.
+  Future<void> _onRefresh() async {
+    await _clearCachedEntries();
+    _pageLoadController.reset();
   }
 }
 
