@@ -1,6 +1,7 @@
 import 'package:guide7/util/scheduler/task/appointment_task.dart';
 import 'package:guide7/util/scheduler/task/background_task.dart';
 import 'package:guide7/util/scheduler/task/notice_board_task.dart';
+import 'package:guide7/util/scheduler/task/week_plan_task.dart';
 
 /// Class holds all available background tasks for the application.
 class Tasks {
@@ -8,5 +9,6 @@ class Tasks {
   static const List<BackgroundTask> tasks = [
     NoticeBoardTask(),
     AppointmentTask(),
+    WeekPlanTask(),
   ];
 }
