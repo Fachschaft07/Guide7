@@ -15,12 +15,9 @@ class SingleSlotWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 10.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: _buildChildren(context),
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: _buildChildren(context),
     );
   }
 
@@ -41,24 +38,27 @@ class SingleSlotWidget extends StatelessWidget {
     ));
 
     // Append rooms and teachers.
-    children.add(Row(
-      mainAxisSize: MainAxisSize.max,
-      children: <Widget>[
-        Icon(
-          Icons.room,
-          color: CustomColors.lightCoral,
-        ),
-        Expanded(
-          child: Text(slot.rooms.join(", ")),
-        ),
-        Icon(
-          Icons.person,
-          color: CustomColors.slateGrey,
-        ),
-        Expanded(
-          child: Text(slot.teachers.join(", ")),
-        ),
-      ],
+    children.add(Padding(
+      padding: EdgeInsets.only(top: 5.0),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        children: <Widget>[
+          Icon(
+            Icons.room,
+            color: CustomColors.lightCoral,
+          ),
+          Expanded(
+            child: Text(slot.rooms.join(", ")),
+          ),
+          Icon(
+            Icons.person,
+            color: CustomColors.slateGrey,
+          ),
+          Expanded(
+            child: Text(slot.teachers.join(", ")),
+          ),
+        ],
+      ),
     ));
 
     return children;

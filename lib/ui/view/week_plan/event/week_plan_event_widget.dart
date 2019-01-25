@@ -22,7 +22,7 @@ class WeekPlanEventWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+      padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
       child: Column(
         children: <Widget>[
           Row(
@@ -43,11 +43,13 @@ class WeekPlanEventWidget extends StatelessWidget {
               ),
             ],
           ),
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              Expanded(child: _getEventDisplayWidget(context)),
-            ],
+          Padding(
+            padding: EdgeInsets.only(top: 5.0),
+            child: Row(
+              children: <Widget>[
+                Expanded(child: _getEventDisplayWidget(context)),
+              ],
+            ),
           ),
         ],
       ),

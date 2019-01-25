@@ -63,6 +63,11 @@ class AppLocalizations {
     "refresh": "Aktualisieren",
     "version": "Version",
     "no_entries": "Keine Einträge",
+    "moved": "Verschoben",
+    "cancelled": "Abgesagt",
+    "room_changed": "Raum geändert",
+    "change_to": "auf",
+    "change_at": "in",
   };
 
   /// English localized values.
@@ -103,6 +108,11 @@ class AppLocalizations {
     "refresh": "Refresh",
     "version": "Version",
     "no_entries": "No entries",
+    "moved": "Moved",
+    "cancelled": "Cancelled",
+    "room_changed": "Room changed",
+    "change_to": "to",
+    "change_at": "at",
   };
 
   /// Get localized value by [key].
@@ -181,4 +191,14 @@ class AppLocalizations {
   String get version => _get("version");
 
   String get noEntries => _get("no_entries");
+
+  String get moved => _get("moved");
+
+  String get cancelled => _get("cancelled");
+
+  String get roomChanged => _get("room_changed");
+
+  String get changeTo => _get("change_to");
+
+  String get changeAt => _get("change_at");
 }
