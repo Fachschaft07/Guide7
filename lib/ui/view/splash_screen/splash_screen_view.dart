@@ -46,7 +46,7 @@ class _SplashScreenState extends State<SplashScreenView> {
               width: imageWidth,
             ),
             Container(
-              child: Headline(AppLocalizations.of(context).title),
+              child: Headline(AppLocalizations.of(context).appTitle),
               padding: EdgeInsets.only(top: 20.0),
             ),
             Text(

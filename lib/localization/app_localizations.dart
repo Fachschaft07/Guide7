@@ -27,7 +27,7 @@ class AppLocalizations {
 
   /// German localized values.
   static const Map<String, String> _deLocalizations = {
-    "title": "Guide7",
+    "app_title": "Guide7",
     "splash_subtitle": "Eine App der Fachschaft 07",
     "login": "Anmeldung",
     "login_info": "Gib deine ZPA Anmeldedaten an um dich anzumelden.",
@@ -68,11 +68,28 @@ class AppLocalizations {
     "room_changed": "Raum geändert",
     "change_to": "auf",
     "change_at": "in",
+    "title": "Titel",
+    "description": "Beschreibung",
+    "location": "Ort",
+    "create_event_title_empty_error": "Ein Titel wird benötigt",
+    "create_custom_event": "Neues Ereignis",
+    "edit_custom_event": "Ereignis bearbeiten",
+    "details": "Details",
+    "recurring": "Wiederkehrend",
+    "create": "Erstellen",
+    "edit": "Bearbeiten",
+    "daily": "Täglich",
+    "weekly": "Wöchentlich",
+    "every_two_weeks": "Jede zweite Woche",
+    "custom": "Benutzerdefiniert",
+    "only_once": "Nur einmal",
+    "create_event_custom_recurring_cycle_invalid": "Die eingegebene Zahl ist ungültig",
+    "count_of_days": "Anzahl an Tagen",
   };
 
   /// English localized values.
   static const Map<String, String> _enLocalizations = {
-    "title": "Guide7",
+    "app_title": "Guide7",
     "splash_subtitle": "App of the students council of department 07",
     "login": "Login",
     "login_info": "Enter your ZPA credentials to login.",
@@ -113,6 +130,23 @@ class AppLocalizations {
     "room_changed": "Room changed",
     "change_to": "to",
     "change_at": "at",
+    "title": "Title",
+    "description": "Description",
+    "location": "Location",
+    "create_event_title_empty_error": "The event needs a title",
+    "create_custom_event": "New event",
+    "edit_custom_event": "Edit event",
+    "details": "Details",
+    "recurring": "Recurring",
+    "create": "Create",
+    "edit": "Edit",
+    "daily": "Daily",
+    "weekly": "Weekly",
+    "every_two_weeks": "Every second week",
+    "custom": "Custom",
+    "only_once": "Only once",
+    "create_event_custom_recurring_cycle_invalid": "The provided cycle is invalid",
+    "count_of_days": "Count of days",
   };
 
   /// Get localized value by [key].
@@ -120,7 +154,7 @@ class AppLocalizations {
 
   String get appVersion => _appVersion;
 
-  String get title => _get("title");
+  String get appTitle => _get("app_title");
 
   String get splashSubtitle => _get("splash_subtitle");
 
@@ -201,4 +235,38 @@ class AppLocalizations {
   String get changeTo => _get("change_to");
 
   String get changeAt => _get("change_at");
+
+  String get title => _get("title");
+
+  String get description => _get("description");
+
+  String get location => _get("location");
+
+  String get createEventTitleEmptyError => _get("create_event_title_empty_error");
+
+  String get createCustomEvent => _get("create_custom_event");
+
+  String get editCustomEvent => _get("edit_custom_event");
+
+  String get details => _get("details");
+
+  String get recurring => _get("recurring");
+
+  String get create => _get("create");
+
+  String get edit => _get("edit");
+
+  String get daily => _get("daily");
+
+  String get weekly => _get("weekly");
+
+  String get everyTwoWeeks => _get("every_two_weeks");
+
+  String get custom => _get("custom");
+
+  String get onlyOnce => _get("only_once");
+
+  String get createEventCustomRecurringCycleInvalid => _get("create_event_custom_recurring_cycle_invalid");
+
+  String get countOfDays => _get("count_of_days");
 }

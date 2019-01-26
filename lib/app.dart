@@ -31,7 +31,7 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) => MaterialApp(
-        onGenerateTitle: (BuildContext context) => AppLocalizations.of(context).title,
+        onGenerateTitle: (BuildContext context) => AppLocalizations.of(context).appTitle,
         localizationsDelegates: [
           AppLocalizationsDelegate(),
           GlobalMaterialLocalizations.delegate,

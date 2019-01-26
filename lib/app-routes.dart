@@ -8,6 +8,7 @@ import 'package:guide7/ui/view/settings_view/settings_view.dart';
 import 'package:guide7/ui/view/settings_view/test_bench/test_bench_view.dart';
 import 'package:guide7/ui/view/splash_screen/splash_screen_view.dart';
 import 'package:guide7/ui/view/view_holder.dart';
+import 'package:guide7/ui/view/week_plan/custom/custom_event_dialog_view.dart';
 
 /// Routes (for navigation) are defined here.
 class AppRoutes {
@@ -25,6 +26,9 @@ class AppRoutes {
 
   /// Route to the week plan view.
   static const String weekPlan = "$main/week-plan";
+
+  /// Route to the custom event dialog.
+  static const String customEventDialog = "$weekPlan/custom-event-dialog}";
 
   /// Route to the settings view.
   static const String settings = "/settings";
@@ -50,13 +54,20 @@ class AppRoutes {
     router.define(AppRoutes.root, handler: Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) => SplashScreenView()));
     router.define(AppRoutes.login, handler: Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) => LoginView()));
     router.define(AppRoutes.main, handler: Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) => ViewHolder(viewIndex: 0)));
+
     router.define(AppRoutes.noticeBoard, handler: Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) => ViewHolder(viewIndex: 0)));
+
     router.define(AppRoutes.weekPlan, handler: Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) => ViewHolder(viewIndex: 1)));
+    router.define(AppRoutes.customEventDialog, handler: Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) => CustomEventDialogView()));
+
     router.define(AppRoutes.settings, handler: Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) => SettingsView()));
+    router.define(AppRoutes.testBench, handler: Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) => TestBenchView()));
+
     router.define(AppRoutes.appointments, handler: Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) => AppointmentView()));
+
     router.define(AppRoutes.privacyPolicyStatement,
         handler: Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) => PrivacyPolicyStatementView()));
+
     router.define(AppRoutes.roomSearch, handler: Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) => RoomSearchView()));
-    router.define(AppRoutes.testBench, handler: Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) => TestBenchView()));
   }
 }

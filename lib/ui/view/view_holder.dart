@@ -1,5 +1,8 @@
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:guide7/app-routes.dart';
+import 'package:guide7/app.dart';
 import 'package:guide7/localization/app_localizations.dart';
 import 'package:guide7/ui/navigation/bottom_bar/app_bottom_navigation_bar.dart';
 import 'package:guide7/ui/navigation/bottom_bar/item/app_bottom_navigation_bar_item.dart';
@@ -91,7 +94,7 @@ class _ViewHolderState extends State<ViewHolder> {
       case 1: // Week plan view
         return FloatingActionButton(
           onPressed: () {
-            print("Test add event");
+            App.router.navigateTo(context, AppRoutes.customEventDialog, transition: TransitionType.native);
           },
           child: Icon(Icons.add),
           backgroundColor: CustomColors.slateGrey,
