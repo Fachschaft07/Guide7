@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:guide7/localization/app_localizations.dart';
 import 'package:guide7/model/weekplan/custom/custom_event.dart';
+import 'package:guide7/model/weekplan/custom/custom_event_cycle.dart';
 import 'package:guide7/ui/common/line_separator.dart';
 import 'package:guide7/util/custom_colors.dart';
 import 'package:intl/intl.dart';
+import 'package:uuid/uuid.dart';
 
 /// Dialog to create and edit custom events.
 class CustomEventDialog extends StatefulWidget {
@@ -47,11 +49,17 @@ class _CustomEventDialogState extends State<CustomEventDialog> {
   /// Controller for the location text field.
   final TextEditingController _locationController = TextEditingController();
 
-  /// Controller for the custom recurring cycle value.
-  final TextEditingController _customRecurringCycleController = TextEditingController();
+  /// Controller for the custom recurring day cycle value.
+  final TextEditingController _customRecurringDayCycleController = TextEditingController();
 
-  /// Event is recurring all n days.
-  int _recurringCycle = 0;
+  /// Controller for the custom recurring month cycle value.
+  final TextEditingController _customRecurringMonthCycleController = TextEditingController();
+
+  /// Controller for the custom recurring year cycle value.
+  final TextEditingController _customRecurringYearCycleController = TextEditingController();
+
+  /// How the event is recurring.
+  CustomEventCycle _recurringCycle = CustomEventCycle(days: 0, months: 0, years: 0);
 
   @override
   void initState() {
@@ -67,7 +75,9 @@ class _CustomEventDialogState extends State<CustomEventDialog> {
       _selectedStartTime = TimeOfDay(hour: widget.toEdit.start.hour, minute: widget.toEdit.start.minute);
       _selectedEndTime = TimeOfDay(hour: widget.toEdit.end.hour, minute: widget.toEdit.end.minute);
 
-      _customRecurringCycleController.text = widget.toEdit.cycle.toString();
+      _customRecurringDayCycleController.text = widget.toEdit.cycle.days.toString();
+      _customRecurringMonthCycleController.text = widget.toEdit.cycle.months.toString();
+      _customRecurringYearCycleController.text = widget.toEdit.cycle.years.toString();
     }
   }
 
@@ -214,11 +224,11 @@ class _CustomEventDialogState extends State<CustomEventDialog> {
       ),
     ));
 
-    List<_RecurringCycle> cycles = _getRecurringCycleOptions();
+    List<_RecurringCycleItem> cycles = _getRecurringCycleOptions();
 
-    fields.add(DropdownButton<int>(
-      items: cycles.map((_RecurringCycle cycle) {
-        return DropdownMenuItem<int>(
+    fields.add(DropdownButton<CustomEventCycle>(
+      items: cycles.map((_RecurringCycleItem cycle) {
+        return DropdownMenuItem<CustomEventCycle>(
           value: cycle.cycle,
           child: Text(cycle.value),
         );
@@ -231,19 +241,58 @@ class _CustomEventDialogState extends State<CustomEventDialog> {
       value: _recurringCycle,
     ));
 
-    if (_recurringCycle == -1) {
-      // Custom recurring value
-      fields.add(TextFormField(
-        decoration: InputDecoration(hintText: localizations.countOfDays),
-        validator: (value) {
-          int number = int.tryParse(value);
+    if (isCustomCycle) {
+      fields.add(Row(
+        children: <Widget>[
+          Expanded(
+            child: TextFormField(
+              decoration: InputDecoration(hintText: localizations.countOfDays),
+              validator: (value) {
+                int number = int.tryParse(value);
 
-          if (number == null || number < 0) {
-            return localizations.createEventCustomRecurringCycleInvalid;
-          }
-        },
-        keyboardType: TextInputType.number,
-        controller: _customRecurringCycleController,
+                if (number == null || number < 0) {
+                  return localizations.createEventCustomRecurringCycleInvalid;
+                }
+              },
+              keyboardType: TextInputType.number,
+              controller: _customRecurringDayCycleController,
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(left: 5),
+              child: TextFormField(
+                decoration: InputDecoration(hintText: localizations.countOfMonths),
+                validator: (value) {
+                  int number = int.tryParse(value);
+
+                  if (number == null || number < 0) {
+                    return localizations.createEventCustomRecurringCycleInvalid;
+                  }
+                },
+                keyboardType: TextInputType.number,
+                controller: _customRecurringMonthCycleController,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(left: 5),
+              child: TextFormField(
+                decoration: InputDecoration(hintText: localizations.countOfYears),
+                validator: (value) {
+                  int number = int.tryParse(value);
+
+                  if (number == null || number < 0) {
+                    return localizations.createEventCustomRecurringCycleInvalid;
+                  }
+                },
+                keyboardType: TextInputType.number,
+                controller: _customRecurringYearCycleController,
+              ),
+            ),
+          ),
+        ],
       ));
     }
 
@@ -315,10 +364,17 @@ class _CustomEventDialogState extends State<CustomEventDialog> {
       DateTime end = DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day, _selectedEndTime.hour, _selectedEndTime.minute);
 
       CustomEvent result = CustomEvent(
+        uuid: widget.toEdit != null ? widget.toEdit.uuid : Uuid().v1(),
         title: title,
         description: description,
         location: location,
-        cycle: _recurringCycle > -1 ? _recurringCycle : (int.tryParse(_customRecurringCycleController.text) ?? 0),
+        cycle: !isCustomCycle
+            ? _recurringCycle
+            : CustomEventCycle(
+                days: int.tryParse(_customRecurringDayCycleController.text),
+                months: int.tryParse(_customRecurringMonthCycleController.text),
+                years: int.tryParse(_customRecurringYearCycleController.text),
+              ),
         start: start,
         end: end,
       );
@@ -328,29 +384,35 @@ class _CustomEventDialogState extends State<CustomEventDialog> {
   }
 
   /// Get all recurring cycle options.
-  List<_RecurringCycle> _getRecurringCycleOptions() {
+  List<_RecurringCycleItem> _getRecurringCycleOptions() {
     AppLocalizations localizations = AppLocalizations.of(context);
 
     return [
-      _RecurringCycle(value: localizations.onlyOnce, cycle: 0),
-      _RecurringCycle(value: localizations.daily, cycle: 1),
-      _RecurringCycle(value: localizations.weekly, cycle: 7),
-      _RecurringCycle(value: localizations.everyTwoWeeks, cycle: 14),
-      _RecurringCycle(value: localizations.custom, cycle: -1),
+      _RecurringCycleItem(value: localizations.onlyOnce, cycle: CustomEventCycle(days: 0, months: 0, years: 0)),
+      _RecurringCycleItem(value: localizations.daily, cycle: CustomEventCycle(days: 1, months: 0, years: 0)),
+      _RecurringCycleItem(value: localizations.weekly, cycle: CustomEventCycle(days: 7, months: 0, years: 0)),
+      _RecurringCycleItem(value: localizations.everyTwoWeeks, cycle: CustomEventCycle(days: 14, months: 0, years: 0)),
+      _RecurringCycleItem(value: localizations.custom, cycle: CustomEventCycle(days: -1, months: -1, years: -1)),
     ];
   }
+
+  /// Whether the cycle is only once.
+  bool get isOnlyOnce => _recurringCycle != null && _recurringCycle.years == 0 && _recurringCycle.months == 0 && _recurringCycle.days == 0;
+
+  /// Whether custom cycle is selected.
+  bool get isCustomCycle => _recurringCycle != null && _recurringCycle.years == -1 && _recurringCycle.months == -1 && _recurringCycle.days == -1;
 }
 
 /// A cycle for recurring events.
-class _RecurringCycle {
+class _RecurringCycleItem {
   /// Value of the cycle.
   final String value;
 
-  /// Recurring every [cycle] days.
-  final int cycle;
+  /// Recurring every [cycle].
+  final CustomEventCycle cycle;
 
   /// Create cycle.
-  const _RecurringCycle({
+  const _RecurringCycleItem({
     @required this.value,
     @required this.cycle,
   });

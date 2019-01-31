@@ -1,3 +1,4 @@
+import 'package:guide7/connect/week_plan/custom/custom_week_plan_event_repository.dart';
 import 'package:guide7/connect/week_plan/week_plan_repository.dart';
 import 'package:guide7/connect/week_plan/zpa/zpa_week_plan_repository.dart';
 import 'package:guide7/model/weekplan/week_plan_event.dart';
@@ -7,6 +8,7 @@ class WeekPlanRepositoryImpl implements WeekPlanRepository {
   /// All week plan repositories.
   static const List<WeekPlanRepository> _weekPlanRepositories = [
     ZPAWeekPlanRepository(),
+    CustomWeekPlanEventRepository(),
   ];
 
   @override

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:guide7/model/weekplan/custom/custom_event.dart';
 import 'package:guide7/model/weekplan/week_plan_event.dart';
 import 'package:guide7/model/weekplan/zpa/zpa_week_plan_event.dart';
+import 'package:guide7/ui/view/week_plan/custom/custom_event_widget.dart';
 import 'package:guide7/ui/view/week_plan/event/zpa/zpa_week_plan_event_widget.dart';
 import 'package:guide7/util/custom_colors.dart';
 import 'package:intl/intl.dart';
@@ -59,7 +61,13 @@ class WeekPlanEventWidget extends StatelessWidget {
   /// Get the events widget to display it.
   Widget _getEventDisplayWidget(BuildContext context) {
     if (event is ZPAWeekPlanEvent) {
-      return ZPAWeekPlanEventWidget(event: event as ZPAWeekPlanEvent);
+      return ZPAWeekPlanEventWidget(
+        event: event as ZPAWeekPlanEvent,
+      );
+    } else if (event is CustomEvent) {
+      return CustomEventWidget(
+        event: event as CustomEvent,
+      );
     } else {
       throw Exception("Event type unknown");
     }

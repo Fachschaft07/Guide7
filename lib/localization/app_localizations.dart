@@ -84,7 +84,9 @@ class AppLocalizations {
     "custom": "Benutzerdefiniert",
     "only_once": "Nur einmal",
     "create_event_custom_recurring_cycle_invalid": "Die eingegebene Zahl ist ungültig",
-    "count_of_days": "Anzahl an Tagen",
+    "count_of_days": "Tage",
+    "count_of_months": "Monate",
+    "count_of_years": "Jahre",
   };
 
   /// English localized values.
@@ -146,7 +148,9 @@ class AppLocalizations {
     "custom": "Custom",
     "only_once": "Only once",
     "create_event_custom_recurring_cycle_invalid": "The provided cycle is invalid",
-    "count_of_days": "Count of days",
+    "count_of_days": "Days",
+    "count_of_months": "Months",
+    "count_of_years": "Years",
   };
 
   /// Get localized value by [key].
@@ -269,4 +273,8 @@ class AppLocalizations {
   String get createEventCustomRecurringCycleInvalid => _get("create_event_custom_recurring_cycle_invalid");
 
   String get countOfDays => _get("count_of_days");
+
+  String get countOfMonths => _get("count_of_months");
+
+  String get countOfYears => _get("count_of_years");
 }

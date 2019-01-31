@@ -5,6 +5,7 @@ import 'package:guide7/storage/database/patch/patch_1.dart';
 import 'package:guide7/storage/database/patch/patch_2.dart';
 import 'package:guide7/storage/database/patch/patch_3.dart';
 import 'package:guide7/storage/database/patch/patch_4.dart';
+import 'package:guide7/storage/database/patch/patch_5.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:synchronized/synchronized.dart';
@@ -13,7 +14,7 @@ import 'package:synchronized/synchronized.dart';
 class AppDatabase {
   /// Version of the database.
   /// NOTE: Increase whenever you add a new patch for the database. See [_patches].
-  static const int _databaseVersion = 4;
+  static const int _databaseVersion = 5;
 
   /// List of patches for the database.
   /// Make sure this list is ordered after patch versions (newer patches are at the end)!
@@ -23,6 +24,7 @@ class AppDatabase {
     Patch2(),
     Patch3(),
     Patch4(),
+    Patch5(),
   ];
 
   /// File name of the database.

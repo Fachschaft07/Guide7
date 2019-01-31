@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:guide7/app.dart';
 import 'package:guide7/localization/app_localizations.dart';
 import 'package:guide7/model/weekplan/custom/custom_event.dart';
+import 'package:guide7/storage/week_plan/custom/custom_week_plan_event_storage.dart';
 import 'package:guide7/ui/util/ui_util.dart';
 import 'package:guide7/ui/view/week_plan/custom/custom_event_dialog.dart';
 import 'package:guide7/util/custom_colors.dart';
@@ -49,15 +51,17 @@ class _CustomEventDialogViewState extends State<CustomEventDialogView> {
       child: CustomEventDialog(
         toEdit: widget.toEdit,
         onSubmit: (event) {
-          print("Event updated!");
-          print("Title: ${event.title}");
-          print("Description: ${event.description}");
-          print("Location: ${event.location}");
-          print("Start: ${event.start}");
-          print("End: ${event.end}");
-          print("Cycle: ${event.cycle}");
+          _submitEvent(event);
         },
       ),
     );
+  }
+
+  /// Submit the passed [event].
+  void _submitEvent(CustomEvent event) {
+    CustomWeekPlanEventStorage storage = CustomWeekPlanEventStorage();
+    storage.write([event]).then((_) {
+      App.router.pop(context);
+    });
   }
 }
