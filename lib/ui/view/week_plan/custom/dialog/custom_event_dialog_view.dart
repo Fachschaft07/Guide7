@@ -52,7 +52,7 @@ class _CustomEventDialogViewState extends State<CustomEventDialogView> {
 
   /// Build the views app bar.
   Widget _buildAppBar() => UIUtil.getSliverAppBar(
-      title: widget.uuid == null ? AppLocalizations.of(context).createCustomEvent : AppLocalizations.of(context).editCustomEvent,
+      title: widget.uuid == null || widget.uuid.isEmpty ? AppLocalizations.of(context).createCustomEvent : AppLocalizations.of(context).editCustomEvent,
       leading: BackButton(
         color: CustomColors.slateGrey,
       ));
@@ -63,11 +63,14 @@ class _CustomEventDialogViewState extends State<CustomEventDialogView> {
       child: FutureBuilder<CustomEvent>(
         future: _future,
         builder: (BuildContext context, AsyncSnapshot<CustomEvent> snapshot) {
-          if (snapshot.hasData) {
-            CustomEvent event = snapshot.data;
+          if (snapshot.hasData || widget.uuid == null || widget.uuid.isEmpty) {
+            CustomEvent toEdit;
+            if (snapshot.data is CustomEvent) {
+              toEdit = snapshot.data;
+            }
 
             return CustomEventDialog(
-              toEdit: event,
+              toEdit: toEdit,
               onSubmit: (event) {
                 _submitEvent(event);
               },
@@ -97,7 +100,7 @@ class _CustomEventDialogViewState extends State<CustomEventDialogView> {
   void _submitEvent(CustomEvent event) async {
     CustomWeekPlanEventStorage storage = CustomWeekPlanEventStorage();
 
-    if (widget.uuid != null) {
+    if (widget.uuid != null && widget.uuid.isNotEmpty) {
       // First delete from storage, then rewrite.
       await storage.clearEvent(widget.uuid);
     }
@@ -110,6 +113,10 @@ class _CustomEventDialogViewState extends State<CustomEventDialogView> {
 
   /// Fetch the event with the passed [uuid].
   Future<CustomEvent> _fetchCustomEvent(String uuid) {
+    if (uuid == null || uuid.isEmpty) {
+      return Future.value(null);
+    }
+
     CustomWeekPlanEventStorage storage = CustomWeekPlanEventStorage();
     return storage.readEvent(uuid);
   }

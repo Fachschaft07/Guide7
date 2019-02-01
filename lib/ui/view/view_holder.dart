@@ -96,7 +96,7 @@ class _ViewHolderState extends State<ViewHolder> {
       case 1: // Week plan view
         return FloatingActionButton(
           onPressed: () {
-            App.router.navigateTo(context, AppRoutes.customEventDialog, transition: TransitionType.native);
+            App.router.navigateTo(context, AppRoutes.customEventDialog.replaceFirst(":uuid", ""), transition: TransitionType.native);
           },
           child: Icon(Icons.add),
           backgroundColor: CustomColors.slateGrey,
