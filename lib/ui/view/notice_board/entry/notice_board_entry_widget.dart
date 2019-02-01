@@ -8,6 +8,7 @@ import 'package:guide7/ui/common/progress/numbered_circle_progress_indicator.dar
 import 'package:guide7/util/custom_colors.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /// Widget displaying a notice board entry.
 class NoticeBoardEntryWidget extends StatelessWidget {
@@ -76,6 +77,7 @@ class NoticeBoardEntryWidget extends StatelessWidget {
             child: MarkdownBody(
               data: entry.content,
               styleSheet: _getMarkdownStylesheet(context),
+              onTapLink: _openLink,
             ),
           ),
           Row(
@@ -170,6 +172,17 @@ class NoticeBoardEntryWidget extends StatelessWidget {
         backgroundImage: MemoryImage(avatarImage),
         radius: 25.0,
       );
+    }
+  }
+
+  /// Open the passed [link].
+  Future<void> _openLink(String link) async {
+    String url = Uri.encodeFull(link);
+
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw Exception("Could not launch $url");
     }
   }
 }
