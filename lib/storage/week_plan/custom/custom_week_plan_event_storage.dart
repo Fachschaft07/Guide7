@@ -78,7 +78,7 @@ class CustomWeekPlanEventStorage implements Storage<List<CustomEvent>> {
 
     assert(result.length <= 1);
 
-    if (result.length == 0) {
+    if (result.length == 1) {
       return _convertMapToEvent(result.first);
     }
 

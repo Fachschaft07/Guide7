@@ -1,5 +1,8 @@
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:guide7/app-routes.dart';
+import 'package:guide7/app.dart';
 import 'package:guide7/model/weekplan/custom/custom_event.dart';
 import 'package:guide7/util/custom_colors.dart';
 
@@ -65,8 +68,13 @@ class CustomEventWidget extends StatelessWidget {
       ));
     }
 
-    return Column(
-      children: children,
+    return FlatButton(
+      child: Column(
+        children: children,
+      ),
+      onPressed: () {
+        App.router.navigateTo(context, AppRoutes.customEventDetail.replaceFirst(":uuid", event.uuid), transition: TransitionType.native);
+      },
     );
   }
 }

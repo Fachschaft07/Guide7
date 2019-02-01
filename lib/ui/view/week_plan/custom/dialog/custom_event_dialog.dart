@@ -78,6 +78,13 @@ class _CustomEventDialogState extends State<CustomEventDialog> {
       _customRecurringDayCycleController.text = widget.toEdit.cycle.days.toString();
       _customRecurringMonthCycleController.text = widget.toEdit.cycle.months.toString();
       _customRecurringYearCycleController.text = widget.toEdit.cycle.years.toString();
+
+      List<_RecurringCycleItem> items = _getRecurringCycleOptions(false);
+      if (items.where((item) => item.cycle == widget.toEdit.cycle).isNotEmpty) {
+        _recurringCycle = widget.toEdit.cycle;
+      } else {
+        _recurringCycle = CustomEventCycle(days: -1, months: -1, years: -1); // Custom cycle.
+      }
     }
   }
 
@@ -306,7 +313,7 @@ class _CustomEventDialogState extends State<CustomEventDialog> {
               _submit();
             },
             icon: Icon(Icons.keyboard_arrow_right),
-            label: Text(widget.toEdit == null ? localizations.create : localizations.edit),
+            label: Text(widget.toEdit == null ? localizations.create : localizations.save),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100000.0)),
             textColor: Colors.white,
             color: CustomColors.slateGrey,
@@ -384,15 +391,15 @@ class _CustomEventDialogState extends State<CustomEventDialog> {
   }
 
   /// Get all recurring cycle options.
-  List<_RecurringCycleItem> _getRecurringCycleOptions() {
-    AppLocalizations localizations = AppLocalizations.of(context);
+  List<_RecurringCycleItem> _getRecurringCycleOptions([bool withTranslations = true]) {
+    AppLocalizations localizations = withTranslations ? AppLocalizations.of(context) : null;
 
     return [
-      _RecurringCycleItem(value: localizations.onlyOnce, cycle: CustomEventCycle(days: 0, months: 0, years: 0)),
-      _RecurringCycleItem(value: localizations.daily, cycle: CustomEventCycle(days: 1, months: 0, years: 0)),
-      _RecurringCycleItem(value: localizations.weekly, cycle: CustomEventCycle(days: 7, months: 0, years: 0)),
-      _RecurringCycleItem(value: localizations.everyTwoWeeks, cycle: CustomEventCycle(days: 14, months: 0, years: 0)),
-      _RecurringCycleItem(value: localizations.custom, cycle: CustomEventCycle(days: -1, months: -1, years: -1)),
+      _RecurringCycleItem(value: withTranslations ? localizations.onlyOnce : "", cycle: CustomEventCycle(days: 0, months: 0, years: 0)),
+      _RecurringCycleItem(value: withTranslations ? localizations.daily : "", cycle: CustomEventCycle(days: 1, months: 0, years: 0)),
+      _RecurringCycleItem(value: withTranslations ? localizations.weekly : "", cycle: CustomEventCycle(days: 7, months: 0, years: 0)),
+      _RecurringCycleItem(value: withTranslations ? localizations.everyTwoWeeks : "", cycle: CustomEventCycle(days: 14, months: 0, years: 0)),
+      _RecurringCycleItem(value: withTranslations ? localizations.custom : "", cycle: CustomEventCycle(days: -1, months: -1, years: -1)),
     ];
   }
 

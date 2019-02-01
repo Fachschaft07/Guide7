@@ -87,6 +87,8 @@ class AppLocalizations {
     "count_of_days": "Tage",
     "count_of_months": "Monate",
     "count_of_years": "Jahre",
+    "generic_load_error": "Während des Ladens ist ein Fehler aufgetreten",
+    "save": "Speichern",
   };
 
   /// English localized values.
@@ -151,6 +153,8 @@ class AppLocalizations {
     "count_of_days": "Days",
     "count_of_months": "Months",
     "count_of_years": "Years",
+    "generic_load_error": "An error occurred while loading",
+    "save": "Save",
   };
 
   /// Get localized value by [key].
@@ -277,4 +281,8 @@ class AppLocalizations {
   String get countOfMonths => _get("count_of_months");
 
   String get countOfYears => _get("count_of_years");
+
+  String get genericLoadError => _get("generic_load_error");
+
+  String get save => _get("save");
 }
