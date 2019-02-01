@@ -9,6 +9,7 @@ import 'package:guide7/model/weekplan/week_plan_event.dart';
 import 'package:guide7/model/weekplan/zpa/zpa_week_plan_event.dart';
 import 'package:guide7/storage/week_plan/zpa/zpa_week_plan_storage.dart';
 import 'package:guide7/util/date_util.dart';
+import 'package:guide7/util/zpa.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
@@ -41,11 +42,16 @@ class ZPAWeekPlanRepository implements WeekPlanRepository {
     if (!fromServer && hasEventsCached) {
       events = await storage.readEvents(calendarWeek);
     } else {
-      // Retrieve from server.
-      events = await _loadEvents(date);
+      bool isLoggedIn = await ZPA.isLoggedIn();
+      if (isLoggedIn) {
+        // Retrieve from server.
+        events = await _loadEvents(date);
 
-      // Store events.
-      await storage.writeEvents(events, calendarWeek);
+        // Store events.
+        await storage.writeEvents(events, calendarWeek);
+      } else {
+        events = List<WeekPlanEvent>(); // Return empty list.
+      }
     }
 
     return events;

@@ -89,6 +89,9 @@ class AppLocalizations {
     "count_of_years": "Jahre",
     "generic_load_error": "Während des Ladens ist ein Fehler aufgetreten",
     "save": "Speichern",
+    "delete_event": "Ereignis löschen",
+    "delete_event_security_question": "Nochmal Berühren zum Löschen",
+    "actions": "Aktionen",
   };
 
   /// English localized values.
@@ -155,6 +158,9 @@ class AppLocalizations {
     "count_of_years": "Years",
     "generic_load_error": "An error occurred while loading",
     "save": "Save",
+    "delete_event": "Delete event",
+    "delete_event_security_question": "Tap again to delete",
+    "actions": "Actions",
   };
 
   /// Get localized value by [key].
@@ -285,4 +291,10 @@ class AppLocalizations {
   String get genericLoadError => _get("generic_load_error");
 
   String get save => _get("save");
+
+  String get deleteEvent => _get("delete_event");
+
+  String get deleteEventSecurityQuestion => _get("delete_event_security_question");
+
+  String get actions => _get("actions");
 }

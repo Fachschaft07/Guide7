@@ -6,6 +6,7 @@ import 'package:guide7/app.dart';
 import 'package:guide7/localization/app_localizations.dart';
 import 'package:guide7/model/weekplan/custom/custom_event.dart';
 import 'package:guide7/storage/week_plan/custom/custom_week_plan_event_storage.dart';
+import 'package:guide7/ui/common/line_separator.dart';
 import 'package:guide7/ui/util/ui_util.dart';
 import 'package:guide7/util/custom_colors.dart';
 
@@ -26,6 +27,9 @@ class CustomEventDetailView extends StatefulWidget {
 class _CustomEventDetailViewState extends State<CustomEventDetailView> {
   /// Future to load event with.
   Future<CustomEvent> _future;
+
+  /// Whether the delete security question is shown.
+  bool _isSecurityQuestion = false;
 
   @override
   void initState() {
@@ -153,12 +157,81 @@ class _CustomEventDetailViewState extends State<CustomEventDetailView> {
       ));
     }
 
+    children.add(Padding(
+      padding: EdgeInsets.only(top: 10.0),
+      child: LineSeparator(
+        title: AppLocalizations.of(context).actions,
+      ),
+    ));
+
+    children.add(Padding(
+      padding: EdgeInsets.only(top: 20.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          RaisedButton.icon(
+            icon: Icon(
+              Icons.edit,
+              color: Colors.white,
+            ),
+            label: Text(
+              AppLocalizations.of(context).edit,
+              style: TextStyle(color: Colors.white),
+            ),
+            onPressed: () {
+              _editEvent();
+            },
+            color: CustomColors.slateGrey,
+          ),
+        ],
+      ),
+    ));
+
+    children.add(Padding(
+      padding: EdgeInsets.symmetric(vertical: 5.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          RaisedButton.icon(
+            icon: Icon(
+              !_isSecurityQuestion ? Icons.delete : Icons.delete_forever,
+              color: Colors.white,
+            ),
+            label: Text(
+              !_isSecurityQuestion ? AppLocalizations.of(context).deleteEvent : AppLocalizations.of(context).deleteEventSecurityQuestion,
+              style: TextStyle(color: Colors.white),
+            ),
+            onPressed: () {
+              _deleteEvent();
+            },
+            color: Colors.redAccent,
+          ),
+        ],
+      ),
+    ));
+
     return children;
   }
 
   /// Edit the event.
   void _editEvent() {
     App.router.navigateTo(context, AppRoutes.customEventDialog.replaceFirst(":uuid", widget.uuid), transition: TransitionType.native);
+  }
+
+  /// Delete the event.
+  Future<void> _deleteEvent() async {
+    if (_isSecurityQuestion) {
+      // Really delete the event.
+      CustomWeekPlanEventStorage storage = CustomWeekPlanEventStorage();
+      await storage.clearEvent(widget.uuid);
+
+      App.router.navigateTo(context, AppRoutes.weekPlan, transition: TransitionType.native, clearStack: true);
+    } else {
+      // Show the security message.
+      setState(() {
+        _isSecurityQuestion = true;
+      });
+    }
   }
 
   /// Fetch the event with the passed [uuid].

@@ -1,7 +1,5 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/widgets.dart';
-import 'package:guide7/model/weekplan/custom/custom_event.dart';
-import 'package:guide7/storage/week_plan/custom/custom_week_plan_event_storage.dart';
 import 'package:guide7/ui/view/appointment/appointment_view.dart';
 import 'package:guide7/ui/view/login/login_view.dart';
 import 'package:guide7/ui/view/privacy_policy_statement/privacy_policy_statement_view.dart';
