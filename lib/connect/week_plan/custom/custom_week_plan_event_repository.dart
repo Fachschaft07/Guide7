@@ -87,7 +87,8 @@ class CustomWeekPlanEventRepository implements WeekPlanRepository {
       return start;
     } else {
       while (start.isBefore(after)) {
-        start = DateTime(start.year + cycle.years, start.month + cycle.months, start.day, start.hour, start.minute, start.second).add(Duration(days: cycle.days));
+        start =
+            DateTime(start.year + cycle.years, start.month + cycle.months, start.day, start.hour, start.minute, start.second).add(Duration(days: cycle.days));
       }
 
       return start;

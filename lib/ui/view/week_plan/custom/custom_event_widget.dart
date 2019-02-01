@@ -1,5 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:guide7/model/weekplan/custom/custom_event.dart';
+import 'package:guide7/util/custom_colors.dart';
 
 /// Widget used to display a custom event.
 class CustomEventWidget extends StatelessWidget {
@@ -13,8 +15,58 @@ class CustomEventWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Text(event.title),
+    List<Widget> children = List<Widget>();
+
+    // Append title.
+    children.add(Row(
+      children: <Widget>[
+        Expanded(
+          child: Text(
+            event.title,
+            style: TextStyle(
+              fontFamily: "NotoSerifTC",
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        )
+      ],
+    ));
+
+    if (event.description != null && event.description.isNotEmpty) {
+      // Append description.
+      children.add(Row(
+        children: <Widget>[
+          Expanded(
+            child: Text(
+              event.description,
+              style: TextStyle(fontFamily: "NotoSerifTC"),
+            ),
+          )
+        ],
+      ));
+    }
+
+    if (event.location != null && event.location.isNotEmpty) {
+      // Append location
+      children.add(Padding(
+        padding: EdgeInsets.only(top: 5.0),
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          children: <Widget>[
+            Icon(
+              Icons.room,
+              color: CustomColors.lightCoral,
+            ),
+            Expanded(
+              child: Text(event.location),
+            )
+          ],
+        ),
+      ));
+    }
+
+    return Column(
+      children: children,
     );
   }
 }

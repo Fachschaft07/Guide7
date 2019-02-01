@@ -1,5 +1,7 @@
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:guide7/app-routes.dart';
 import 'package:guide7/app.dart';
 import 'package:guide7/localization/app_localizations.dart';
 import 'package:guide7/model/weekplan/custom/custom_event.dart';
@@ -61,7 +63,7 @@ class _CustomEventDialogViewState extends State<CustomEventDialogView> {
   void _submitEvent(CustomEvent event) {
     CustomWeekPlanEventStorage storage = CustomWeekPlanEventStorage();
     storage.writeEvent(event).then((_) {
-      App.router.pop(context);
+      App.router.navigateTo(context, AppRoutes.weekPlan, transition: TransitionType.native, clearStack: true);
     });
   }
 }
