@@ -18,6 +18,9 @@ class CustomEventCycle {
     @required this.years,
   });
 
+  /// Whether the event should only occur once.
+  bool get isOnlyOnce => days == 0 && months == 0 && years == 0;
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||

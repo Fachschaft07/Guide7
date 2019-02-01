@@ -60,7 +60,7 @@ class _CustomEventDialogViewState extends State<CustomEventDialogView> {
   /// Submit the passed [event].
   void _submitEvent(CustomEvent event) {
     CustomWeekPlanEventStorage storage = CustomWeekPlanEventStorage();
-    storage.write([event]).then((_) {
+    storage.writeEvent(event).then((_) {
       App.router.pop(context);
     });
   }

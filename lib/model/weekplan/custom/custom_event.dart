@@ -35,5 +35,5 @@ class CustomEvent extends WeekPlanEvent {
         );
 
   /// Whether the event is recurring.
-  bool get isRecurring => cycle != null;
+  bool get isRecurring => !cycle.isOnlyOnce;
 }
