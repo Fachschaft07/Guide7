@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:connectivity/connectivity.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -12,6 +13,7 @@ import 'package:guide7/model/credentials/username_password_credentials.dart';
 import 'package:guide7/model/login_info/login_info.dart';
 import 'package:guide7/storage/login_info/login_info_storage.dart';
 import 'package:guide7/ui/common/headline.dart';
+import 'package:guide7/util/zpa.dart';
 
 /// Splash screen of the application.
 /// It redirects to the correct starting view (Login if user already logged in).
@@ -111,12 +113,19 @@ class _SplashScreenState extends State<SplashScreenView> {
 
   /// Check if a user is currently logged in.
   Future<bool> isLoggedIn() async {
-    Repository repo = Repository();
+    /// Check that internet connection is available first.
+    final connectivityResult = await (new Connectivity().checkConnectivity());
 
-    UsernamePasswordCredentials credentials = await repo.getLocalCredentialsRepository().loadLocalCredentials();
-    ZPALoginResponse response = await repo.getZPALoginRepository().tryLogin(credentials);
+    if (connectivityResult == ConnectivityResult.none) {
+      return await ZPA.isLoggedIn(); // Just check whether credentials are stored or not.
+    } else {
+      Repository repo = Repository();
 
-    return response != null;
+      UsernamePasswordCredentials credentials = await repo.getLocalCredentialsRepository().loadLocalCredentials();
+      ZPALoginResponse response = await repo.getZPALoginRepository().tryLogin(credentials);
+
+      return response != null;
+    }
   }
 
   /// Navigate to login view.
