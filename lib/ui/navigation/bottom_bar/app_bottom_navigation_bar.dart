@@ -30,7 +30,7 @@ class AppBottomNavigationBar extends StatefulWidget {
   final NotchedShape shape;
 
   /// Index of the initially selected item.
-  final int initiallySelectedItemIndex;
+  final int selectedItemIndex;
 
   /// Create app navigation bar.
   AppBottomNavigationBar({
@@ -42,7 +42,7 @@ class AppBottomNavigationBar extends StatefulWidget {
     this.color = Colors.black54,
     this.selectedColor = CustomColors.lightCoral,
     this.shape,
-    this.initiallySelectedItemIndex = 0,
+    this.selectedItemIndex = 0,
   });
 
   @override
@@ -51,23 +51,14 @@ class AppBottomNavigationBar extends StatefulWidget {
 
 /// State of the applications bottom navigation bar.
 class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
-  /// Index of the currently selected item.
-  int _selectedItemIndex = 0;
-
   @override
   void initState() {
     super.initState();
-
-    _selectedItemIndex = widget.initiallySelectedItemIndex;
   }
 
   /// Change the currently selected item.
   void _changeSelectedItem(int index) {
     widget.onItemSelected(index);
-
-    setState(() {
-      _selectedItemIndex = index;
-    });
   }
 
   @override
@@ -98,7 +89,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
     int index,
     ValueChanged<int> onPressed,
   }) {
-    Color color = _selectedItemIndex == index ? widget.selectedColor : widget.color;
+    Color color = widget.selectedItemIndex == index ? widget.selectedColor : widget.color;
 
     return Expanded(
       child: SizedBox(

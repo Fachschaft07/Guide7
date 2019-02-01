@@ -59,24 +59,26 @@ class _ViewHolderState extends State<ViewHolder> {
 
   @override
   Widget build(BuildContext context) {
-    final bottomNavigationBar = AppBottomNavigationBar(
-      items: [
-        AppBottomNavigationBarItem(iconData: Icons.announcement, title: AppLocalizations.of(context).noticeBoard),
-        AppBottomNavigationBarItem(iconData: Icons.timeline, title: AppLocalizations.of(context).weekPlan),
-        AppBottomNavigationBarItem(iconData: Icons.menu, title: AppLocalizations.of(context).navigationViewItemTitle),
-      ],
-      initiallySelectedItemIndex: _currentViewIndex,
-      onItemSelected: _selectPage,
-      shape: CircularNotchedRectangle(),
-    );
-
     return UIUtil.getScaffold(
       body: PageView(
         controller: _controller,
         children: _getBottomNavigationBarViews(),
-        physics: NeverScrollableScrollPhysics(),
+        onPageChanged: (pageIndex) {
+          setState(() {
+            _currentViewIndex = pageIndex;
+          });
+        },
       ),
-      bottomNavigationBar: bottomNavigationBar,
+      bottomNavigationBar: AppBottomNavigationBar(
+        items: [
+          AppBottomNavigationBarItem(iconData: Icons.announcement, title: AppLocalizations.of(context).noticeBoard),
+          AppBottomNavigationBarItem(iconData: Icons.timeline, title: AppLocalizations.of(context).weekPlan),
+          AppBottomNavigationBarItem(iconData: Icons.menu, title: AppLocalizations.of(context).navigationViewItemTitle),
+        ],
+        selectedItemIndex: _currentViewIndex,
+        onItemSelected: _selectPage,
+        shape: CircularNotchedRectangle(),
+      ),
       floatingActionButton: _getFloatingActionButton(_currentViewIndex),
     );
   }
