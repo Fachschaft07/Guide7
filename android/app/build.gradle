@@ -40,6 +40,10 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        release
+    }
+
     buildTypes {
         release {
             signingConfig signingConfigs.release
