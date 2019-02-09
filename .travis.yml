@@ -84,4 +84,4 @@ cache:
   directories:
     - "$HOME/.pub-cache"
 before_install:
-  - openssl aes-256-cbc -K $encrypted_03b1fefb39f0_key -iv $encrypted_03b1fefb39f0_iv -in .travis/guide7_keystore.jks.enc -out .travis/guide7_keystore.jks -d
+  - openssl aes-256-cbc -K $encrypted_03b1fefb39f0_key -iv $encrypted_03b1fefb39f0_iv -in guide7_keystore.jks.enc -out .travis/guide7_keystore.jks -d
