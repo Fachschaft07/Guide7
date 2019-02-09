@@ -84,4 +84,4 @@ cache:
   directories:
     - "$HOME/.pub-cache"
 before_install:
-  - openssl aes-256-cbc -K $encrypted_4e8007a6406d_key -iv $encrypted_4e8007a6406d_iv -in guide7_keystore.jks.enc -out guide7_keystore.jks -d
+  - openssl aes-256-cbc -K $encrypted_4e8007a6406d_key -iv $encrypted_4e8007a6406d_iv -in android/siggning/guide7_keystore.jks.enc -out android/signing/guide7_keystore.jks -d
