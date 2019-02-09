@@ -1,40 +1,31 @@
 matrix:
-  # This causes the build to complete immediately upon first failure or once
-  # required jobs are green.
   fast_finish: true
-
-  # Building APK/IPA takes a long time; do not wait for them to finish.
   allow_failures:
     - env: JOB=APK
     - env: JOB=IPA
-
   include:
-    # Runs unit tests without emulators.
     - env: JOB=PR
       os: linux
       language: generic
       sudo: false
       addons:
         apt:
-          # Flutter depends on /usr/lib/x86_64-linux-gnu/libstdc++.so.6 version GLIBCXX_3.4.18
           sources:
-            - ubuntu-toolchain-r-test # if we don't specify this, the libstdc++6 we get is the wrong version
+            - ubuntu-toolchain-r-test
           packages:
             - libstdc++6
             - fonts-droid
       before_script:
         - git clone https://github.com/flutter/flutter.git -b stable
       script:
-        - ./flutter/bin/flutter test
-
-    # Builds an APK (Android build).
+        - "./flutter/bin/flutter test"
     - env: JOB=APK
       os: linux
       language: android
       licenses:
-        - 'android-sdk-preview-license-.+'
-        - 'android-sdk-license-.+'
-        - 'google-gdk-license-.+'
+        - android-sdk-preview-license-.+
+        - android-sdk-license-.+
+        - google-gdk-license-.+
       android:
         components:
           - tools
@@ -50,9 +41,8 @@ matrix:
       sudo: false
       addons:
         apt:
-          # Flutter depends on /usr/lib/x86_64-linux-gnu/libstdc++.so.6 version GLIBCXX_3.4.18
           sources:
-            - ubuntu-toolchain-r-test # if we don't specify this, the libstdc++6 we get is the wrong version
+            - ubuntu-toolchain-r-test
           packages:
             - libstdc++6
             - fonts-droid
@@ -66,9 +56,17 @@ matrix:
         - export PATH=$GRADLE_HOME/bin:$PATH
         - git clone https://github.com/flutter/flutter.git -b stable
       script:
-        - ./flutter/bin/flutter -v build apk
-
-    # Builds an IPA (Apple iOS build).
+        - "./flutter/bin/flutter -v build apk"
+      deploy:
+        provider: releases
+        skip_cleanup: true
+        overwrite: true
+        api_key: $github_token
+        file_glob: true
+        file: /home/travis/build/Fachschaft07/Guide7/build/app/outputs/apk/release/*
+        on:
+          repo: Fachschaft07/Guide7
+          tags: true
     - env: JOB=IPA
       os: osx
       language: generic
@@ -81,8 +79,9 @@ matrix:
         - brew install ios-deploy
         - git clone https://github.com/flutter/flutter.git -b stable
       script:
-        - ./flutter/bin/flutter -v build ios --no-codesign
-
+        - "./flutter/bin/flutter -v build ios --no-codesign"
 cache:
   directories:
-    - $HOME/.pub-cache
+    - "$HOME/.pub-cache"
+before_install:
+  - openssl aes-256-cbc -K $encrypted_4e8007a6406d_key -iv $encrypted_4e8007a6406d_iv -in guide7_keystore.jks.enc -out guide7_keystore.jks -d
