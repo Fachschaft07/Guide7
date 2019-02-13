@@ -97,6 +97,7 @@ play {
     track = getPublishingTrack()
     userFraction = 0.5
     releaseStatus = "completed"
+    resolutionStrategy = "auto"
 }
 
 flutter {
