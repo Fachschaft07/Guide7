@@ -60,10 +60,10 @@ matrix:
       script:
         - "./flutter/bin/flutter -v build apk"
         - chmod +x /home/travis/build/Fachschaft07/Guide7/android/gradlew
-        - /home/travis/build/Fachschaft07/Guide7/android/gradlew tasks
+        - /home/travis/build/Fachschaft07/Guide7/android/gradlew app:tasks --all
         - |
           if [[ $TRAVIS_BRANCH == "alpha" ||  $TRAVIS_BRANCH == "beta" || $TRAVIS_BRANCH == "stable" ]]; then
-            /home/travis/build/Fachschaft07/Guide7/android/gradlew publishApk
+            /home/travis/build/Fachschaft07/Guide7/android/gradlew app:publishApk
           fi
       deploy:
         provider: releases
