@@ -1,3 +1,7 @@
+plugins {
+    id 'com.github.triplet.play' version '2.1.0'
+}
+
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
@@ -32,6 +36,20 @@ def getWorkingBranch() {
                                rev-parse --abbrev-ref HEAD""".execute().text.trim()
     print "Working branch: " + workingBranch
     return workingBranch
+}
+
+def getPublishingTrack() {
+    def workingBranch = getWorkingBranch()
+
+    if (workingBranch.equalsIgnoreCase("alpha")) {
+        return "alpha"
+    } else if (workingBranch.equalsIgnoreCase("beta")) {
+        return "beta"
+    } else if (workingBranch.equalsIgnoreCase("stable")) {
+        return "production"
+    } else {
+        return "internal"
+    }
 }
 
 apply plugin: 'com.android.application'
@@ -72,6 +90,13 @@ android {
         signingConfigs.release.keyAlias = System.getenv("keystore_alias")
         signingConfigs.release.keyPassword = System.getenv("keystore_alias_password")
     }
+}
+
+play {
+    serviceAccountCredentials = file("../../.travis/api-8382503924831001465-189898-6da3f809c6e2.json")
+    track = getPublishingTrack()
+    userFraction = 0.5
+    releaseStatus = "completed"
 }
 
 flutter {
