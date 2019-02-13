@@ -62,7 +62,6 @@ matrix:
       after_success:
         - cd /home/travis/build/Fachschaft07/Guide7/android/
         - chmod +x gradlew
-        - ./gradlew app:tasks --all
         - |
           if [[ $TRAVIS_BRANCH == "alpha" ||  $TRAVIS_BRANCH == "beta" || $TRAVIS_BRANCH == "stable" ]]; then
             ./gradlew app:publishApk
