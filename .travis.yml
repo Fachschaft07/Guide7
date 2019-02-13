@@ -53,7 +53,7 @@ matrix:
         - openssl aes-256-cbc -k $google_play_encryption_key -in .travis/api-8382503924831001465-189898-6da3f809c6e2.json.enc -out .travis/api-8382503924831001465-189898-6da3f809c6e2.json -d -md sha256
       after_success:
         - |
-          if [ $TRAVIS_BRANCH == "alpha" ||  $TRAVIS_BRANCH == "beta" || $TRAVIS_BRANCH == "stable" ]; then
+          if [[ $TRAVIS_BRANCH == "alpha" ||  $TRAVIS_BRANCH == "beta" || $TRAVIS_BRANCH == "stable" ]]; then
             ./android/gradlew.bat app:publishApk
           fi
       before_script:
