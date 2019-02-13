@@ -55,7 +55,7 @@ matrix:
         - chmod +x ./android/gradlew
         - |
           if [[ $TRAVIS_BRANCH == "alpha" ||  $TRAVIS_BRANCH == "beta" || $TRAVIS_BRANCH == "stable" ]]; then
-            ./android/gradlew app:publishApk
+            ./android/gradlew publishApk
           fi
       before_script:
         - wget http://services.gradle.org/distributions/gradle-3.5-bin.zip
