@@ -31,10 +31,14 @@ if (flutterVersionName == null) {
  * @return Name of the working branch
  */
 def getWorkingBranch() {
-    def workingBranch = """git --git-dir=${rootDir}/../.git
-                               --work-tree=${rootDir}/..
-                               rev-parse --abbrev-ref HEAD""".execute().text.trim()
-    print "Working branch: " + workingBranch
+    def workingBranch = ""
+
+    def proc = "git rev-parse --abbrev-ref HEAD".execute()
+
+    proc.in.eachLine { line -> branch = line }
+    proc.err.eachLine { line -> println line }
+    proc.waitFor()
+
     return workingBranch
 }
 
@@ -49,6 +53,18 @@ def getPublishingTrack() {
         return "production"
     } else {
         return "internal"
+    }
+}
+
+def getReleaseStatus() {
+    def workingBranch = getWorkingBranch()
+
+    if (workingBranch.equalsIgnoreCase("alpha") || workingBranch.equalsIgnoreCase("beta")) {
+        return "completed"
+    } else if (workingBranch.equalsIgnoreCase("stable")) {
+        return "draft"
+    } else {
+        return "inProgress"
     }
 }
 
@@ -95,8 +111,8 @@ android {
 play {
     serviceAccountCredentials = file("../../.travis/api-8382503924831001465-189898-6da3f809c6e2.json")
     track = getPublishingTrack()
-    userFraction = 0.5
-    releaseStatus = "completed"
+    userFraction = 1.0
+    releaseStatus = getReleaseStatus()
     resolutionStrategy = "auto"
 }
 
