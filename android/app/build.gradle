@@ -31,15 +31,23 @@ if (flutterVersionName == null) {
  * @return Name of the working branch
  */
 def getWorkingBranch() {
-    def workingBranch = ""
+    def isRunningOnTravis = System.getenv("CI") == "true"
 
-    def proc = "git rev-parse --abbrev-ref HEAD".execute()
+    if (isRunningOnTravis) {
+        return System.getenv("TRAVIS_BRANCH");
+    } else {
+        def workingBranch = ""
 
-    proc.in.eachLine { line -> workingBranch = line }
-    proc.err.eachLine { line -> println line }
-    proc.waitFor()
+        def proc = "git rev-parse --abbrev-ref HEAD".execute()
 
-    return workingBranch
+        proc.in.eachLine { line -> workingBranch = line }
+        proc.err.eachLine { line -> println line }
+        proc.waitFor()
+
+        println workingBranch
+
+        return workingBranch
+    }
 }
 
 def getPublishingTrack() {
