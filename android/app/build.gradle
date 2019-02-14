@@ -35,7 +35,7 @@ def getWorkingBranch() {
 
     def proc = "git rev-parse --abbrev-ref HEAD".execute()
 
-    proc.in.eachLine { line -> branch = line }
+    proc.in.eachLine { line -> workingBranch = line }
     proc.err.eachLine { line -> println line }
     proc.waitFor()
 
