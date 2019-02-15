@@ -67,10 +67,8 @@ def getPublishingTrack() {
 def getReleaseStatus() {
     def workingBranch = getWorkingBranch()
 
-    if (workingBranch.equalsIgnoreCase("alpha") || workingBranch.equalsIgnoreCase("beta")) {
+    if (workingBranch.equalsIgnoreCase("alpha") || workingBranch.equalsIgnoreCase("beta") || workingBranch.equalsIgnoreCase("stable")) {
         return "completed"
-    } else if (workingBranch.equalsIgnoreCase("stable")) {
-        return "draft"
     } else {
         return "inProgress"
     }

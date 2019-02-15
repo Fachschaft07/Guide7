@@ -32,7 +32,7 @@ class LocalFlutterNotificationManager implements NotificationManagerI {
 
   @override
   Future<void> initialize() async {
-    var initializationSettingsAndroid = AndroidInitializationSettings("@mipmap/ic_launcher");
+    var initializationSettingsAndroid = AndroidInitializationSettings("@drawable/plain_icon");
     var initializationSettingsIOS = IOSInitializationSettings();
     var initializationSettings = InitializationSettings(initializationSettingsAndroid, initializationSettingsIOS);
 

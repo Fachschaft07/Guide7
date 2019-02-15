@@ -44,7 +44,7 @@ class _SplashScreenState extends State<SplashScreenView> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              "res/images/guide7_logo.png",
+              "res/images/icon/icon-xxxhdpi.png",
               width: imageWidth,
             ),
             Container(
