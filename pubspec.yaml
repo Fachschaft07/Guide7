@@ -50,6 +50,10 @@ flutter:
   assets:
     - res/images/icon/icon-xxxhdpi.png
 
+    # Privacy policy statement
+    - res/docs/privacy_policy/privacy_policy_de.md
+    - res/docs/privacy_policy/privacy_policy_en.md
+
   fonts:
     - family: Raleway
       fonts:

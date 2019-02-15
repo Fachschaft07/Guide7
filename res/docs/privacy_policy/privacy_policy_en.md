@@ -1,5 +1,3 @@
-# Privacy policy statement
-
 ## App provider
 
 - Benjamin Eder

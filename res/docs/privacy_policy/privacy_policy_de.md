@@ -1,5 +1,3 @@
-# Datenschutzerklärung
-
 ## Anbieter/Betreiber der App
 
 - Benjamin Eder
