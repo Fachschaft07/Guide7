@@ -109,7 +109,7 @@ play {
     track = getPublishingTrack()
     userFraction = 1.0
     releaseStatus = "completed"
-    resolutionStrategy = "fail"g
+    resolutionStrategy = "fail"
 }
 
 flutter {
