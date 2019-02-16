@@ -60,9 +60,6 @@ matrix:
       script:
         - "./flutter/bin/flutter -v build apk"
       after_success:
-        - cd /home/travis/build/Fachschaft07/Guide7/build/app/outputs/apk/
-        - rm -rf debug
-        - rm app.apk
         - cd /home/travis/build/Fachschaft07/Guide7/android/
         - chmod +x gradlew
         - |

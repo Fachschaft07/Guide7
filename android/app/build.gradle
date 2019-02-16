@@ -120,6 +120,9 @@ play {
     userFraction = 1.0
     releaseStatus = getReleaseStatus()
     resolutionStrategy = "auto"
+    outputProcessor = {
+        versionNameOverride = "$versionNameOverride.$versionCode"
+    }
 }
 
 flutter {
