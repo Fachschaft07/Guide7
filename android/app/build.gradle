@@ -64,16 +64,6 @@ def getPublishingTrack() {
     }
 }
 
-def getReleaseStatus() {
-    def workingBranch = getWorkingBranch()
-
-    if (workingBranch.equalsIgnoreCase("alpha") || workingBranch.equalsIgnoreCase("beta") || workingBranch.equalsIgnoreCase("stable")) {
-        return "completed"
-    } else {
-        return "inProgress"
-    }
-}
-
 apply plugin: 'com.android.application'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
@@ -88,7 +78,7 @@ android {
         applicationId "de.be.thaw"
         minSdkVersion 18
         targetSdkVersion 27
-        versionCode 1 // Should be automatically updated on each Google Play publish.
+        versionCode flutterVersionCode
         versionName flutterVersionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -118,7 +108,7 @@ play {
     serviceAccountCredentials = file("../../.travis/api-8382503924831001465-189898-6da3f809c6e2.json")
     track = getPublishingTrack()
     userFraction = 1.0
-    releaseStatus = getReleaseStatus()
+    releaseStatus = "completed"
     resolutionStrategy = "auto"
     outputProcessor {
         versionNameOverride = "$versionNameOverride.$versionCode"
