@@ -120,7 +120,7 @@ play {
     userFraction = 1.0
     releaseStatus = getReleaseStatus()
     resolutionStrategy = "auto"
-    outputProcessor = {
+    outputProcessor {
         versionNameOverride = "$versionNameOverride.$versionCode"
     }
 }
