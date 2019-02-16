@@ -78,7 +78,7 @@ android {
         applicationId "de.be.thaw"
         minSdkVersion 18
         targetSdkVersion 27
-        versionCode flutterVersionCode
+        versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -109,7 +109,7 @@ play {
     track = getPublishingTrack()
     userFraction = 1.0
     releaseStatus = "completed"
-    resolutionStrategy = "auto"
+    resolutionStrategy = "fail"
     outputProcessor {
         versionNameOverride = "$versionNameOverride.$versionCode"
     }
