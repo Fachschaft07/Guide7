@@ -64,6 +64,7 @@ matrix:
         - chmod +x gradlew
         - |
           if [[ $TRAVIS_BRANCH == "alpha" ||  $TRAVIS_BRANCH == "beta" || $TRAVIS_BRANCH == "stable" ]]; then
+            ./gradlew app:clean
             ./gradlew app:publishApk
           fi
       deploy:
