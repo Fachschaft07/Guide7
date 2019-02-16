@@ -6,7 +6,7 @@ import 'package:flutter/widgets.dart';
 /// Class containing localizations for the app (translations).
 class AppLocalizations {
   /// Version of the application.
-  static const String _appVersion = "0.1.0";
+  static const String _appVersion = "0.1.1";
 
   /// Create app localizations.
   AppLocalizations(this.locale);
