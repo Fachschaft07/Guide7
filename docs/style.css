@@ -1,0 +1,70 @@
+html, body {
+    margin: 0;
+}
+
+body {
+    font-family: 'Source Sans Pro', sans-serif;
+    padding: 4.0em 5.0em;
+    font-size: 16pt;
+}
+
+a {
+    color: lightcoral;
+    text-decoration: none;g
+}
+
+header {
+    text-align: center;
+}
+
+header > h1 {
+    font-size: 3.0em;
+}
+
+header > h2 {
+    font-size: 1.5em;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 300;
+    color: slategray;
+}
+
+hr {
+    border-width: 2px 0 0 0;
+    color: lightgray;
+    margin: 3.0em 4.0em;
+}
+
+main > div {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: center;
+    padding: 4.0em 0;
+}
+
+main > div:nth-child(even) {
+    flex-direction: row-reverse;
+}
+
+main > div > .image-holder {
+    max-height: 80vh;
+}
+
+main > div > .description {
+    padding: 0 3.0em;
+    text-align: center;
+}
+
+footer {
+    text-align: center;
+}
+
+@media only screen and (max-width: 700px) {
+    main > div {
+        display: block;
+    }
+}
