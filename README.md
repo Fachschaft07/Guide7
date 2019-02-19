@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/Fachschaft07/Guide7.svg?branch=develop)](https://travis-ci.org/Fachschaft07/Guide7)
+[![Build Status](https://travis-ci.org/Fachschaft07/Guide7.svg?branch=master)](https://travis-ci.org/Fachschaft07/Guide7)
 
 # Guide7
 
