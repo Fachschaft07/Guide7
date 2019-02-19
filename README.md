@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.org/Fachschaft07/Guide7.svg?branch=master)](https://travis-ci.org/Fachschaft07/Guide7)
 
+> Looking for some screenshots? Take a look in our [GitHub pages](https://fachschaft07.github.io/Guide7/)!
+
 # Guide7
 
 <div style="text-align: center">
