@@ -92,6 +92,18 @@ class AppLocalizations {
     "delete_event": "Ereignis löschen",
     "delete_event_security_question": "Nochmal Berühren zum Löschen",
     "actions": "Aktionen",
+    "first_start.first_line": "Ich bereite nur schnell was für dich vor!",
+    "first_start.line1": "Ist gleich fertig. Versprochen!",
+    "first_start.line2": "Ich kann nicht wenn jemand kuckt! :(",
+    "first_start.line3": "Hmm... braucht wohl doch länger ¯\\_(ツ)_/¯",
+    "first_start.line4": "Gähn...",
+    "first_start.line5": "Mach dir doch noch schnell einen Kaffee!",
+    "first_start.line6": "Nur die Ruhe... Ich mach ja schon!",
+    "first_start.line7": "Mist... ich glaub ich muss nochmal von vorne anfangen >.<",
+    "first_start.line8": "Hier könnte Ihre Werbung stehen!",
+    "first_start.line9": "Einen kleinen Moment noch, ich habs gleich!",
+    "first_start.line10": "Lorem ipsum...",
+    "first_start.last_line": "Gleich gehts los!",
   };
 
   /// English localized values.
@@ -161,6 +173,18 @@ class AppLocalizations {
     "delete_event": "Delete event",
     "delete_event_security_question": "Tap again to delete",
     "actions": "Actions",
+    "first_start.first_line": "I'm preparing stuff for you!",
+    "first_start.line1": "Nearly ready. I Promise!",
+    "first_start.line2": "Stop staring. I just cannot work when you do this!",
+    "first_start.line3": "Weeeell... Seems like it takes a little longer ¯\\_(ツ)_/¯",
+    "first_start.line4": "So boring...",
+    "first_start.line5": "Just another coffee and we're ready to go!",
+    "first_start.line6": "Keep calm! I'm at it!",
+    "first_start.line7": "#!&? Oh no! I have to restart all over! >.<",
+    "first_start.line8": "Here could be your ad!",
+    "first_start.line9": "Just a little longer, nearly finished!",
+    "first_start.line10": "Lorem ipsum...",
+    "first_start.last_line": "Let's go!",
   };
 
   /// Get localized value by [key].
@@ -297,4 +321,21 @@ class AppLocalizations {
   String get deleteEventSecurityQuestion => _get("delete_event_security_question");
 
   String get actions => _get("actions");
+
+  String get firstStartFirstLine => _get("first_start.first_line");
+
+  String get firstStartLastLine => _get("first_start.last_line");
+
+  List<String> get firstStartLines => [
+        _get("first_start.line1"),
+        _get("first_start.line2"),
+        _get("first_start.line3"),
+        _get("first_start.line4"),
+        _get("first_start.line5"),
+        _get("first_start.line6"),
+        _get("first_start.line7"),
+        _get("first_start.line8"),
+        _get("first_start.line9"),
+        _get("first_start.line10"),
+      ];
 }
