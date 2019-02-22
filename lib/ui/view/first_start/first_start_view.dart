@@ -30,11 +30,17 @@ class _FirstStartViewState extends State<FirstStartView> {
   /// Count of lines to show in between the first and the last line.
   static const int _numberOfLinesToShow = 3;
 
-  /// The minimum seconds to show the view.
-  static const int _minDurationSeconds = 20;
+  /// Duration for each letter.
+  static const Duration _durationPerLetter = Duration(milliseconds: 120);
 
   /// Lines to show.
   List<String> _lines;
+
+  /// Total duration of the animation.
+  Duration _animDuration;
+
+  /// Future loading initial data.
+  Future<void> _initialLoadingFuture;
 
   /// Load all initial app data.
   Future<void> _loadInitialAppData() async {
@@ -51,16 +57,7 @@ class _FirstStartViewState extends State<FirstStartView> {
   void initState() {
     super.initState();
 
-    Future<void> minDurationFuture = Future.delayed(Duration(seconds: _minDurationSeconds));
-    Future<void> finishedFuture = _loadInitialAppData();
-
-    /// Wait for both futures, then navigate to start view.
-    Future.wait([
-      minDurationFuture,
-      finishedFuture,
-    ]).then((values) {
-      App.router.navigateTo(context, AppRoutes.noticeBoard, transition: TransitionType.native, replace: true);
-    });
+    _initialLoadingFuture = _loadInitialAppData();
   }
 
   @override
@@ -71,6 +68,21 @@ class _FirstStartViewState extends State<FirstStartView> {
       _lines = [localizations.firstStartFirstLine];
       _lines.addAll(_getRandomLines(_numberOfLinesToShow, localizations.firstStartLines));
       _lines.add(localizations.firstStartLastLine);
+
+      int letterCount = _lines.map((line) => line.length).reduce((value, length) => value + length);
+      _animDuration = Duration(milliseconds: letterCount * _durationPerLetter.inMilliseconds);
+
+      Future<void> minDurationFuture = Future.delayed(_animDuration);
+
+      print("Letter count: $letterCount with Duration $_animDuration");
+
+      /// Wait for both futures, then navigate to start view.
+      Future.wait([
+        minDurationFuture,
+        _initialLoadingFuture,
+      ]).then((values) {
+        App.router.navigateTo(context, AppRoutes.noticeBoard, transition: TransitionType.native, replace: true);
+      });
     }
 
     return UIUtil.getScaffold(
@@ -90,6 +102,7 @@ class _FirstStartViewState extends State<FirstStartView> {
             Column(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 Expanded(
                   child: Row(), // Empty row
@@ -101,15 +114,16 @@ class _FirstStartViewState extends State<FirstStartView> {
                       left: 40.0,
                       right: 40.0,
                     ),
-                    child: TyperAnimatedTextKit(
+                    child: FadeAnimatedTextKit(
                       text: _lines,
                       textStyle: TextStyle(
                         fontSize: 30.0,
                         color: Colors.black87,
                       ),
                       alignment: Alignment.topCenter,
+                      textAlign: TextAlign.center,
                       isRepeatingAnimation: false,
-                      duration: Duration(seconds: _minDurationSeconds),
+                      duration: _animDuration,
                     ),
                   ),
                 ),
