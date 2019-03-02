@@ -1,5 +1,7 @@
 import 'package:guide7/connect/appointment/appointment_repository.dart';
 import 'package:guide7/connect/appointment/hm_appointment_repository.dart';
+import 'package:guide7/connect/cloudnotif/cloud_notif_repository.dart';
+import 'package:guide7/connect/cloudnotif/firebase_cloud_notif_repository.dart';
 import 'package:guide7/connect/credential/local_credentials_repository.dart';
 import 'package:guide7/connect/credential/local_username_password_credential_repository.dart';
 import 'package:guide7/connect/free_rooms/free_rooms_repository.dart';
@@ -36,4 +38,7 @@ class DefaultRepository implements RepositoryI {
 
   @override
   WeekPlanRepository getWeekPlanRepository() => WeekPlanRepositoryImpl();
+
+  @override
+  CloudNotificationRepository getCloudNotificationRepository() => FirebaseNotificationRepository();
 }

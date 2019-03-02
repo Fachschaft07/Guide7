@@ -1,4 +1,5 @@
 import 'package:guide7/connect/appointment/appointment_repository.dart';
+import 'package:guide7/connect/cloudnotif/cloud_notif_repository.dart';
 import 'package:guide7/connect/credential/local_credentials_repository.dart';
 import 'package:guide7/connect/free_rooms/free_rooms_repository.dart';
 import 'package:guide7/connect/hm_people/hm_people_repository.dart';
@@ -29,4 +30,7 @@ abstract class RepositoryI {
 
   /// Get repository providing week plan events.
   WeekPlanRepository getWeekPlanRepository();
+
+  /// Get repository providing services for cloud notifications
+  CloudNotificationRepository getCloudNotificationRepository();
 }

@@ -1,4 +1,5 @@
 import 'package:guide7/connect/appointment/appointment_repository.dart';
+import 'package:guide7/connect/cloudnotif/cloud_notif_repository.dart';
 import 'package:guide7/connect/credential/local_credentials_repository.dart';
 import 'package:guide7/connect/free_rooms/free_rooms_repository.dart';
 import 'package:guide7/connect/hm_people/hm_people_repository.dart';
@@ -19,7 +20,8 @@ class Repository implements RepositoryI {
   static RepositoryI _delegate;
 
   /// Cached instance of the local credential repository.
-  LocalCredentialsRepository<UsernamePasswordCredentials> _localCredentialsRepository;
+  LocalCredentialsRepository<UsernamePasswordCredentials>
+      _localCredentialsRepository;
 
   /// Cached instance of the ZPA login repository instance.
   ZPALoginRepository _zpaLoginRepository;
@@ -38,6 +40,9 @@ class Repository implements RepositoryI {
 
   /// Cached instance of the week plan repository.
   WeekPlanRepository _weekPlanRepository;
+
+  /// Cached instance of the cloud notification repository.
+  CloudNotificationRepository _cloudNotificationRepository;
 
   /// Retrieve the Repository instance.
   factory Repository() {
@@ -59,7 +64,8 @@ class Repository implements RepositoryI {
   }
 
   @override
-  LocalCredentialsRepository<UsernamePasswordCredentials> getLocalCredentialsRepository() {
+  LocalCredentialsRepository<UsernamePasswordCredentials>
+      getLocalCredentialsRepository() {
     if (_localCredentialsRepository == null) {
       _localCredentialsRepository = _delegate.getLocalCredentialsRepository();
     }
@@ -119,5 +125,14 @@ class Repository implements RepositoryI {
     }
 
     return _weekPlanRepository;
+  }
+
+  @override
+  CloudNotificationRepository getCloudNotificationRepository() {
+    if (_cloudNotificationRepository == null) {
+      _cloudNotificationRepository = _delegate.getCloudNotificationRepository();
+    }
+
+    return _cloudNotificationRepository;
   }
 }
