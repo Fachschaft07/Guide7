@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:connectivity/connectivity.dart';
 import 'package:guide7/connect/appointment/appointment_repository.dart';
 import 'package:guide7/connect/repository.dart';

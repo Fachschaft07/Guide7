@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:guide7/model/notice_board/notice_board_entry.dart';
 
 /// Repository interface for managing notice board entries.

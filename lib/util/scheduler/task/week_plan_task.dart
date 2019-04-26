@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:connectivity/connectivity.dart';
 import 'package:guide7/connect/repository.dart';
 import 'package:guide7/connect/week_plan/week_plan_repository.dart';

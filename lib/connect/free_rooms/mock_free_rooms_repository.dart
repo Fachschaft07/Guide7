@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:guide7/connect/free_rooms/free_rooms_repository.dart';
 import 'package:guide7/model/room/room.dart';

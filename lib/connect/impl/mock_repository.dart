@@ -8,6 +8,8 @@ import 'package:guide7/connect/hm_people/hm_people_repository.dart';
 import 'package:guide7/connect/hm_people/mock_hm_people_repository.dart';
 import 'package:guide7/connect/login/zpa/mock_zpa_login_repository.dart';
 import 'package:guide7/connect/login/zpa/zpa_login_repository.dart';
+import 'package:guide7/connect/meal_plan/meal_plan_repository.dart';
+import 'package:guide7/connect/meal_plan/mock_meal_plan_repository.dart';
 import 'package:guide7/connect/notice_board/mock_notice_board_repository.dart';
 import 'package:guide7/connect/notice_board/notice_board_repository.dart';
 import 'package:guide7/connect/repository_interface.dart';
@@ -37,4 +39,7 @@ class MockRepository implements RepositoryI {
 
   @override
   WeekPlanRepository getWeekPlanRepository() => MockWeekPlanRepository();
+
+  @override
+  MealPlanRepository getMealPlanRepository() => MockMealPlanRepository();
 }

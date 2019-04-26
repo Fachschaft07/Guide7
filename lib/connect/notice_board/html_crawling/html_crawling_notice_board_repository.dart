@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:guide7/connect/notice_board/html_crawling/request/notice_board_load_request.dart';
 import 'package:guide7/connect/notice_board/html_crawling/request/personal_notice_board_load_request.dart';
 import 'package:guide7/connect/notice_board/html_crawling/request/public_notice_board_load_request.dart';

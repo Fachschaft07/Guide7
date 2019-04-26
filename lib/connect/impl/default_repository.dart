@@ -7,6 +7,8 @@ import 'package:guide7/connect/free_rooms/zpa_free_rooms_repository.dart';
 import 'package:guide7/connect/hm_people/hm_people_repository.dart';
 import 'package:guide7/connect/hm_people/hm_people_repository_impl.dart';
 import 'package:guide7/connect/login/zpa/zpa_login_repository.dart';
+import 'package:guide7/connect/meal_plan/meal_plan_repository.dart';
+import 'package:guide7/connect/meal_plan/openmensa/openmensa_repository.dart';
 import 'package:guide7/connect/notice_board/html_crawling/html_crawling_notice_board_repository.dart';
 import 'package:guide7/connect/notice_board/notice_board_repository.dart';
 import 'package:guide7/connect/repository_interface.dart';
@@ -36,4 +38,7 @@ class DefaultRepository implements RepositoryI {
 
   @override
   WeekPlanRepository getWeekPlanRepository() => WeekPlanRepositoryImpl();
+
+  @override
+  MealPlanRepository getMealPlanRepository() => OpenMensaRepository();
 }
