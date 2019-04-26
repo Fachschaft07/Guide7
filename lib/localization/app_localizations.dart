@@ -104,6 +104,8 @@ class AppLocalizations {
     "first_start.line9": "Einen kleinen Moment noch, ich habs gleich!",
     "first_start.line10": "Lorem ipsum...",
     "first_start.last_line": "Gleich gehts los!",
+    "meal_plan": "Speiseplan",
+    "meal_plan.error": "Beim Laden des Speiseplans ist ein Fehler aufgetreten.",
   };
 
   /// English localized values.
@@ -185,6 +187,8 @@ class AppLocalizations {
     "first_start.line9": "Just a little longer, nearly finished!",
     "first_start.line10": "Lorem ipsum...",
     "first_start.last_line": "Let's go!",
+    "meal_plan": "Meal plan",
+    "meal_plan.error": "An error occurred during loading the meal plan.",
   };
 
   /// Get localized value by [key].
@@ -338,4 +342,8 @@ class AppLocalizations {
         _get("first_start.line9"),
         _get("first_start.line10"),
       ];
+
+  String get mealPlan => _get("meal_plan");
+
+  String get mealPlanError => _get("meal_plan.error");
 }

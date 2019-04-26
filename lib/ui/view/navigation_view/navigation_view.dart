@@ -28,12 +28,19 @@ class _NavigationViewState extends State<NavigationView> {
               delegate: SliverChildListDelegate(
                 [
                   NavigationViewItem(
+                    text: AppLocalizations.of(context).mealPlan,
+                    icon: Icons.fastfood,
+                    onSelected: () {
+                      App.router.navigateTo(context, AppRoutes.mealPlan, transition: TransitionType.native);
+                    },
+                    isFirst: true,
+                  ),
+                  NavigationViewItem(
                     text: AppLocalizations.of(context).appointments,
                     icon: Icons.timer,
                     onSelected: () {
                       App.router.navigateTo(context, AppRoutes.appointments, transition: TransitionType.native);
                     },
-                    isFirst: true,
                   ),
                   NavigationViewItem(
                     text: AppLocalizations.of(context).roomSearch,
