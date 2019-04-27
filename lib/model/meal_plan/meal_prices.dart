@@ -33,4 +33,6 @@ class MealPrices {
   bool get hasPupilsPrice => pupils != null;
 
   bool get hasOthersPrice => others != null;
+
+  bool get hasPrice => hasStudentPrice || hasEmployeePrice || hasPupilsPrice || hasOthersPrice;
 }

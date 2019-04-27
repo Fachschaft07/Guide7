@@ -7,6 +7,8 @@ import 'package:guide7/connect/repository.dart';
 import 'package:guide7/localization/app_localizations.dart';
 import 'package:guide7/model/meal_plan/canteen.dart';
 import 'package:guide7/model/meal_plan/meal_plan.dart';
+import 'package:guide7/model/meal_plan/meal_plan_info.dart';
+import 'package:guide7/storage/meal_plan/info/meal_plan_info_storage.dart';
 import 'package:guide7/ui/util/ui_util.dart';
 import 'package:guide7/ui/view/meal_plan/meal_plan_widget.dart';
 import 'package:guide7/util/custom_colors.dart';
@@ -20,6 +22,9 @@ class MealPlanView extends StatefulWidget {
 
 /// State of the meal plan view.
 class _MealPlanViewState extends State<MealPlanView> {
+  /// Canteen id of the lothstr. mensa.
+  static const int _defaultCanteenId = 141;
+
   /// Controller for paging.
   PageController _controller;
 
@@ -32,12 +37,37 @@ class _MealPlanViewState extends State<MealPlanView> {
   /// Future loading the meal plan.
   Future<MealPlan> _mealPlanFuture;
 
+  /// Future loading meal plan info.
+  Future<void> _mealPlanInfoFuture;
+
+  /// The meal plan info to display meal plans for.
+  MealPlanInfo _mealPlanInfo;
+
   @override
   void initState() {
     super.initState();
 
     _controller = PageController(initialPage: _dateOffset);
     _now = DateTime.now();
+
+    _mealPlanInfoFuture = _loadMealPlanInfo();
+  }
+
+  /// Load the meal plan info.
+  Future<void> _loadMealPlanInfo() async {
+    MealPlanInfoStorage storage = MealPlanInfoStorage();
+
+    _mealPlanInfo = await storage.read();
+
+    if (_mealPlanInfo == null) {
+      _mealPlanInfo = MealPlanInfo(
+        canteen: Canteen(
+          id: _defaultCanteenId,
+          name: "",
+        ),
+        priceCategory: MealPlanInfo.other,
+      );
+    }
   }
 
   @override
@@ -131,6 +161,7 @@ class _MealPlanViewState extends State<MealPlanView> {
         if (snapshot.hasData && snapshot.connectionState == ConnectionState.done) {
           widget = MealPlanWidget(
             mealPlan: snapshot.data,
+            priceCategory: _mealPlanInfo.priceCategory,
           );
         } else if (!snapshot.hasData && snapshot.connectionState == ConnectionState.done) {
           widget = Center(
@@ -169,6 +200,8 @@ class _MealPlanViewState extends State<MealPlanView> {
     DateTime date, {
     bool fromCache = true,
   }) async {
+    await _mealPlanInfoFuture;
+
     Repository repository = Repository();
     MealPlanRepository mealPlanRepository = repository.getMealPlanRepository();
 
