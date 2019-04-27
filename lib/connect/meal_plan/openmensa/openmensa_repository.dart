@@ -51,7 +51,11 @@ class OpenMensaRepository implements MealPlanRepository {
     http.Response response = await http.get("$_openMensaAPIUrl/canteens/${canteen.id}/days/${_dateFormat.format(date)}/meals");
 
     if (response.statusCode != HttpStatus.ok) {
-      throw Exception("Bad status code ${response.statusCode}");
+      if (response.statusCode == HttpStatus.notFound) {
+        return null;
+      } else {
+        throw Exception("Bad status code ${response.statusCode}");
+      }
     }
 
     List<dynamic> jsonMeals = json.decode(response.body);

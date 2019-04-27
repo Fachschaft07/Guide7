@@ -132,6 +132,16 @@ class _MealPlanViewState extends State<MealPlanView> {
           widget = MealPlanWidget(
             mealPlan: snapshot.data,
           );
+        } else if (!snapshot.hasData && snapshot.connectionState == ConnectionState.done) {
+          widget = Center(
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+              child: Text(
+                AppLocalizations.of(context).noMealPlan,
+                style: TextStyle(fontFamily: "NotoSerifTC"),
+              ),
+            ),
+          );
         } else if (snapshot.hasError && snapshot.connectionState == ConnectionState.done) {
           widget = Padding(
             padding: EdgeInsets.symmetric(vertical: 40.0, horizontal: 30.0),

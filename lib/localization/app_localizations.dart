@@ -106,6 +106,7 @@ class AppLocalizations {
     "first_start.last_line": "Gleich gehts los!",
     "meal_plan": "Speiseplan",
     "meal_plan.error": "Beim Laden des Speiseplans ist ein Fehler aufgetreten.",
+    "no_meal_plan": "Kein Speiseplan verfügbar.",
   };
 
   /// English localized values.
@@ -189,6 +190,7 @@ class AppLocalizations {
     "first_start.last_line": "Let's go!",
     "meal_plan": "Meal plan",
     "meal_plan.error": "An error occurred during loading the meal plan.",
+    "no_meal_plan": "No meal plan available.",
   };
 
   /// Get localized value by [key].
@@ -346,4 +348,6 @@ class AppLocalizations {
   String get mealPlan => _get("meal_plan");
 
   String get mealPlanError => _get("meal_plan.error");
+
+  String get noMealPlan => _get("no_meal_plan");
 }
