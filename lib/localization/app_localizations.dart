@@ -107,6 +107,14 @@ class AppLocalizations {
     "meal_plan": "Speiseplan",
     "meal_plan.error": "Beim Laden des Speiseplans ist ein Fehler aufgetreten.",
     "no_meal_plan": "Kein Speiseplan verfügbar.",
+    "meal_plan_setup.title": "Speiseplan einrichten...",
+    "price_category.students": "Student",
+    "price_category.employees": "Mitarbeiter",
+    "price_category.others": "Andere",
+    "price_category.label": "Preiskategorie",
+    "canteen": "Mensa",
+    "modify_meal_plan_settings": "Speiseplan Einstellungen ändern",
+    "modify_meal_plan_settings.description": "Richte den Speiseplan ein...",
   };
 
   /// English localized values.
@@ -191,6 +199,14 @@ class AppLocalizations {
     "meal_plan": "Meal plan",
     "meal_plan.error": "An error occurred during loading the meal plan.",
     "no_meal_plan": "No meal plan available.",
+    "meal_plan_setup.title": "Meal plan setup...",
+    "price_category.students": "Student",
+    "price_category.employees": "Employee",
+    "price_category.others": "Other",
+    "price_category.label": "Price category",
+    "canteen": "Canteen",
+    "modify_meal_plan_settings": "Modify meal plan settings",
+    "modify_meal_plan_settings.description": "Brings up the meal plan setup...",
   };
 
   /// Get localized value by [key].
@@ -350,4 +366,20 @@ class AppLocalizations {
   String get mealPlanError => _get("meal_plan.error");
 
   String get noMealPlan => _get("no_meal_plan");
+
+  String get mealPlanSetupTitle => _get("meal_plan_setup.title");
+
+  String get priceCategoryStudents => _get("price_category.students");
+
+  String get priceCategoryEmployees => _get("price_category.employees");
+
+  String get priceCategoryOthers => _get("price_category.others");
+
+  String get priceCategoryLabel => _get("price_category.label");
+
+  String get canteen => _get("canteen");
+
+  String get modifyMealPlanSettings => _get("modify_meal_plan_settings");
+
+  String get modifyMealPlanSettingsDescription => _get("modify_meal_plan_settings.description");
 }

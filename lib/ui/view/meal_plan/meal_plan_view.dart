@@ -61,10 +61,7 @@ class _MealPlanViewState extends State<MealPlanView> {
 
     if (_mealPlanInfo == null) {
       _mealPlanInfo = MealPlanInfo(
-        canteen: Canteen(
-          id: _defaultCanteenId,
-          name: "",
-        ),
+        canteenId: _defaultCanteenId,
         priceCategory: MealPlanInfo.other,
       );
     }
@@ -205,7 +202,7 @@ class _MealPlanViewState extends State<MealPlanView> {
     Repository repository = Repository();
     MealPlanRepository mealPlanRepository = repository.getMealPlanRepository();
 
-    return await mealPlanRepository.loadMealPlan(Canteen(id: 141, name: ""), date);
+    return await mealPlanRepository.loadMealPlan(Canteen(id: _mealPlanInfo.canteenId, name: ""), date);
   }
 
   /// Switch to previous or next page.

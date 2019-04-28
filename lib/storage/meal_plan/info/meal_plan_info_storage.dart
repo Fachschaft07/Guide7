@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:guide7/model/meal_plan/canteen.dart';
 import 'package:guide7/model/meal_plan/meal_plan_info.dart';
 import 'package:guide7/storage/storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,14 +12,8 @@ class MealPlanInfoStorage implements Storage<MealPlanInfo> {
   /// Key of the key-value pair of a price category.
   static const String _priceCategoryKey = "price_category";
 
-  /// Key of the key-value pair of a canteen.
-  static const String _canteenKey = "canteen";
-
   /// Key of the key-value pair of a canteens id.
-  static const String _canteenIdKey = "id";
-
-  /// Key of the key-value pair of a canteens name.
-  static const String _canteenNameKey = "name";
+  static const String _canteenIdKey = "canteen.id";
 
   /// Instance of the singleton.
   static const MealPlanInfoStorage _instance = MealPlanInfoStorage._internal();
@@ -51,16 +44,11 @@ class MealPlanInfoStorage implements Storage<MealPlanInfo> {
   Future<MealPlanInfo> read() async {
     SharedPreferences prefs = await _getPrefs();
 
-    int canteenId = prefs.getInt("$_baseKey.$_canteenKey.$_canteenIdKey");
-    String canteenName = prefs.getString("$_baseKey.$_canteenKey.$_canteenNameKey");
-
+    int canteenId = prefs.getInt("$_baseKey.$_canteenIdKey");
     int priceCategory = prefs.getInt("$_baseKey.$_priceCategoryKey");
 
     return MealPlanInfo(
-      canteen: Canteen(
-        id: canteenId,
-        name: canteenName,
-      ),
+      canteenId: canteenId,
       priceCategory: priceCategory,
     );
   }
@@ -69,9 +57,7 @@ class MealPlanInfoStorage implements Storage<MealPlanInfo> {
   Future<void> write(MealPlanInfo data) async {
     SharedPreferences prefs = await _getPrefs();
 
-    await prefs.setInt("$_baseKey.$_canteenKey.$_canteenIdKey", data.canteen.id);
-    await prefs.setString("$_baseKey.$_canteenKey.$_canteenNameKey", data.canteen.name);
-
+    await prefs.setInt("$_baseKey.$_canteenIdKey", data.canteenId);
     await prefs.setInt("$_baseKey.$_priceCategoryKey", data.priceCategory);
   }
 

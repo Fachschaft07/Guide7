@@ -6,6 +6,7 @@ import 'package:guide7/app.dart';
 import 'package:guide7/connect/login/zpa/zpa_login_repository.dart';
 import 'package:guide7/connect/repository.dart';
 import 'package:guide7/localization/app_localizations.dart';
+import 'package:guide7/storage/meal_plan/info/meal_plan_info_storage.dart';
 import 'package:guide7/ui/util/ui_util.dart';
 import 'package:guide7/ui/view/navigation_view/item/navigation_view_item.dart';
 import 'package:guide7/util/custom_colors.dart';
@@ -30,8 +31,14 @@ class _NavigationViewState extends State<NavigationView> {
                   NavigationViewItem(
                     text: AppLocalizations.of(context).mealPlan,
                     icon: Icons.fastfood,
-                    onSelected: () {
-                      App.router.navigateTo(context, AppRoutes.mealPlan, transition: TransitionType.native);
+                    onSelected: () async {
+                      MealPlanInfoStorage mealPlanInfoStorage = MealPlanInfoStorage();
+
+                      if (await mealPlanInfoStorage.isEmpty()) {
+                        App.router.navigateTo(context, AppRoutes.mealPlanSetup, transition: TransitionType.native);
+                      } else {
+                        App.router.navigateTo(context, AppRoutes.mealPlan, transition: TransitionType.native);
+                      }
                     },
                     isFirst: true,
                   ),

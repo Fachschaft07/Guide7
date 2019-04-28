@@ -44,6 +44,7 @@ class _SettingsViewState extends State<SettingsView> {
   List<Widget> _buildSettingsItems() {
     List<Widget> items = List<Widget>();
 
+    items.add(_buildModifyMealPlanInfoItem());
     items.add(_buildInfoItem());
 
     if (DebugUtil.isDebugMode) {
@@ -52,6 +53,18 @@ class _SettingsViewState extends State<SettingsView> {
     }
 
     return items;
+  }
+
+  /// Build item to adjust the meal plan info.
+  Widget _buildModifyMealPlanInfoItem() {
+    return SettingsItem(
+      title: AppLocalizations.of(context).modifyMealPlanSettings,
+      description: AppLocalizations.of(context).modifyMealPlanSettingsDescription,
+      icon: Icons.fastfood,
+      onTap: () {
+        App.router.navigateTo(context, AppRoutes.mealPlanSetup, transition: TransitionType.native);
+      },
+    );
   }
 
   /// Build app info settings item.

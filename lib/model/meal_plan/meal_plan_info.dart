@@ -1,4 +1,3 @@
-import 'package:guide7/model/meal_plan/canteen.dart';
 import 'package:meta/meta.dart';
 
 /// Info used to display a meal plan.
@@ -16,14 +15,14 @@ class MealPlanInfo {
   static const int other = 3;
 
   /// Canteen to display a meal plan for.
-  final Canteen canteen;
+  final int canteenId;
 
   /// Category of the price (e. g. student, employee, ...).
   final int priceCategory;
 
   /// Create info.
   MealPlanInfo({
-    @required this.canteen,
+    @required this.canteenId,
     @required this.priceCategory,
   });
 }

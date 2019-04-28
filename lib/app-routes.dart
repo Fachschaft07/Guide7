@@ -4,6 +4,7 @@ import 'package:guide7/ui/view/appointment/appointment_view.dart';
 import 'package:guide7/ui/view/first_start/first_start_view.dart';
 import 'package:guide7/ui/view/login/login_view.dart';
 import 'package:guide7/ui/view/meal_plan/meal_plan_view.dart';
+import 'package:guide7/ui/view/meal_plan/setup/meal_plan_setup_view.dart';
 import 'package:guide7/ui/view/privacy_policy_statement/privacy_policy_statement_view.dart';
 import 'package:guide7/ui/view/room_search/room_search_view.dart';
 import 'package:guide7/ui/view/settings_view/settings_view.dart';
@@ -48,6 +49,9 @@ class AppRoutes {
   /// Route to the meal plan view.
   static const String mealPlan = "/meal-plan";
 
+  /// Route to the meal plan setup view.
+  static const String mealPlanSetup = "/meal-plan-setup";
+
   /// Route to the privacy policy statement.
   static const String privacyPolicyStatement = "/privacy-policy-statement";
 
@@ -87,6 +91,7 @@ class AppRoutes {
     router.define(AppRoutes.appointments, handler: Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) => AppointmentView()));
 
     router.define(AppRoutes.mealPlan, handler: Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) => MealPlanView()));
+    router.define(AppRoutes.mealPlanSetup, handler: Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) => MealPlanSetupView()));
 
     router.define(AppRoutes.privacyPolicyStatement,
         handler: Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) => PrivacyPolicyStatementView()));
