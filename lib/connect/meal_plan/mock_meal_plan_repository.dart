@@ -20,6 +20,8 @@ class MockMealPlanRepository implements MealPlanRepository {
   ];
 
   static const MealPlan _mockMealPlan = MealPlan(
+    canteenId: 1,
+    date: null,
     meals: [
       Meal(
         id: 1,

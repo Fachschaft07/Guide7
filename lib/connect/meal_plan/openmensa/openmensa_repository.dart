@@ -103,6 +103,12 @@ class OpenMensaRepository implements MealPlanRepository {
     }
 
     return MealPlan(
+      canteenId: canteen.id,
+      date: DateTime(
+        date.year,
+        date.month,
+        date.day,
+      ),
       meals: meals,
     );
   }

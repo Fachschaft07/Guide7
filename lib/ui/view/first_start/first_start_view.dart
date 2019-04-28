@@ -75,8 +75,6 @@ class _FirstStartViewState extends State<FirstStartView> {
 
       Future<void> minDurationFuture = Future.delayed(_animDuration);
 
-      print("Letter count: $letterCount with Duration $_animDuration");
-
       /// Wait for both futures, then navigate to start view.
       Future.wait([
         minDurationFuture,

@@ -74,6 +74,10 @@ class MealWidget extends StatelessWidget {
           ),
         ),
       ));
+    } else {
+      widgets.add(Expanded(
+        child: Container(),
+      ));
     }
 
     double mealPrice = _getMealPrice();

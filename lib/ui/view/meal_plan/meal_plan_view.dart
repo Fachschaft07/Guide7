@@ -9,6 +9,7 @@ import 'package:guide7/model/meal_plan/canteen.dart';
 import 'package:guide7/model/meal_plan/meal_plan.dart';
 import 'package:guide7/model/meal_plan/meal_plan_info.dart';
 import 'package:guide7/storage/meal_plan/info/meal_plan_info_storage.dart';
+import 'package:guide7/storage/meal_plan/meal_plan_storage.dart';
 import 'package:guide7/ui/util/ui_util.dart';
 import 'package:guide7/ui/view/meal_plan/meal_plan_widget.dart';
 import 'package:guide7/util/custom_colors.dart';
@@ -199,10 +200,29 @@ class _MealPlanViewState extends State<MealPlanView> {
   }) async {
     await _mealPlanInfoFuture;
 
+    date = DateTime(date.year, date.month, date.day);
+
     Repository repository = Repository();
     MealPlanRepository mealPlanRepository = repository.getMealPlanRepository();
 
-    return await mealPlanRepository.loadMealPlan(Canteen(id: _mealPlanInfo.canteenId, name: ""), date);
+    MealPlanStorage storage = MealPlanStorage();
+
+    MealPlan result;
+    if (fromCache) {
+      // Try to load from cache first -> if unsuccessful -> Load from repository.
+      result = await storage.readMealPlan(_mealPlanInfo.canteenId, date);
+    }
+
+    if (result == null) {
+      result = await mealPlanRepository.loadMealPlan(Canteen(id: _mealPlanInfo.canteenId, name: ""), date);
+
+      if (result != null) {
+        // Store result in the cache
+        await storage.writeMealPlan(result);
+      }
+    }
+
+    return result;
   }
 
   /// Switch to previous or next page.

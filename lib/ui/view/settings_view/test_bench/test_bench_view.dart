@@ -5,6 +5,7 @@ import 'package:guide7/connect/repository.dart';
 import 'package:guide7/storage/appointment/appointment_storage.dart';
 import 'package:guide7/storage/hm_person/hm_person_storage.dart';
 import 'package:guide7/storage/meal_plan/info/meal_plan_info_storage.dart';
+import 'package:guide7/storage/meal_plan/meal_plan_storage.dart';
 import 'package:guide7/storage/notice_board/notice_board_storage.dart';
 import 'package:guide7/storage/week_plan/custom/custom_week_plan_event_storage.dart';
 import 'package:guide7/storage/week_plan/zpa/zpa_week_plan_storage.dart';
@@ -108,5 +109,7 @@ class _TestBenchViewState extends State<TestBenchView> {
     await HMPersonStorage().clear();
 
     await MealPlanInfoStorage().clear();
+
+    await MealPlanStorage().clear();
   }
 }
