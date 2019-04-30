@@ -75,6 +75,7 @@ class _SettingsViewState extends State<SettingsView> {
     items.add(_buildModifyMealPlanInfoItem());
 
     if (_preferences != null) {
+      items.add(_buildStartViewItem());
       items.add(_buildNoticeBoardNotificationSwitchItem());
       items.add(_buildWeekPlanNotificationSwitchItem());
       items.add(_buildAppointmentNotificationSwitchItem());
@@ -88,6 +89,56 @@ class _SettingsViewState extends State<SettingsView> {
     }
 
     return items;
+  }
+
+  /// Build item to choose the start view.
+  Widget _buildStartViewItem() {
+    return SettingsItem(
+      title: AppLocalizations.of(context).startView,
+      description: AppLocalizations.of(context).startViewDescription,
+      icon: Icons.add_to_home_screen,
+      onTap: () async {
+        String route = await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return SimpleDialog(
+              children: <Widget>[
+                SimpleDialogOption(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10.0),
+                    child: Text(
+                      AppLocalizations.of(context).noticeBoard,
+                      textScaleFactor: 1.2,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context, AppRoutes.noticeBoard);
+                  },
+                ),
+                SimpleDialogOption(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10.0),
+                    child: Text(
+                      AppLocalizations.of(context).weekPlan,
+                      textScaleFactor: 1.2,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context, AppRoutes.weekPlan);
+                  },
+                ),
+              ],
+            );
+          },
+        );
+
+        print("Selected $route");
+
+        _preferences.startRoute = route;
+
+        _savePreferences();
+      },
+    );
   }
 
   /// Build item to toggle the notice board notifications.

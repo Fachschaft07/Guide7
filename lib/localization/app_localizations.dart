@@ -121,6 +121,8 @@ class AppLocalizations {
     "show_week_plan_notifications_description": "Willst du Benachrichtigungen vom Wochenplan erhalten?",
     "show_appointment_notifications": "Termin Benachrichtigungen",
     "show_appointment_notifications_description": "Willst du Benachrichtigungen über Termine und Fristen erhalten?",
+    "start_view": "Start Ansicht",
+    "start_view_description": "... welche angezeigt wird, wenn die App gestartet wird",
   };
 
   /// English localized values.
@@ -219,6 +221,8 @@ class AppLocalizations {
     "show_week_plan_notifications_description": "Do you want to receive Week Plan notifications?",
     "show_appointment_notifications": "Show Appointment notifications",
     "show_appointment_notifications_description": "Do you want to receive Appointment notifications?",
+    "start_view": "Start view",
+    "start_view_description": "... which will be shown on app startup",
   };
 
   /// Get localized value by [key].
@@ -406,4 +410,8 @@ class AppLocalizations {
   String get showAppointmentNotifications => _get("show_appointment_notifications");
 
   String get showAppointmentNotificationsDescription => _get("show_appointment_notifications_description");
+
+  String get startView => _get("start_view");
+
+  String get startViewDescription => _get("start_view_description");
 }

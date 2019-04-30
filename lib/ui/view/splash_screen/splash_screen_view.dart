@@ -8,6 +8,7 @@ import 'package:guide7/app.dart';
 import 'package:guide7/localization/app_localizations.dart';
 import 'package:guide7/model/login_info/login_info.dart';
 import 'package:guide7/storage/login_info/login_info_storage.dart';
+import 'package:guide7/storage/preferences/preferences_storage.dart';
 import 'package:guide7/storage/route/route_storage.dart';
 import 'package:guide7/ui/common/headline.dart';
 import 'package:guide7/util/zpa.dart';
@@ -128,7 +129,8 @@ class _SplashScreenState extends State<SplashScreenView> {
 
       await App.router.navigateTo(context, route, transition: TransitionType.native, replace: true, clearStack: true);
     } else {
-      await App.router.navigateTo(context, AppRoutes.main, transition: TransitionType.native, replace: true, clearStack: true);
+      route = (await PreferencesStorage().read()).startRoute;
+      await App.router.navigateTo(context, route, transition: TransitionType.native, replace: true, clearStack: true);
     }
   }
 }
