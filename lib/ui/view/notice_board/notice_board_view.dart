@@ -271,6 +271,7 @@ class _NoticeBoardViewState extends State<NoticeBoardView> {
   /// Transform displayed entries.
   void _transformEntries(List<NoticeBoardEntry> entries) {
     DateTime now = DateTime.now();
+    now = DateTime(now.year, now.month, now.day);
 
     // Remove no more valid entries.
     entries.removeWhere((entry) => entry.validTo.isBefore(now));
