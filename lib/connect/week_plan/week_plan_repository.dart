@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:guide7/model/weekplan/week_plan_event.dart';
 
 /// Interface for all week plan repositories delivering week plan events.

@@ -18,8 +18,8 @@
     <application
             tools:replace="android:label"
             android:name=".Application"
-            android:label="guide7"
-            android:icon="@mipmap/ic_launcher">
+            android:label="Guide7"
+            android:icon="@drawable/icon">
         <receiver android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver"/>
         <receiver android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver">
             <intent-filter>

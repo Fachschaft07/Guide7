@@ -1,3 +1,5 @@
+import 'dart:async';
+
 /// Interface for each scheduler implementation.
 abstract class SchedulerI {
   /// Initialize the scheduler.

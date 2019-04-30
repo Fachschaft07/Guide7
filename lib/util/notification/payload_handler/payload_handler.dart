@@ -1,3 +1,5 @@
+import 'dart:async';
+
 /// Interface for all payload handler doing stuff based on a passed notification payload string.
 abstract class PayloadHandler {
   /// Handle the passed payload.

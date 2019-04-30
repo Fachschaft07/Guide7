@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:guide7/model/weekplan/zpa/slot/change/plan_change.dart';
 import 'package:guide7/model/weekplan/zpa/slot/types/extra_slot.dart';
 import 'package:guide7/model/weekplan/zpa/slot/types/regular_slot.dart';

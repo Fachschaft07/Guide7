@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:guide7/model/credentials/credentials.dart';
 
 /// Repository managing login to some kind of service.

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:guide7/connect/week_plan/week_plan_repository.dart';
 import 'package:guide7/model/weekplan/week_plan_event.dart';
 import 'package:guide7/model/weekplan/zpa/slot/change/plan_change.dart';

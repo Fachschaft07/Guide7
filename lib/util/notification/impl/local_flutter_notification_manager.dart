@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:guide7/util/notification/notification_manager_interface.dart';
 import 'package:guide7/util/notification/payload_handler/payload_handler.dart';
@@ -32,7 +34,7 @@ class LocalFlutterNotificationManager implements NotificationManagerI {
 
   @override
   Future<void> initialize() async {
-    var initializationSettingsAndroid = AndroidInitializationSettings("@mipmap/ic_launcher");
+    var initializationSettingsAndroid = AndroidInitializationSettings("@drawable/plain_icon");
     var initializationSettingsIOS = IOSInitializationSettings();
     var initializationSettings = InitializationSettings(initializationSettingsAndroid, initializationSettingsIOS);
 

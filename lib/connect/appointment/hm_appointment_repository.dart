@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:guide7/connect/appointment/appointment_repository.dart';
 import 'package:guide7/connect/appointment/parser/appointment_ical_parser.dart';
 import 'package:guide7/model/appointment/appointment.dart';

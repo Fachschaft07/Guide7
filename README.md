@@ -1,12 +1,16 @@
-[![Build Status](https://travis-ci.org/Fachschaft07/Guide7.svg?branch=develop)](https://travis-ci.org/Fachschaft07/Guide7)
+[![Build Status](https://travis-ci.org/Fachschaft07/Guide7.svg?branch=master)](https://travis-ci.org/Fachschaft07/Guide7)
+
+> Looking for some screenshots? Take a look in our [GitHub pages](https://fachschaft07.github.io/Guide7/)!
 
 # Guide7
 
-<img src="https://github.com/Fachschaft07/Guide7/blob/master/res/images/guide7_logo.png" width="200" height="200"/>
+<div style="text-align: center">
+    <img src="res/images/icon/icon-xhdpi.png" width="200" height="200"/>
+</div>
 
 App for comfortable access of the student services for department 07 (computer science) at the Munich University for Applied Sciences.
 
-> App will be reworked in Flutter. The old android app can be found under the java-app folder.
+> App has been reworked using [Flutter](https://flutter.io). The old android app can be found under the java-app folder.
 
 For information about the app and its architecture take a look in the projects [wiki](https://github.com/Fachschaft07/Guide7/wiki)!
 

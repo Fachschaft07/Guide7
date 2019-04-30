@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:guide7/model/credentials/credentials.dart';
 
 /// Interface for repositories managing local credentials.

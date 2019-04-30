@@ -1,17 +1,15 @@
 import 'dart:async';
 
-import 'package:connectivity/connectivity.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:guide7/app-routes.dart';
 import 'package:guide7/app.dart';
-import 'package:guide7/connect/login/zpa/response/zpa_login_response.dart';
-import 'package:guide7/connect/repository.dart';
 import 'package:guide7/localization/app_localizations.dart';
-import 'package:guide7/model/credentials/username_password_credentials.dart';
 import 'package:guide7/model/login_info/login_info.dart';
 import 'package:guide7/storage/login_info/login_info_storage.dart';
+import 'package:guide7/storage/preferences/preferences_storage.dart';
+import 'package:guide7/storage/route/route_storage.dart';
 import 'package:guide7/ui/common/headline.dart';
 import 'package:guide7/util/zpa.dart';
 
@@ -25,7 +23,7 @@ class SplashScreenView extends StatefulWidget {
 /// State of the splash screen redirecting to the correct starting view.
 class _SplashScreenState extends State<SplashScreenView> {
   /// Duration the splash screen is shown.
-  static const Duration _minDuration = Duration(milliseconds: 600);
+  static const Duration _minDuration = Duration(milliseconds: 500);
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +42,7 @@ class _SplashScreenState extends State<SplashScreenView> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              "res/images/guide7_logo.png",
+              "res/images/icon/icon-xxxhdpi.png",
               width: imageWidth,
             ),
             Container(
@@ -94,7 +92,7 @@ class _SplashScreenState extends State<SplashScreenView> {
     }
 
     if (skippedLogin || await isLoggedIn()) {
-      return _gotoNoticeBoard;
+      return _gotoStartView;
     } else {
       return _gotoLoginView;
     }
@@ -113,28 +111,26 @@ class _SplashScreenState extends State<SplashScreenView> {
 
   /// Check if a user is currently logged in.
   Future<bool> isLoggedIn() async {
-    /// Check that internet connection is available first.
-    final connectivityResult = await (new Connectivity().checkConnectivity());
-
-    if (connectivityResult == ConnectivityResult.none) {
-      return await ZPA.isLoggedIn(); // Just check whether credentials are stored or not.
-    } else {
-      Repository repo = Repository();
-
-      UsernamePasswordCredentials credentials = await repo.getLocalCredentialsRepository().loadLocalCredentials();
-      ZPALoginResponse response = await repo.getZPALoginRepository().tryLogin(credentials);
-
-      return response != null;
-    }
+    return await ZPA.isLoggedIn(); // Just check whether credentials are stored or not.
   }
 
   /// Navigate to login view.
   void _gotoLoginView() {
-    App.router.navigateTo(context, AppRoutes.login, transition: TransitionType.native, replace: true);
+    App.router.navigateTo(context, AppRoutes.login, transition: TransitionType.native, replace: true, clearStack: true);
   }
 
-  /// Navigate to notice board.
-  void _gotoNoticeBoard() {
-    App.router.navigateTo(context, AppRoutes.main, transition: TransitionType.native, replace: true);
+  /// Navigate to start view.
+  void _gotoStartView() async {
+    RouteStorage storage = RouteStorage();
+    String route = await storage.read();
+
+    if (route != null) {
+      await storage.clear();
+
+      await App.router.navigateTo(context, route, transition: TransitionType.native, replace: true, clearStack: true);
+    } else {
+      route = (await PreferencesStorage().read()).startRoute;
+      await App.router.navigateTo(context, route, transition: TransitionType.native, replace: true, clearStack: true);
+    }
   }
 }

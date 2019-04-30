@@ -1,9 +1,13 @@
+import 'dart:async';
+
 import 'package:connectivity/connectivity.dart';
 import 'package:guide7/connect/repository.dart';
 import 'package:guide7/connect/week_plan/week_plan_repository.dart';
+import 'package:guide7/model/preferences/preferences.dart';
 import 'package:guide7/model/weekplan/week_plan_event.dart';
 import 'package:guide7/model/weekplan/zpa/slot/types/regular_slot.dart';
 import 'package:guide7/model/weekplan/zpa/zpa_week_plan_event.dart';
+import 'package:guide7/storage/preferences/preferences_storage.dart';
 import 'package:guide7/util/notification/notification_manager.dart';
 import 'package:guide7/util/notification/payload_handler/week_plan_payload_handler.dart';
 import 'package:guide7/util/scheduler/task/background_task.dart';
@@ -39,24 +43,28 @@ class WeekPlanTask implements BackgroundTask {
     // Find changes.
     _WeekPlanChange _weekPlanChange = _getChange(oldEvents, newEvents);
 
-    if (_weekPlanChange.hasNew && _weekPlanChange.hasChanged) {
-      NotificationManager().showNotification(
-        title: "Der Wochenplan hat sich geändert",
-        content: "Es gibt neue und veränderte Ereignisse auf dem Wochenplan.",
-        payload: WeekPlanPayloadHandler.payload,
-      );
-    } else if (_weekPlanChange.hasChanged) {
-      NotificationManager().showNotification(
-        title: "Der Wochenplan hat sich geändert",
-        content: "Es gibt ${_weekPlanChange.changedEvents.length} veränderte Ereignisse auf dem Wochenplan.",
-        payload: WeekPlanPayloadHandler.payload,
-      );
-    } else if (_weekPlanChange.hasNew) {
-      NotificationManager().showNotification(
-        title: "Der Wochenplan hat sich geändert",
-        content: "Es gibt ${_weekPlanChange.newEvents.length} neue Ereignisse auf dem Wochenplan.",
-        payload: WeekPlanPayloadHandler.payload,
-      );
+    Preferences preferences = await PreferencesStorage().read();
+
+    if (preferences.showWeekPlanNotifications) {
+      if (_weekPlanChange.hasNew && _weekPlanChange.hasChanged) {
+        NotificationManager().showNotification(
+          title: "Der Wochenplan hat sich geändert",
+          content: "Es gibt neue und veränderte Ereignisse auf dem Wochenplan.",
+          payload: WeekPlanPayloadHandler.payload,
+        );
+      } else if (_weekPlanChange.hasChanged) {
+        NotificationManager().showNotification(
+          title: "Der Wochenplan hat sich geändert",
+          content: "Es gibt ${_weekPlanChange.changedEvents.length} veränderte Ereignisse auf dem Wochenplan.",
+          payload: WeekPlanPayloadHandler.payload,
+        );
+      } else if (_weekPlanChange.hasNew) {
+        NotificationManager().showNotification(
+          title: "Der Wochenplan hat sich geändert",
+          content: "Es gibt ${_weekPlanChange.newEvents.length} neue Ereignisse auf dem Wochenplan.",
+          payload: WeekPlanPayloadHandler.payload,
+        );
+      }
     }
   }
 

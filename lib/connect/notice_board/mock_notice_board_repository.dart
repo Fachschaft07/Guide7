@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:guide7/connect/notice_board/notice_board_repository.dart';
 import 'package:guide7/model/notice_board/notice_board_entry.dart';
 

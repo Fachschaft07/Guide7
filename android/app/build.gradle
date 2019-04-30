@@ -64,18 +64,6 @@ def getPublishingTrack() {
     }
 }
 
-def getReleaseStatus() {
-    def workingBranch = getWorkingBranch()
-
-    if (workingBranch.equalsIgnoreCase("alpha") || workingBranch.equalsIgnoreCase("beta")) {
-        return "completed"
-    } else if (workingBranch.equalsIgnoreCase("stable")) {
-        return "draft"
-    } else {
-        return "inProgress"
-    }
-}
-
 apply plugin: 'com.android.application'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
@@ -120,8 +108,8 @@ play {
     serviceAccountCredentials = file("../../.travis/api-8382503924831001465-189898-6da3f809c6e2.json")
     track = getPublishingTrack()
     userFraction = 1.0
-    releaseStatus = getReleaseStatus()
-    resolutionStrategy = "auto"
+    releaseStatus = "completed"
+    resolutionStrategy = "fail"
 }
 
 flutter {

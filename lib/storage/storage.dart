@@ -1,3 +1,5 @@
+import 'dart:async';
+
 /// Storage base interface.
 abstract class Storage<T> {
   /// Read data from storage.

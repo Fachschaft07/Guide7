@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:guide7/app-routes.dart';
 import 'package:guide7/app.dart';
+import 'package:guide7/storage/route/route_storage.dart';
 import 'package:guide7/util/notification/payload_handler/payload_handler.dart';
 
 /// Payload handler opening the week plan view.
@@ -13,7 +16,11 @@ class WeekPlanPayloadHandler implements PayloadHandler {
   @override
   Future<bool> handle(String payload) async {
     if (payload == WeekPlanPayloadHandler.payload) {
-      await App.router.navigateTo(null, AppRoutes.weekPlan, clearStack: true, replace: true);
+      if (App.navigatorKey != null && App.navigatorKey.currentState != null) {
+        await App.navigatorKey.currentState.pushNamed(AppRoutes.weekPlan);
+      } else {
+        RouteStorage().write(AppRoutes.weekPlan);
+      }
 
       return true;
     }

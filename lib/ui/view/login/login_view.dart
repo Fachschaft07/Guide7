@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -11,6 +13,7 @@ import 'package:guide7/model/login_info/login_info.dart';
 import 'package:guide7/storage/login_info/login_info_storage.dart';
 import 'package:guide7/ui/common/headline.dart';
 import 'package:guide7/ui/common/line_separator.dart';
+import 'package:guide7/ui/view/first_start/first_start_view.dart';
 import 'package:guide7/ui/view/login/form/login_form.dart';
 import 'package:guide7/util/custom_colors.dart';
 
@@ -113,13 +116,22 @@ class _LoginViewState extends State<LoginView> {
     return success;
   }
 
-  /// What to do when the login succeeded.
+  /// What to do when the login succeeded or is [skipped].
   Future<void> _onLoginSuccess(bool skipped) async {
     LoginInfoStorage loginInfoStorage = LoginInfoStorage();
     await loginInfoStorage.write(LoginInfo(
       skippedLogin: skipped,
     ));
 
-    App.router.navigateTo(context, AppRoutes.main, transition: TransitionType.native, replace: true);
+    _navigateToNextView();
+  }
+
+  /// Navigate to the next view after login.
+  Future<void> _navigateToNextView() async {
+    if (!(await FirstStartView.hasInitialDataLoaded())) {
+      App.router.navigateTo(context, AppRoutes.firstStart, transition: TransitionType.native, replace: true);
+    } else {
+      App.router.navigateTo(context, AppRoutes.noticeBoard, transition: TransitionType.native, replace: true);
+    }
   }
 }

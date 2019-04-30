@@ -4,6 +4,7 @@ import 'package:guide7/connect/free_rooms/free_rooms_repository.dart';
 import 'package:guide7/connect/hm_people/hm_people_repository.dart';
 import 'package:guide7/connect/impl/default_repository.dart';
 import 'package:guide7/connect/login/zpa/zpa_login_repository.dart';
+import 'package:guide7/connect/meal_plan/meal_plan_repository.dart';
 import 'package:guide7/connect/notice_board/notice_board_repository.dart';
 import 'package:guide7/connect/repository_interface.dart';
 import 'package:guide7/connect/week_plan/week_plan_repository.dart';
@@ -38,6 +39,9 @@ class Repository implements RepositoryI {
 
   /// Cached instance of the week plan repository.
   WeekPlanRepository _weekPlanRepository;
+
+  /// Cached instance of the meal plan repository.
+  MealPlanRepository _mealPlanRepository;
 
   /// Retrieve the Repository instance.
   factory Repository() {
@@ -119,5 +123,14 @@ class Repository implements RepositoryI {
     }
 
     return _weekPlanRepository;
+  }
+
+  @override
+  MealPlanRepository getMealPlanRepository() {
+    if (_mealPlanRepository == null) {
+      _mealPlanRepository = _delegate.getMealPlanRepository();
+    }
+
+    return _mealPlanRepository;
   }
 }
