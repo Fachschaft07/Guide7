@@ -69,6 +69,7 @@ class CustomEventWidget extends StatelessWidget {
     }
 
     return FlatButton(
+      padding: EdgeInsets.zero,
       child: Column(
         children: children,
       ),

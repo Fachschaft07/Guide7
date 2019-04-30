@@ -167,6 +167,8 @@ class _WeekPlanViewState extends State<WeekPlanView> {
 
   /// Build container for events.
   Widget _buildEventsContainer(List<WeekPlanEvent> events, double width, double xOffset) {
+    WeekPlanEvent nextEvent = _getDaysNextEvent(events);
+
     return Container(
       margin: EdgeInsets.only(left: xOffset),
       width: width,
@@ -193,15 +195,32 @@ class _WeekPlanViewState extends State<WeekPlanView> {
               padding: EdgeInsets.only(bottom: 20.0),
               child: Column(
                 children: List.generate(events.length, (index) {
+                  final event = events[index];
+
                   return Container(
                     child: WeekPlanEventWidget(
-                      event: events[index],
+                      event: event,
+                      isNextEvent: event == nextEvent,
                     ),
                   );
                 }),
               ),
             ),
     );
+  }
+
+  /// Find the next event in the passed list of all events on the same day.
+  WeekPlanEvent _getDaysNextEvent(List<WeekPlanEvent> dayEvents) {
+    DateTime now = DateTime.now();
+    now = now.subtract(Duration(hours: 1));
+
+    for (WeekPlanEvent event in dayEvents) {
+      if (event.start.isAfter(now) && event.start.year == now.year && event.start.month == now.month && event.start.day == now.day) {
+        return event;
+      }
+    }
+
+    return null;
   }
 
   /// Fetch all events in a week defined by the passed [date].
