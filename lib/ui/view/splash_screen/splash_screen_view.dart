@@ -8,6 +8,7 @@ import 'package:guide7/app.dart';
 import 'package:guide7/localization/app_localizations.dart';
 import 'package:guide7/model/login_info/login_info.dart';
 import 'package:guide7/storage/login_info/login_info_storage.dart';
+import 'package:guide7/storage/route/route_storage.dart';
 import 'package:guide7/ui/common/headline.dart';
 import 'package:guide7/util/zpa.dart';
 
@@ -90,7 +91,7 @@ class _SplashScreenState extends State<SplashScreenView> {
     }
 
     if (skippedLogin || await isLoggedIn()) {
-      return _gotoNoticeBoard;
+      return _gotoStartView;
     } else {
       return _gotoLoginView;
     }
@@ -114,11 +115,20 @@ class _SplashScreenState extends State<SplashScreenView> {
 
   /// Navigate to login view.
   void _gotoLoginView() {
-    App.router.navigateTo(context, AppRoutes.login, transition: TransitionType.native, replace: true);
+    App.router.navigateTo(context, AppRoutes.login, transition: TransitionType.native, replace: true, clearStack: true);
   }
 
-  /// Navigate to notice board.
-  void _gotoNoticeBoard() {
-    App.router.navigateTo(context, AppRoutes.main, transition: TransitionType.native, replace: true);
+  /// Navigate to start view.
+  void _gotoStartView() async {
+    RouteStorage storage = RouteStorage();
+    String route = await storage.read();
+
+    if (route != null) {
+      await storage.clear();
+
+      await App.router.navigateTo(context, route, transition: TransitionType.native, replace: true, clearStack: true);
+    } else {
+      await App.router.navigateTo(context, AppRoutes.main, transition: TransitionType.native, replace: true, clearStack: true);
+    }
   }
 }

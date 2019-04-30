@@ -13,6 +13,7 @@ import 'package:guide7/ui/util/ui_util.dart';
 import 'package:guide7/ui/view/settings_view/settings_item/settings_item.dart';
 import 'package:guide7/util/custom_colors.dart';
 import 'package:guide7/util/notification/notification_manager.dart';
+import 'package:guide7/util/notification/payload_handler/appointment_payload_handler.dart';
 import 'package:guide7/util/scheduler/impl/background_fetch_scheduler.dart' show executeBackgroundTasks;
 
 /// A test bench is used to help debugging / testing the app.
@@ -58,6 +59,7 @@ class _TestBenchViewState extends State<TestBenchView> {
         NotificationManager().showNotification(
           title: "I am a notification!",
           content: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam",
+          payload: AppointmentPayloadHandler.payload,
         );
       },
     ));
