@@ -1,9 +1,13 @@
+import 'dart:async';
+
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:guide7/app-routes.dart';
 import 'package:guide7/app.dart';
 import 'package:guide7/localization/app_localizations.dart';
+import 'package:guide7/model/preferences/preferences.dart';
+import 'package:guide7/storage/preferences/preferences_storage.dart';
 import 'package:guide7/ui/util/ui_util.dart';
 import 'package:guide7/ui/view/settings_view/settings_item/settings_item.dart';
 import 'package:guide7/util/custom_colors.dart';
@@ -17,6 +21,30 @@ class SettingsView extends StatefulWidget {
 
 /// State of the settings view.
 class _SettingsViewState extends State<SettingsView> {
+  /// Preferences of the app.
+  Preferences _preferences;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _loadPreferences();
+  }
+
+  /// Load the apps preferences.
+  void _loadPreferences() async {
+    Preferences prefs = await PreferencesStorage().read();
+
+    setState(() {
+      _preferences = prefs;
+    });
+  }
+
+  /// Save the apps preferences.
+  Future<void> _savePreferences() async {
+    await PreferencesStorage().write(_preferences);
+  }
+
   @override
   Widget build(BuildContext context) => UIUtil.getScaffold(
         body: SafeArea(
@@ -45,6 +73,13 @@ class _SettingsViewState extends State<SettingsView> {
     List<Widget> items = List<Widget>();
 
     items.add(_buildModifyMealPlanInfoItem());
+
+    if (_preferences != null) {
+      items.add(_buildNoticeBoardNotificationSwitchItem());
+      items.add(_buildWeekPlanNotificationSwitchItem());
+      items.add(_buildAppointmentNotificationSwitchItem());
+    }
+
     items.add(_buildInfoItem());
 
     if (DebugUtil.isDebugMode) {
@@ -53,6 +88,72 @@ class _SettingsViewState extends State<SettingsView> {
     }
 
     return items;
+  }
+
+  /// Build item to toggle the notice board notifications.
+  Widget _buildNoticeBoardNotificationSwitchItem() {
+    return SettingsItem(
+      title: AppLocalizations.of(context).showNoticeBoardNotifications,
+      description: AppLocalizations.of(context).showNoticeBoardNotificationsDescription,
+      icon: Icons.announcement,
+      onTap: () async {
+        _preferences.showNoticeBoardNotifications = !_preferences.showNoticeBoardNotifications;
+
+        await _savePreferences();
+
+        setState(() {});
+      },
+      after: Switch(
+        value: _preferences.showNoticeBoardNotifications,
+        onChanged: (newValue) {
+          _preferences.showNoticeBoardNotifications = newValue;
+        },
+      ),
+    );
+  }
+
+  /// Build item to toggle the week plan notifications.
+  Widget _buildWeekPlanNotificationSwitchItem() {
+    return SettingsItem(
+      title: AppLocalizations.of(context).showWeekPlanNotifications,
+      description: AppLocalizations.of(context).showWeekPlanNotificationsDescription,
+      icon: Icons.timeline,
+      onTap: () async {
+        _preferences.showWeekPlanNotifications = !_preferences.showWeekPlanNotifications;
+
+        await _savePreferences();
+
+        setState(() {});
+      },
+      after: Switch(
+        value: _preferences.showWeekPlanNotifications,
+        onChanged: (newValue) {
+          _preferences.showWeekPlanNotifications = newValue;
+        },
+      ),
+    );
+  }
+
+  /// Build item to toggle the appointment notifications.
+  Widget _buildAppointmentNotificationSwitchItem() {
+    return SettingsItem(
+      title: AppLocalizations.of(context).showAppointmentNotifications,
+      description: AppLocalizations.of(context).showAppointmentNotificationsDescription,
+      icon: Icons.timer,
+      onTap: () async {
+        _preferences.showAppointmentNotifications = !_preferences.showAppointmentNotifications;
+
+        await _savePreferences();
+
+        setState(() {});
+      },
+      after: Switch(
+        value: _preferences.showAppointmentNotifications,
+        onChanged: (newValue) {
+          _preferences.showAppointmentNotifications = newValue;
+        },
+      ),
+    );
   }
 
   /// Build item to adjust the meal plan info.

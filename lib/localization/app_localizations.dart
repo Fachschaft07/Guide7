@@ -6,7 +6,7 @@ import 'package:flutter/widgets.dart';
 /// Class containing localizations for the app (translations).
 class AppLocalizations {
   /// Version of the application.
-  static const String _appVersion = "0.1.1";
+  static const String _appVersion = "0.2.0";
 
   /// Create app localizations.
   AppLocalizations(this.locale);
@@ -115,6 +115,12 @@ class AppLocalizations {
     "canteen": "Mensa",
     "modify_meal_plan_settings": "Speiseplan Einstellungen ändern",
     "modify_meal_plan_settings.description": "Richte den Speiseplan ein...",
+    "show_notice_board_notifications": "Schwarzes Brett Benachrichtigungen",
+    "show_notice_board_notifications_description": "Willst du Benachrichtigungen vom Schwarzen Brett erhalten?",
+    "show_week_plan_notifications": "Wochenplan Benachrichtigungen",
+    "show_week_plan_notifications_description": "Willst du Benachrichtigungen vom Wochenplan erhalten?",
+    "show_appointment_notifications": "Termin Benachrichtigungen",
+    "show_appointment_notifications_description": "Willst du Benachrichtigungen über Termine und Fristen erhalten?",
   };
 
   /// English localized values.
@@ -207,6 +213,12 @@ class AppLocalizations {
     "canteen": "Canteen",
     "modify_meal_plan_settings": "Modify meal plan settings",
     "modify_meal_plan_settings.description": "Brings up the meal plan setup...",
+    "show_notice_board_notifications": "Show Notice Board notifications",
+    "show_notice_board_notifications_description": "Do you want to receive Notice Board notifications?",
+    "show_week_plan_notifications": "Show Week Plan notifications",
+    "show_week_plan_notifications_description": "Do you want to receive Week Plan notifications?",
+    "show_appointment_notifications": "Show Appointment notifications",
+    "show_appointment_notifications_description": "Do you want to receive Appointment notifications?",
   };
 
   /// Get localized value by [key].
@@ -382,4 +394,16 @@ class AppLocalizations {
   String get modifyMealPlanSettings => _get("modify_meal_plan_settings");
 
   String get modifyMealPlanSettingsDescription => _get("modify_meal_plan_settings.description");
+
+  String get showNoticeBoardNotifications => _get("show_notice_board_notifications");
+
+  String get showNoticeBoardNotificationsDescription => _get("show_notice_board_notifications_description");
+
+  String get showWeekPlanNotifications => _get("show_week_plan_notifications");
+
+  String get showWeekPlanNotificationsDescription => _get("show_week_plan_notifications_description");
+
+  String get showAppointmentNotifications => _get("show_appointment_notifications");
+
+  String get showAppointmentNotificationsDescription => _get("show_appointment_notifications_description");
 }
