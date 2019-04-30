@@ -11,7 +11,6 @@ class ZPA {
     // Check if credentials are present.
     Repository repo = Repository();
     LocalUsernamePasswordCredentialsRepository credentialsRepository = repo.getLocalCredentialsRepository();
-
     UsernamePasswordCredentials credentials = await credentialsRepository.loadLocalCredentials();
 
     return credentials.username != null && credentials.password != null;
