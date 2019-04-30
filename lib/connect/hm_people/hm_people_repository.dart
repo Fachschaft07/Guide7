@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:guide7/model/hm_people/hm_person.dart';
 
 /// Repository delivering people information of the department 07 of the munich university of applied sciences.

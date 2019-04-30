@@ -16,15 +16,28 @@ class WeekPlanEventWidget extends StatelessWidget {
   /// Event to display.
   final WeekPlanEvent event;
 
+  /// Whether this event is the next event.
+  final bool isNextEvent;
+
   /// Create week plan event widget.
   WeekPlanEventWidget({
     @required this.event,
+    this.isNextEvent = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+      margin: EdgeInsets.symmetric(horizontal: 10.0),
+      padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),
+      decoration: BoxDecoration(
+        border: Border(
+          left: BorderSide(
+            width: 2.0,
+            color: isNextEvent ? Colors.pinkAccent : CustomColors.lightGray,
+          ),
+        ),
+      ),
       child: Column(
         children: <Widget>[
           Row(

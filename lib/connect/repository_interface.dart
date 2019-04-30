@@ -3,6 +3,7 @@ import 'package:guide7/connect/credential/local_credentials_repository.dart';
 import 'package:guide7/connect/free_rooms/free_rooms_repository.dart';
 import 'package:guide7/connect/hm_people/hm_people_repository.dart';
 import 'package:guide7/connect/login/zpa/zpa_login_repository.dart';
+import 'package:guide7/connect/meal_plan/meal_plan_repository.dart';
 import 'package:guide7/connect/notice_board/notice_board_repository.dart';
 import 'package:guide7/connect/week_plan/week_plan_repository.dart';
 import 'package:guide7/model/credentials/username_password_credentials.dart';
@@ -29,4 +30,7 @@ abstract class RepositoryI {
 
   /// Get repository providing week plan events.
   WeekPlanRepository getWeekPlanRepository();
+
+  /// Get repository providing meal plans.
+  MealPlanRepository getMealPlanRepository();
 }

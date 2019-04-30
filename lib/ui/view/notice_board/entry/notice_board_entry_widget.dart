@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 import 'dart:typed_data';
 
@@ -130,8 +131,16 @@ class NoticeBoardEntryWidget extends StatelessWidget {
   double _getEntryProgress(NoticeBoardEntry entry) {
     DateTime now = DateTime.now();
 
+    if (now.isBefore(entry.validFrom)) {
+      return 0.0;
+    }
+
     int progress = max(now.difference(entry.validFrom).inMinutes, 0);
     int total = entry.validTo.difference(entry.validFrom).inMinutes;
+
+    if (total == 0) {
+      return 1.0;
+    }
 
     return progress / total;
   }

@@ -14,6 +14,9 @@ class App extends StatefulWidget {
   /// Router used to navigate within the application.
   static Router router;
 
+  /// Global navigator key of the app.
+  static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
   @override
   State<StatefulWidget> createState() => _AppState();
 }
@@ -57,6 +60,7 @@ class _AppState extends State<App> {
           fontFamily: "Roboto",
         ),
         onGenerateRoute: App.router.generator,
+        navigatorKey: App.navigatorKey,
         home: SplashScreenView(),
       );
 

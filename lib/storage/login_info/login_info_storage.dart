@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:guide7/model/login_info/login_info.dart';
 import 'package:guide7/storage/storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';

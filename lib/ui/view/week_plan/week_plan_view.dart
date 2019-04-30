@@ -1,15 +1,17 @@
+import 'dart:async';
+
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_pagewise/flutter_pagewise.dart';
 import 'package:guide7/connect/repository.dart';
 import 'package:guide7/connect/week_plan/week_plan_repository.dart';
 import 'package:guide7/localization/app_localizations.dart';
 import 'package:guide7/model/weekplan/week_plan_event.dart';
 import 'package:guide7/ui/view/week_plan/event/week_plan_event_widget.dart';
-import 'package:flutter_pagewise/flutter_pagewise.dart';
 import 'package:guide7/util/custom_colors.dart';
 import 'package:intl/intl.dart';
 import 'package:sticky_headers/sticky_headers.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 
 /// View showing the week plan of the student.
 class WeekPlanView extends StatefulWidget {
@@ -84,6 +86,9 @@ class _WeekPlanViewState extends State<WeekPlanView> {
     DateFormat dayFormat = DateFormat.d(Localizations.localeOf(context).languageCode);
     DateFormat monthFormat = DateFormat.MMM(Localizations.localeOf(context).languageCode);
 
+    DateTime now = DateTime.now();
+    now = DateTime(now.year, now.month, now.day);
+
     Size size = MediaQuery.of(context).size;
     double fixedColumnWidth;
     if (MediaQuery.of(context).orientation == Orientation.portrait) {
@@ -99,15 +104,19 @@ class _WeekPlanViewState extends State<WeekPlanView> {
       itemBuilder: (BuildContext context, value, int index) {
         _DayInfo dayInfo = value as _DayInfo;
 
-        return StickyHeaderBuilder(
-          overlapHeaders: true,
-          builder: (BuildContext context, double stuckAmount) {
-            stuckAmount = 1.0 - stuckAmount.clamp(0.0, 1.0);
+        if (dayInfo.date.isBefore(now)) {
+          return Container();
+        } else {
+          return StickyHeaderBuilder(
+            overlapHeaders: true,
+            builder: (BuildContext context, double stuckAmount) {
+              stuckAmount = 1.0 - stuckAmount.clamp(0.0, 1.0);
 
-            return _buildDateHeader(fixedColumnWidth, weekDayFormat, dayFormat, monthFormat, dayInfo.date);
-          },
-          content: _buildEventsContainer(dayInfo.events, eventColumnWidth, fixedColumnWidth),
-        );
+              return _buildDateHeader(fixedColumnWidth, weekDayFormat, dayFormat, monthFormat, dayInfo.date);
+            },
+            content: _buildEventsContainer(dayInfo.events, eventColumnWidth, fixedColumnWidth),
+          );
+        }
       },
     );
   }
@@ -158,6 +167,8 @@ class _WeekPlanViewState extends State<WeekPlanView> {
 
   /// Build container for events.
   Widget _buildEventsContainer(List<WeekPlanEvent> events, double width, double xOffset) {
+    WeekPlanEvent nextEvent = _getDaysNextEvent(events);
+
     return Container(
       margin: EdgeInsets.only(left: xOffset),
       width: width,
@@ -184,15 +195,32 @@ class _WeekPlanViewState extends State<WeekPlanView> {
               padding: EdgeInsets.only(bottom: 20.0),
               child: Column(
                 children: List.generate(events.length, (index) {
+                  final event = events[index];
+
                   return Container(
                     child: WeekPlanEventWidget(
-                      event: events[index],
+                      event: event,
+                      isNextEvent: event == nextEvent,
                     ),
                   );
                 }),
               ),
             ),
     );
+  }
+
+  /// Find the next event in the passed list of all events on the same day.
+  WeekPlanEvent _getDaysNextEvent(List<WeekPlanEvent> dayEvents) {
+    DateTime now = DateTime.now();
+    now = now.subtract(Duration(hours: 1));
+
+    for (WeekPlanEvent event in dayEvents) {
+      if (event.start.isAfter(now) && event.start.year == now.year && event.start.month == now.month && event.start.day == now.day) {
+        return event;
+      }
+    }
+
+    return null;
   }
 
   /// Fetch all events in a week defined by the passed [date].

@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:connectivity/connectivity.dart';
 import 'package:guide7/connect/appointment/appointment_repository.dart';
 import 'package:guide7/connect/repository.dart';
 import 'package:guide7/model/appointment/appointment.dart';
+import 'package:guide7/model/preferences/preferences.dart';
+import 'package:guide7/storage/preferences/preferences_storage.dart';
 import 'package:guide7/util/notification/notification_manager.dart';
 import 'package:guide7/util/notification/payload_handler/appointment_payload_handler.dart';
 import 'package:guide7/util/scheduler/task/background_task.dart';
@@ -55,13 +59,17 @@ class AppointmentTask implements BackgroundTask {
 
       List<Appointment> upcomingAppointments = _getUpcomingAppointments(appointments, currentDate);
       if (upcomingAppointments.isNotEmpty) {
-        NotificationManager().showNotification(
-          title: "Erinnerung",
-          content: upcomingAppointments.length == 1
-              ? "\"${upcomingAppointments.first.summary} beginnt in Kürze"
-              : "${upcomingAppointments.length} Termine beginnen in Kürze",
-          payload: AppointmentPayloadHandler.payload,
-        );
+        Preferences preferences = await PreferencesStorage().read();
+
+        if (preferences.showAppointmentNotifications) {
+          NotificationManager().showNotification(
+            title: "Erinnerung",
+            content: upcomingAppointments.length == 1
+                ? "\"${upcomingAppointments.first.summary} beginnt in Kürze"
+                : "${upcomingAppointments.length} Termine beginnen in Kürze",
+            payload: AppointmentPayloadHandler.payload,
+          );
+        }
       }
     }
   }

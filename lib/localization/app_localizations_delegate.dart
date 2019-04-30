@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/widgets.dart';
 import 'package:guide7/localization/app_localizations.dart';
 import 'package:flutter/foundation.dart' show SynchronousFuture;

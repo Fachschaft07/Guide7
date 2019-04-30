@@ -6,7 +6,7 @@ import 'package:flutter/widgets.dart';
 /// Class containing localizations for the app (translations).
 class AppLocalizations {
   /// Version of the application.
-  static const String _appVersion = "0.1.1";
+  static const String _appVersion = "0.2.0";
 
   /// Create app localizations.
   AppLocalizations(this.locale);
@@ -104,6 +104,25 @@ class AppLocalizations {
     "first_start.line9": "Einen kleinen Moment noch, ich habs gleich!",
     "first_start.line10": "Lorem ipsum...",
     "first_start.last_line": "Gleich gehts los!",
+    "meal_plan": "Speiseplan",
+    "meal_plan.error": "Beim Laden des Speiseplans ist ein Fehler aufgetreten.",
+    "no_meal_plan": "Kein Speiseplan verfügbar.",
+    "meal_plan_setup.title": "Speiseplan einrichten...",
+    "price_category.students": "Student",
+    "price_category.employees": "Mitarbeiter",
+    "price_category.others": "Andere",
+    "price_category.label": "Preiskategorie",
+    "canteen": "Mensa",
+    "modify_meal_plan_settings": "Speiseplan Einstellungen ändern",
+    "modify_meal_plan_settings.description": "Richte den Speiseplan ein...",
+    "show_notice_board_notifications": "Schwarzes Brett Benachrichtigungen",
+    "show_notice_board_notifications_description": "Willst du Benachrichtigungen vom Schwarzen Brett erhalten?",
+    "show_week_plan_notifications": "Wochenplan Benachrichtigungen",
+    "show_week_plan_notifications_description": "Willst du Benachrichtigungen vom Wochenplan erhalten?",
+    "show_appointment_notifications": "Termin Benachrichtigungen",
+    "show_appointment_notifications_description": "Willst du Benachrichtigungen über Termine und Fristen erhalten?",
+    "start_view": "Start Ansicht",
+    "start_view_description": "... welche angezeigt wird, wenn die App gestartet wird",
   };
 
   /// English localized values.
@@ -185,6 +204,25 @@ class AppLocalizations {
     "first_start.line9": "Just a little longer, nearly finished!",
     "first_start.line10": "Lorem ipsum...",
     "first_start.last_line": "Let's go!",
+    "meal_plan": "Meal plan",
+    "meal_plan.error": "An error occurred during loading the meal plan.",
+    "no_meal_plan": "No meal plan available.",
+    "meal_plan_setup.title": "Meal plan setup...",
+    "price_category.students": "Student",
+    "price_category.employees": "Employee",
+    "price_category.others": "Other",
+    "price_category.label": "Price category",
+    "canteen": "Canteen",
+    "modify_meal_plan_settings": "Modify meal plan settings",
+    "modify_meal_plan_settings.description": "Brings up the meal plan setup...",
+    "show_notice_board_notifications": "Show Notice Board notifications",
+    "show_notice_board_notifications_description": "Do you want to receive Notice Board notifications?",
+    "show_week_plan_notifications": "Show Week Plan notifications",
+    "show_week_plan_notifications_description": "Do you want to receive Week Plan notifications?",
+    "show_appointment_notifications": "Show Appointment notifications",
+    "show_appointment_notifications_description": "Do you want to receive Appointment notifications?",
+    "start_view": "Start view",
+    "start_view_description": "... which will be shown on app startup",
   };
 
   /// Get localized value by [key].
@@ -338,4 +376,42 @@ class AppLocalizations {
         _get("first_start.line9"),
         _get("first_start.line10"),
       ];
+
+  String get mealPlan => _get("meal_plan");
+
+  String get mealPlanError => _get("meal_plan.error");
+
+  String get noMealPlan => _get("no_meal_plan");
+
+  String get mealPlanSetupTitle => _get("meal_plan_setup.title");
+
+  String get priceCategoryStudents => _get("price_category.students");
+
+  String get priceCategoryEmployees => _get("price_category.employees");
+
+  String get priceCategoryOthers => _get("price_category.others");
+
+  String get priceCategoryLabel => _get("price_category.label");
+
+  String get canteen => _get("canteen");
+
+  String get modifyMealPlanSettings => _get("modify_meal_plan_settings");
+
+  String get modifyMealPlanSettingsDescription => _get("modify_meal_plan_settings.description");
+
+  String get showNoticeBoardNotifications => _get("show_notice_board_notifications");
+
+  String get showNoticeBoardNotificationsDescription => _get("show_notice_board_notifications_description");
+
+  String get showWeekPlanNotifications => _get("show_week_plan_notifications");
+
+  String get showWeekPlanNotificationsDescription => _get("show_week_plan_notifications_description");
+
+  String get showAppointmentNotifications => _get("show_appointment_notifications");
+
+  String get showAppointmentNotificationsDescription => _get("show_appointment_notifications_description");
+
+  String get startView => _get("start_view");
+
+  String get startViewDescription => _get("start_view_description");
 }

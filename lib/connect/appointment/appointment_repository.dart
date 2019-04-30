@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:guide7/model/appointment/appointment.dart';
 
 /// Repository serving appointments.

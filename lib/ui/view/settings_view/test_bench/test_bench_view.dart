@@ -4,6 +4,8 @@ import 'package:guide7/connect/impl/mock_repository.dart';
 import 'package:guide7/connect/repository.dart';
 import 'package:guide7/storage/appointment/appointment_storage.dart';
 import 'package:guide7/storage/hm_person/hm_person_storage.dart';
+import 'package:guide7/storage/meal_plan/info/meal_plan_info_storage.dart';
+import 'package:guide7/storage/meal_plan/meal_plan_storage.dart';
 import 'package:guide7/storage/notice_board/notice_board_storage.dart';
 import 'package:guide7/storage/week_plan/custom/custom_week_plan_event_storage.dart';
 import 'package:guide7/storage/week_plan/zpa/zpa_week_plan_storage.dart';
@@ -11,6 +13,7 @@ import 'package:guide7/ui/util/ui_util.dart';
 import 'package:guide7/ui/view/settings_view/settings_item/settings_item.dart';
 import 'package:guide7/util/custom_colors.dart';
 import 'package:guide7/util/notification/notification_manager.dart';
+import 'package:guide7/util/notification/payload_handler/appointment_payload_handler.dart';
 import 'package:guide7/util/scheduler/impl/background_fetch_scheduler.dart' show executeBackgroundTasks;
 
 /// A test bench is used to help debugging / testing the app.
@@ -56,6 +59,7 @@ class _TestBenchViewState extends State<TestBenchView> {
         NotificationManager().showNotification(
           title: "I am a notification!",
           content: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam",
+          payload: AppointmentPayloadHandler.payload,
         );
       },
     ));
@@ -105,5 +109,9 @@ class _TestBenchViewState extends State<TestBenchView> {
     await AppointmentStorage().clear();
 
     await HMPersonStorage().clear();
+
+    await MealPlanInfoStorage().clear();
+
+    await MealPlanStorage().clear();
   }
 }

@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:connectivity/connectivity.dart';
 import 'package:guide7/connect/repository.dart';
 import 'package:guide7/model/notice_board/notice_board_entry.dart';
+import 'package:guide7/model/preferences/preferences.dart';
+import 'package:guide7/storage/preferences/preferences_storage.dart';
 import 'package:guide7/util/notification/notification_manager.dart';
 import 'package:guide7/util/notification/payload_handler/notice_board_payload_handler.dart';
 import 'package:guide7/util/scheduler/task/background_task.dart';
@@ -30,11 +34,15 @@ class NoticeBoardTask implements BackgroundTask {
     List<NoticeBoardEntry> fresh = await noticeBoardRepo.loadEntries();
 
     if (_hasNewEntries(cached, fresh)) {
-      NotificationManager().showNotification(
-        title: "Schwarzes Brett Update!",
-        content: "Es gibt neue Einträge auf dem Schwarzen Brett.",
-        payload: NoticeBoardPayloadHandler.payload,
-      );
+      Preferences preferences = await PreferencesStorage().read();
+
+      if (preferences.showNoticeBoardNotifications) {
+        NotificationManager().showNotification(
+          title: "Schwarzes Brett Update!",
+          content: "Es gibt neue Einträge auf dem Schwarzen Brett.",
+          payload: NoticeBoardPayloadHandler.payload,
+        );
+      }
     }
   }
 

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:background_fetch/background_fetch.dart';
 import 'package:guide7/util/scheduler/scheduler_interface.dart';
 import 'package:guide7/util/scheduler/task/background_task.dart';

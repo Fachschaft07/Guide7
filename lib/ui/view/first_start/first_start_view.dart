@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
@@ -73,8 +74,6 @@ class _FirstStartViewState extends State<FirstStartView> {
       _animDuration = Duration(milliseconds: letterCount * _durationPerLetter.inMilliseconds);
 
       Future<void> minDurationFuture = Future.delayed(_animDuration);
-
-      print("Letter count: $letterCount with Duration $_animDuration");
 
       /// Wait for both futures, then navigate to start view.
       Future.wait([

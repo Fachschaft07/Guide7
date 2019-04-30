@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:guide7/model/notice_board/notice_board_entry.dart';
 import 'package:guide7/storage/database/app_database.dart';
 import 'package:guide7/storage/storage.dart';
