@@ -47,21 +47,18 @@ class _LoginFormState extends State<LoginForm> {
   List<Widget> _buildFormContents() => <Widget>[
         _wrapTextField(
           child: TextFormField(
-              decoration: InputDecoration(
-                hintText: AppLocalizations.of(context).username,
-                icon: Icon(
-                  Icons.person,
-                  color: CustomColors.slateGrey,
-                ),
-                border: InputBorder.none,
+            decoration: InputDecoration(
+              hintText: AppLocalizations.of(context).username,
+              icon: Icon(
+                Icons.person,
+                color: CustomColors.slateGrey,
               ),
-              style: TextStyle(fontFamily: "Roboto", color: Colors.black87, fontSize: 16.0),
-              validator: (value) {
-                if (value.isEmpty) {
-                  return AppLocalizations.of(context).usernameError;
-                }
-              },
-              controller: _usernameController),
+              border: InputBorder.none,
+            ),
+            style: TextStyle(fontFamily: "Roboto", color: Colors.black87, fontSize: 16.0),
+            validator: (value) => value.isEmpty ? AppLocalizations.of(context).usernameError : null,
+            controller: _usernameController,
+          ),
         ),
         _wrapTextField(
           child: TextFormField(
@@ -74,11 +71,7 @@ class _LoginFormState extends State<LoginForm> {
               border: InputBorder.none,
             ),
             style: TextStyle(fontFamily: "Roboto", color: Colors.black87, fontSize: 16.0),
-            validator: (value) {
-              if (value.isEmpty) {
-                return AppLocalizations.of(context).passwordError;
-              }
-            },
+            validator: (value) => value.isEmpty ? AppLocalizations.of(context).passwordError : null,
             obscureText: true,
             controller: _passwordController,
           ),

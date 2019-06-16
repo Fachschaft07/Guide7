@@ -184,11 +184,7 @@ class _CustomEventDialogState extends State<CustomEventDialog> {
             color: CustomColors.slateGrey,
           ),
         ),
-        validator: (value) {
-          if (value.isEmpty) {
-            return localizations.createEventTitleEmptyError;
-          }
-        },
+        validator: (value) => value.isEmpty ? localizations.createEventTitleEmptyError : null,
         controller: _titleController,
       ),
     );
@@ -260,6 +256,8 @@ class _CustomEventDialogState extends State<CustomEventDialog> {
                 if (number == null || number < 0) {
                   return localizations.createEventCustomRecurringCycleInvalid;
                 }
+
+                return null;
               },
               keyboardType: TextInputType.number,
               controller: _customRecurringDayCycleController,
@@ -276,6 +274,8 @@ class _CustomEventDialogState extends State<CustomEventDialog> {
                   if (number == null || number < 0) {
                     return localizations.createEventCustomRecurringCycleInvalid;
                   }
+
+                  return null;
                 },
                 keyboardType: TextInputType.number,
                 controller: _customRecurringMonthCycleController,
@@ -293,6 +293,8 @@ class _CustomEventDialogState extends State<CustomEventDialog> {
                   if (number == null || number < 0) {
                     return localizations.createEventCustomRecurringCycleInvalid;
                   }
+
+                  return null;
                 },
                 keyboardType: TextInputType.number,
                 controller: _customRecurringYearCycleController,

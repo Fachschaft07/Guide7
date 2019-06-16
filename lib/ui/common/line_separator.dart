@@ -106,7 +106,7 @@ class _LineSeparatorPainter extends CustomPainter {
     double yOffset = rect.height / 2 - thickness / 2;
     double insets = rect.width * 0.02;
 
-    if (tp.text.text == null || tp.text.text.isEmpty) {
+    if ((tp.text as TextSpan).text == null || (tp.text as TextSpan).text.isEmpty) {
       insets = 0.0;
     }
 
