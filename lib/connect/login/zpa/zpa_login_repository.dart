@@ -1,14 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
+import 'package:guide7/connect/login/login_repository.dart';
 import 'package:guide7/connect/login/zpa/response/zpa_login_response.dart';
 import 'package:guide7/connect/login/zpa/response/zpa_logout_response.dart';
 import 'package:guide7/connect/login/zpa/util/zpa_variables.dart';
 import 'package:guide7/model/credentials/username_password_credentials.dart';
 import 'package:http/http.dart' as http;
-
-import 'package:guide7/connect/login/login_repository.dart';
 import 'package:meta/meta.dart';
 
 /// Login repository to login to the ZPA system.
@@ -21,26 +19,40 @@ class ZPALoginRepository implements LoginRepository<UsernamePasswordCredentials,
     try {
       final _CSRFTokenResponse csrfTokenResponse = await _getCSRFToken();
 
-      HttpClient client = HttpClient();
-      HttpClientRequest clientRequest = await client.postUrl(Uri.parse("${ZPAVariables.url}/login/ws_login/"));
+      http.Response response = await http.post(
+        Uri.parse("${ZPAVariables.url}/login/ws_login/"),
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: "csrfmiddlewaretoken=${csrfTokenResponse.csrfToken}&username=${credentials.username}&password=${credentials.password}",
+      );
 
-      clientRequest.headers.contentType = ContentType("application", "x-www-form-urlencoded");
-      clientRequest.write("csrfmiddlewaretoken=${csrfTokenResponse.csrfToken}&username=${credentials.username}&password=${credentials.password}");
-
-      HttpClientResponse httpResponse = await clientRequest.close();
-
-      if (httpResponse.statusCode == 200) {
+      if (response.statusCode == 200) {
         // Fetch cookie from response
-        Cookie cookie = httpResponse.cookies.firstWhere((c) => c.name == "sessionid");
-
-        if (cookie == null) {
+        String setCookieHeaderValue = response.headers["set-cookie"];
+        if (setCookieHeaderValue == null) {
           return null;
         }
 
-        String cookieStr = "sessionid=${cookie.value}";
-        String body = await httpResponse.transform(utf8.decoder).reduce((str1, str2) => str1 + str2);
+        int indexOfSessionId = setCookieHeaderValue.indexOf("sessionid");
+        if (indexOfSessionId == -1) {
+          return null;
+        }
 
-        ZPALoginResponse loginResponse = ZPALoginResponse.fromJson(json.decode(body), cookieStr);
+        int sessionIdValueEndIndex = setCookieHeaderValue.indexOf(";", indexOfSessionId);
+        String cookieKeyValuePair;
+        if (sessionIdValueEndIndex == -1) {
+          cookieKeyValuePair = setCookieHeaderValue.substring(indexOfSessionId);
+        } else {
+          cookieKeyValuePair = setCookieHeaderValue.substring(indexOfSessionId, sessionIdValueEndIndex);
+        }
+
+        if (cookieKeyValuePair == null) {
+          return null;
+        }
+
+        String cookieValue = cookieKeyValuePair.split("=").last;
+        ZPALoginResponse loginResponse = ZPALoginResponse.fromJson(json.decode(response.body), cookieValue);
 
         bool success = loginResponse.errorCode == 0;
 
