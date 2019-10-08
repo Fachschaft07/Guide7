@@ -68,7 +68,7 @@ apply plugin: 'com.android.application'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
 
     lintOptions {
         disable 'InvalidPackage'
@@ -77,11 +77,13 @@ android {
     defaultConfig {
         applicationId "de.be.thaw"
         minSdkVersion 18
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
+    def isRunningOnTravis = System.getenv("CI") == "true"
 
     signingConfigs {
         release
@@ -89,11 +91,13 @@ android {
 
     buildTypes {
         release {
-            signingConfig signingConfigs.release
+            if (isRunningOnTravis) {
+                signingConfig signingConfigs.release
+            } else {
+                signingConfig signingConfigs.debug
+            }
         }
     }
-
-    def isRunningOnTravis = System.getenv("CI") == "true"
 
     if (isRunningOnTravis) {
         // Configure keystore
@@ -118,6 +122,6 @@ flutter {
 
 dependencies {
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    androidTestImplementation 'androidx.test:runner:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 }
