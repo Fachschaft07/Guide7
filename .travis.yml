@@ -6,7 +6,6 @@ matrix:
   include:
     - env: JOB=PR
       os: linux
-      language: generic
       sudo: false
       addons:
         apt:
@@ -14,11 +13,12 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - libstdc++6
-            - fonts-droid
+            - fonts-droid-fallback
       before_script:
-        - git clone https://github.com/flutter/flutter.git -b dev
+        - git clone https://github.com/flutter/flutter.git -b stable
+        - ./flutter/bin/flutter doctor
       script:
-        - "./flutter/bin/flutter test"
+        - ./flutter/bin/flutter test
     - env: JOB=APK
       os: linux
       language: android
@@ -45,20 +45,20 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - libstdc++6
-            - fonts-droid
+            - fonts-droid-fallback
       before_install:
         - yes | sdkmanager "platforms;android-28"
         - yes | sdkmanager "platforms;android-27"
         - openssl aes-256-cbc -k $keystore_encryption_key -in .travis/guide7_keystore.jks.enc -out .travis/guide7_keystore.jks -d -md sha256
         - openssl aes-256-cbc -k $google_play_encryption_key -in .travis/api-8382503924831001465-189898-6da3f809c6e2.json.enc -out .travis/api-8382503924831001465-189898-6da3f809c6e2.json -d -md sha256
       before_script:
-        - wget http://services.gradle.org/distributions/gradle-3.5-bin.zip
-        - unzip -qq gradle-3.5-bin.zip
-        - export GRADLE_HOME=$PWD/gradle-3.5
+        - wget http://services.gradle.org/distributions/gradle-5.6.2-bin.zip
+        - unzip -qq gradle-5.6.2-bin.zip
+        - export GRADLE_HOME=$PWD/gradle-5.6.2
         - export PATH=$GRADLE_HOME/bin:$PATH
-        - git clone https://github.com/flutter/flutter.git -b dev
+        - git clone https://github.com/flutter/flutter.git -b stable
       script:
-        - "./flutter/bin/flutter -v build apk"
+        - ./flutter/bin/flutter -v build apk
       after_success:
         - cd /home/travis/build/Fachschaft07/Guide7/android/
         - chmod +x gradlew
