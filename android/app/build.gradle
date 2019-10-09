@@ -1,5 +1,5 @@
 plugins {
-    id 'com.github.triplet.play' version '2.1.0'
+    id 'com.github.triplet.play' version '2.4.2'
 }
 
 def localProperties = new Properties()

@@ -1,64 +1,80 @@
 matrix:
   fast_finish: true
+
   allow_failures:
     - env: JOB=APK
     - env: JOB=IPA
+
   include:
     - env: JOB=PR
+
       os: linux
+
       sudo: false
+
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
           packages:
             - libstdc++6
-            - fonts-droid-fallback
+            - fonts-droid
+
       before_script:
         - git clone https://github.com/flutter/flutter.git -b dev
-        - ./flutter/bin/flutter doctor
+        - export PATH=./flutter/bin:$PATH
+        - flutter doctor
+
       script:
-        - ./flutter/bin/flutter test
+        - flutter test
+
+
     - env: JOB=APK
+
       os: linux
+
       language: android
+
       licenses:
         - android-sdk-preview-license-.+
         - android-sdk-license-.+
         - google-gdk-license-.+
+
       android:
         components:
           - tools
           - platform-tools
           - build-tools-28.0.3
           - android-28
-          - sys-img-armeabi-v7a-google_apis-28
-          - sys-img-x86_64-android-28
-          - extra-android-m2repository
-          - extra-google-m2repository
-          - extra-google-android-support
+
       jdk: oraclejdk8
+
       sudo: false
+
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
           packages:
             - libstdc++6
-            - fonts-droid-fallback
+            - fonts-droid
+
       before_install:
-        - yes | sdkmanager "platforms;android-28"
-        - yes | sdkmanager "platforms;android-27"
         - openssl aes-256-cbc -k $keystore_encryption_key -in .travis/guide7_keystore.jks.enc -out .travis/guide7_keystore.jks -d -md sha256
         - openssl aes-256-cbc -k $google_play_encryption_key -in .travis/api-8382503924831001465-189898-6da3f809c6e2.json.enc -out .travis/api-8382503924831001465-189898-6da3f809c6e2.json -d -md sha256
+
       before_script:
         - wget http://services.gradle.org/distributions/gradle-5.6.2-bin.zip
         - unzip -qq gradle-5.6.2-bin.zip
         - export GRADLE_HOME=$PWD/gradle-5.6.2
         - export PATH=$GRADLE_HOME/bin:$PATH
         - git clone https://github.com/flutter/flutter.git -b dev
+        - export PATH=./flutter/bin:$PATH
+        - flutter doctor
+
       script:
-        - ./flutter/bin/flutter -v build apk
+        - flutter -v build apk
+
       after_success:
         - cd /home/travis/build/Fachschaft07/Guide7/android/
         - chmod +x gradlew
@@ -66,6 +82,7 @@ matrix:
           if [[ $TRAVIS_BRANCH == "alpha" ||  $TRAVIS_BRANCH == "beta" || $TRAVIS_BRANCH == "stable" ]]; then
             ./gradlew app:publishReleaseApk
           fi
+
       deploy:
         provider: releases
         skip_cleanup: true
@@ -76,10 +93,16 @@ matrix:
         on:
           repo: Fachschaft07/Guide7
           tags: true
+
+
     - env: JOB=IPA
+
       os: osx
+
       language: generic
+
       osx_image: xcode10.1
+
       before_script:
         - pip2 install six
         - brew update
@@ -87,8 +110,10 @@ matrix:
         - brew install ideviceinstaller
         - brew install ios-deploy
         - git clone https://github.com/flutter/flutter.git -b dev
+
       script:
         - "./flutter/bin/flutter -v build ios --no-codesign"
+
 cache:
   directories:
     - "$HOME/.pub-cache"
