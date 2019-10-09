@@ -142,7 +142,7 @@ class NoticeBoardEntryWidget extends StatelessWidget {
       return 1.0;
     }
 
-    return progress / total;
+    return min(progress / total, 1.0);
   }
 
   /// Get the stylesheet to style the markdown content of the entry.

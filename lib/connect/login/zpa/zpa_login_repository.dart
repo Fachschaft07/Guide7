@@ -51,8 +51,7 @@ class ZPALoginRepository implements LoginRepository<UsernamePasswordCredentials,
           return null;
         }
 
-        String cookieValue = cookieKeyValuePair.split("=").last;
-        ZPALoginResponse loginResponse = ZPALoginResponse.fromJson(json.decode(response.body), cookieValue);
+        ZPALoginResponse loginResponse = ZPALoginResponse.fromJson(json.decode(response.body), cookieKeyValuePair);
 
         bool success = loginResponse.errorCode == 0;
 

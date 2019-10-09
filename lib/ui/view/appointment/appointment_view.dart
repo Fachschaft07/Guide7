@@ -82,7 +82,11 @@ class _AppointmentViewState extends State<AppointmentView> {
         }
 
         return RefreshIndicator(
-          onRefresh: () => _loadAppointments(fromCache: false),
+          onRefresh: () async {
+            _appointmentFuture = _loadAppointments(fromCache: false);
+            await _appointmentFuture;
+            setState(() {});
+          },
           child: CustomScrollView(
             slivers: <Widget>[
               _buildAppBar(),

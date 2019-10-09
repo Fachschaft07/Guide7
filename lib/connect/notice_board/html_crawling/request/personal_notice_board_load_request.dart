@@ -20,7 +20,7 @@ class PersonalNoticeBoardLoadRequest implements NoticeBoardLoadRequest {
       throw Exception("Could not fetch notice board entries as the ZPA login failed.");
     }
 
-    return await http.get("${ZPAVariables.url}/$_resource", headers: {"cookie": loginResponse.cookie});
+    return await http.get("${ZPAVariables.url}/$_resource", headers: {"Cookie": loginResponse.cookie});
   }
 
   /// Do the login to the ZPA services.

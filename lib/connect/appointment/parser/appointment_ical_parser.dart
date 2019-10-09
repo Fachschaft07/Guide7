@@ -19,9 +19,15 @@ class AppointmentICalParser implements Parser<String, List<Appointment>> {
       String summary = event["SUMMARY"];
       String description = event["DESCRIPTION"];
       String location = event["LOCATION"];
+      String startDateStr = event["DTSTART"];
+      String endDateStr = event["DTEND"];
 
-      DateTime startDate = DateTime.parse(event["DTSTART;VALUE=DATE"]);
-      DateTime endDate = DateTime.parse(event["DTEND;VALUE=DATE"]);
+      if (startDateStr == null || endDateStr == null) {
+        continue;
+      }
+
+      DateTime startDate = DateTime.parse(startDateStr);
+      DateTime endDate = DateTime.parse(endDateStr);
 
       appointments.add(Appointment(
         uid: uid,
@@ -48,6 +54,11 @@ class AppointmentICalParser implements Parser<String, List<Appointment>> {
       bool continuesLastLineValue = keyValueSplit == -1;
 
       String key = continuesLastLineValue ? lastKey : line.substring(0, keyValueSplit);
+      int splitterIndex = key.indexOf(";");
+      if (splitterIndex != -1) {
+        key = key.substring(0, splitterIndex);
+      }
+
       String value = continuesLastLineValue ? line.trim() : line.substring(keyValueSplit + 1);
 
       if (key == "BEGIN" && value == "VEVENT") {
